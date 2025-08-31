@@ -1,0 +1,4329 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Disk Mensagem Stúdio Neil Marcos</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#111111"/>
+  <style>
+    :root{
+      --bg: #0c0c0f;
+      --panel: #121219;
+      --muted: #a6a6b0;
+      --text: #f2f2f7;
+      --gold: #f5e258;
+      --gold2: #d7c651;
+      --brand: linear-gradient(135deg,#f6e27a,#b68d1e 60%,#f6e27a);
+      --accent: #1f6feb;
+      --ok: #2ea043;
+      --warn: #d29922;
+      --danger: #f85149;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin:0; padding:0; background: var(--bg); color: var(--text); font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+    a { color: var(--accent); }
+    .wrap { max-width: 1040px; margin: 0 auto; padding: 18px; }
+    header {
+      display:flex; align-items:center; gap:16px; padding:10px 0 16px;
+      position: sticky; top:0; background: linear-gradient(180deg, rgba(12,12,15,0.98), rgba(12,12,15,0.8) 70%, rgba(12,12,15,0));
+      backdrop-filter: blur(8px); z-index: 10;
+    }
+    .logo { width: 44px; height: 44px; border-radius: 12px; background: var(--brand); display:flex; align-items:center; justify-content:center; overflow:hidden; }
+    .logo img { width: 100%; height: 100%; object-fit: cover; }
+    h1 { font-size: 20px; margin: 0 0 2px; letter-spacing: 0.2px; }
+    .subtitle { color: var(--muted); font-size: 12px; }
+    .tabs { margin-top: 10px; display:flex; gap:6px; }
+    .tab { border: 1px solid #2a2a3a; background: #15151f; color: var(--text); padding: 8px 12px; border-radius: 12px; cursor:pointer; font-weight:600; }
+    .tab.active { outline: 2px solid var(--gold2); background: #1a1a25; }
+    .card { background: var(--panel); border: 1px solid #242436; border-radius: 18px; padding: 16px; box-shadow: 0 6px 18px rgba(0,0,0,0.25); }
+    .grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap: 12px; }
+    .row { display:flex; gap: 10px; flex-wrap: wrap; }
+    .field { display:flex; flex-direction:column; gap:6px; margin-bottom: 10px; }
+    label { font-size: 12px; color: var(--muted); }
+    input[type="text"], input[type="url"], input[type="date"], input[type="time"], input[type="number"], textarea, select {
+      width:100%; background:#0e0e14; border:1px solid #26263a; color: var(--text);
+      padding:12px 12px; border-radius:12px; outline:none;
+    }
+    textarea { min-height: 120px; resize: vertical; }
+    button { background:#1a1a24; color: var(--text); border:1px solid #2b2b3a; padding: 10px 14px; border-radius: 12px; cursor:pointer; font-weight:700; }
+    button.primary { background: #252532; border-color:#353547; }
+    button.cta { background: var(--brand); color:#121212; border:none; }
+    button.ok { background: var(--ok); border:none; }
+    button.warn { background: var(--warn); border:none; }
+    button.danger { background: var(--danger); border:none; }
+    .pill { padding:4px 10px; border-radius:999px; border:1px solid #2b2b3a; font-size:12px; color: var(--muted); }
+    .sep { height: 1px; background: #21212b; margin: 16px 0; }
+    .title { font-size: 18px; font-weight: 800; margin-bottom: 10px; }
+    .muted { color: var(--muted); font-size: 13px; }
+    .hidden { display:none !important; }
+    .center { text-align:center; }
+    .right { text-align:right; }
+
+    /* anti-cópia (aplicado na exibição do texto da mensagem) */
+    .no-copy {
+      -webkit-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+    .no-copy ::selection { background: transparent; }
+    .msg-box {
+      overflow: visible;
+      max-height: none;
+      white-space: pre-wrap; line-height: 1.45; border: 1px dashed #2b2b3a; padding: 12px; border-radius: 12px; background: #0b0b12;
+    }
+
+    .badge { font-size: 11px; border:1px solid #2d2d3d; padding:2px 8px; border-radius: 999px; color:#ddd; background:#161622; }
+
+    .table { width:100%; border-collapse: collapse; }
+    .table th, .table td { padding: 10px 8px; border-bottom: 1px solid #222233; font-size: 13px; }
+    .table th { color: var(--muted); font-weight: 600; text-align:left; }
+
+    .footnote { font-size: 12px; color: var(--muted); }
+
+    .sticky-cta { position: sticky; bottom: 8px; display:flex; flex-wrap:wrap; gap:8px; padding-top: 8px; background: linear-gradient(180deg, rgba(12,12,15,0), rgba(12,12,15,0.7) 30%, rgba(12,12,15,1)); }
+
+    .k { color:#bfbfcb; }
+
+    .card.selected { outline: 2px solid var(--gold2); }
+    .choose { display:flex; align-items:center; gap:8px; }
+
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="logo"><img src="assets/logo.png" alt="logo"/></div>
+      <div>
+        <h1>Disk Mensagem Stúdio Neil Marcos</h1>
+        <div class="subtitle">Agende sua mensagem com carro de som + trilha do YouTube • pagamento via Pix</div>
+        <div class="tabs">
+          <button class="tab active" data-tab="cliente">Área do Cliente</button>
+          <button class="tab" data-tab="admin">Admin</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- CLIENTE -->
+    <section id="tab-cliente" class="card">
+      <div class="title">1) Escolha uma categoria e a mensagem</div>
+      <div class="row">
+        <div class="field" style="min-width:250px;flex:1;">
+          <label>Categoria</label>
+          <select id="catSelect"></select>
+        </div>
+        <div class="field" style="min-width:250px;flex:2;">
+          <label>Pesquisar mensagem</label>
+          <input id="msgSearch" type="text" placeholder="digite um trecho, ex.: parabéns, amor, gratidão..."/>
+        </div>
+      </div>
+      <div id="msgList" class="grid"></div>
+
+      
+      <div id="selectedBox" class="card hidden" style="margin-top:10px;">
+        <div class="row" style="justify-content: space-between; align-items:center;">
+          <div>
+            <b id="selTitle"></b>
+            <div class="muted">Cód: <span id="selCode"></span></div>
+          </div>
+          <div class="row">
+            <span class="pill">Mensagem selecionada</span>
+            <button id="btnChangeMsg">Trocar</button>
+          </div>
+        </div>
+        <div class="sep"></div>
+        <div id="selText" class="msg-box"></div>
+      </div>
+      <div class="sep"></div>
+      <div class="title">2) Configure as músicas (YouTube)</div>
+
+      <div class="grid">
+        <div class="field">
+          <label>Primeira música (toca só um trecho, até o carro chegar)</label>
+          <input id="ytFirst" type="url" placeholder="cole o link do YouTube aqui"/>
+        </div>
+        <div class="field">
+          <label>Música final (toca inteira no encerramento)</label>
+          <input id="ytLast" type="url" placeholder="cole o link do YouTube aqui"/>
+        </div>
+      </div>
+
+      <div class="sep"></div>
+      <div class="title">3) Dados do agendamento</div>
+      <div class="grid">
+        <div class="field"><label>Quem vai receber a mensagem?</label><input id="toName" type="text" placeholder="Nome de quem recebe"/></div>
+        <div class="field"><label>Quem está mandando?</label><input id="fromName" type="text" placeholder="Seu nome"/></div>
+        <div class="field"><label>Seu celular (para contato e histórico)</label><input id="clientPhone" type="text" placeholder="(DDD) 9xxxx-xxxx"/></div>
+        <div class="field"><label>Endereço</label><input id="address" type="text" placeholder="Rua, número, bairro, ponto de referência"/></div>
+        <div class="field"><label>Tipo de local</label>
+          <select id="placeType">
+            <option value="cidade">Somente na cidade (R$ 70,00)</option>
+            <option value="chacara">Chácara / sítio</option>
+            <option value="outra">Outra cidade</option>
+          </select>
+        </div>
+        <div class="field"><label>Que dia?</label><input id="date" type="date"/></div>
+        <div class="field"><label>Que horas?</label><input id="time" type="time"/></div>
+      </div>
+
+      <div id="outOfCity" class="muted hidden">
+        Para <b>chácara/sítio</b> ou <b>outra cidade</b>, entre em contato para combinar valor e deslocamento:
+        <a id="whatsLink1" target="_blank" rel="noopener">Abrir WhatsApp</a>
+      </div>
+
+      <div class="sep"></div>
+      <div class="title">4) Pagamento via Pix (R$ <span id="price">70,00</span>)</div>
+      <div class="grid">
+        <div class="field">
+          <label>Chave Pix (celular)</label>
+          <input id="pixKey" type="text" readonly/>
+        </div>
+        <div class="field">
+          <label>Pix Copia & Cola (use no app do seu banco)</label>
+          <textarea id="pixCode" readonly></textarea>
+          <div class="row">
+            <button id="btnCopyPix" class="primary">Copiar código</button>
+            <span class="muted">* Gere e pague antes de enviar o pedido.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sep"></div>
+      <div class="title">5) Enviar pedido</div>
+      <div class="muted">Ao enviar, abriremos seu WhatsApp com o pedido pronto para <b>Disk Mensagem Stúdio Neil Marcos</b>. Você também receberá um aviso se já usou a mesma mensagem há cerca de 1 ano.</div>
+      <div class="sticky-cta">
+        <button id="btnSend" class="cta">Enviar pelo WhatsApp</button>
+        <span id="warnSame" class="pill hidden">⚠️ Esta mesma mensagem foi usada por você ~1 ano atrás. Confirme antes de enviar.</span>
+      </div>
+    </section>
+
+    <!-- ADMIN -->
+    <section id="tab-admin" class="card hidden">
+      <div id="adminLogin">
+        <div class="title">Admin</div>
+        <div class="grid">
+          <div class="field"><label>PIN de acesso</label><input id="adminPin" type="password" placeholder="padrão: 1234"/></div>
+        </div>
+        <button id="btnAdminLogin" class="primary">Entrar</button>
+        <div class="muted" style="margin-top:8px">Dica: altere o PIN em Configurações.</div>
+      </div>
+
+      <div id="adminPanel" class="hidden">
+        <div class="row" style="justify-content: space-between; align-items:center;">
+          <div class="title">Painel do Admin</div>
+          <div class="row">
+            <button id="btnLogout">Sair</button>
+          </div>
+        </div>
+
+        <div class="tabs">
+          <button class="tab active" data-admin="pedidos">Pedidos</button>
+          <button class="tab" data-admin="mensagens">Mensagens</button>
+          <button class="tab" data-admin="config">Configurações</button>
+          <button class="tab" data-admin="backup">Backup</button>
+        </div>
+
+        <!-- PEDIDOS -->
+        <div id="admin-pedidos" class="admin-pane">
+          <div class="row" style="margin:10px 0;">
+            <div class="field" style="min-width:200px;">
+              <label>Filtrar por data</label>
+              <input id="filterDate" type="date"/>
+            </div>
+            <div class="field" style="min-width:200px;">
+              <label>Status</label>
+              <select id="filterStatus">
+                <option value="">Todos</option>
+                <option value="pendente">Pendente</option>
+                <option value="pago">Pago</option>
+              </select>
+            </div>
+            <div class="field" style="min-width:200px;">
+              <label>Busca</label>
+              <input id="filterSearch" type="text" placeholder="nome, telefone, mensagem..."/>
+            </div>
+            <div class="field" style="align-self:flex-end;">
+              <button id="btnExport">Exportar CSV</button>
+            </div>
+          </div>
+          <table class="table" id="ordersTable">
+            <thead>
+              <tr>
+                <th>#</th><th>Quando</th><th>Cliente</th><th>Mensagem (cód)</th><th>Músicas</th><th>Endereço</th><th>Valor</th><th>Status</th><th>Ações</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+          <div class="footnote">Novos pedidos aparecem automaticamente nesta lista (no mesmo dispositivo). Para receber pedidos de clientes, compartilhe o link/arquivo do app e peça que enviem pelo WhatsApp.</div>
+        </div>
+
+        <!-- MENSAGENS -->
+        <div id="admin-mensagens" class="admin-pane hidden">
+          <div class="row" style="align-items:center; justify-content:space-between;">
+            <div class="title">Biblioteca de Mensagens</div>
+            <div class="row">
+              <button id="btnAddCategory">+ Categoria</button>
+              <button id="btnAddMessage">+ Mensagem</button>
+              <label class="pill"><input type="checkbox" id="toggleNoCopy" style="vertical-align:middle; margin-right:6px;">Bloquear cópia de mensagens</label>
+            </div>
+          </div>
+          <div class="grid" id="adminCats"></div>
+          <div class="sep"></div>
+          <div class="grid" id="adminMsgs"></div>
+        </div>
+
+        <!-- CONFIG -->
+        <div id="admin-config" class="admin-pane hidden">
+          <div class="title">Configurações</div>
+          <div class="grid">
+            <div class="field"><label>Nome do app</label><input id="cfgAppName" type="text"/></div>
+            <div class="field"><label>Telefone WhatsApp (com DDD) para onde vão os pedidos</label><input id="cfgWhats" type="text"/></div>
+            <div class="field"><label>Chave Pix (celular)</label><input id="cfgPix" type="text"/></div>
+            <div class="field"><label>Valor padrão (cidade)</label><input id="cfgPrice" type="number" step="0.01"/></div>
+            <div class="field"><label>Cidade (para exibir no Pix)</label><input id="cfgCity" type="text"/></div>
+            <div class="field"><label>Nome do recebedor (para Pix)</label><input id="cfgMerchant" type="text"/></div>
+            <div class="field"><label>PIN do Admin</label><input id="cfgPin" type="text"/></div>
+            <div class="field"><label>Logo (subir uma imagem)</label><input id="cfgLogo" type="file" accept="image/*"/></div>
+          </div>
+          <button id="btnSaveConfig" class="ok">Salvar</button>
+        </div>
+
+        <!-- BACKUP -->
+        <div id="admin-backup" class="admin-pane hidden">
+          <div class="title">Backup & Restauração</div>
+          <div class="row">
+            <button id="btnExportJSON">Exportar tudo (.json)</button>
+            <input id="importJSON" type="file" accept=".json"/>
+          </div>
+          <div class="sep"></div>
+          <div class="muted">Dica: faça backup da biblioteca de mensagens e das configurações com frequência. Você pode importar este arquivo em outro celular/computador.</div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // ----------------------- Util -----------------------
+    const $ = sel => document.querySelector(sel);
+    const $$ = sel => Array.from(document.querySelectorAll(sel));
+    const fmtBRL = (v) => (Number(v||0)).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    const todayISO = () => new Date().toISOString().slice(0,10);
+    const daysBetween = (d1, d2) => Math.round((new Date(d2) - new Date(d1)) / 86400000);
+
+    function sanitizeURL(u) {
+      try { const x = new URL(u); return x.href; } catch { return ''; }
+    }
+
+    // CRC16-CCITT (0x1021) for Pix
+    function crc16(str) {
+      let crc = 0xFFFF;
+      for (let i = 0; i < str.length; i++) {
+        crc ^= str.charCodeAt(i) << 8;
+        for (let j = 0; j < 8; j++) {
+          if (crc & 0x8000) crc = (crc << 1) ^ 0x1021;
+          else crc = (crc << 1);
+          crc &= 0xFFFF;
+        }
+      }
+      return crc.toString(16).toUpperCase().padStart(4,'0');
+    }
+    function emv(id, value) {
+      const v = String(value);
+      return id + String(v.length).padStart(2,'0') + v;
+    }
+    function buildPix({merchantName, merchantCity, pixKey, amount, txid}) {
+      const gui = emv('00','BR.GOV.BCB.PIX');
+      const key = emv('01', pixKey);
+      const desc = ''; // optional: emv('02','DiskMensagem');
+
+      const mai = emv('26', gui + key + desc);
+      const payload =
+        emv('00','01') + // Payload Format Indicator
+        emv('01','11') + // Point of Initiation Method (static)
+        mai +
+        emv('52','0000') + // MCC
+        emv('53','986') +  // BRL
+        emv('54', Number(amount).toFixed(2)) +
+        emv('58','BR') +
+        emv('59', merchantName.slice(0,25)) +
+        emv('60', (merchantCity||'BRASIL').toUpperCase().slice(0,15)) +
+        emv('62', emv('05', (txid||'DISKMSG') ));
+      const toCRC = payload + '6304';
+      const crc = crc16(toCRC);
+      return toCRC + crc;
+    }
+
+    // ----------------------- Storage -----------------------
+    const LS = {
+      get(k, def){ try { return JSON.parse(localStorage.getItem(k)) ?? def; } catch { return def; } },
+      set(k, v){ localStorage.setItem(k, JSON.stringify(v)); }
+    };
+
+    // Defaults
+    const defaults = {
+  "appName": "Disk Mensagem Stúdio Neil Marcos",
+  "whatsapp": "5518997053664",
+  "price": 70.0,
+  "pixKey": "18997053664",
+  "merchant": "DISK MENSAGEM NEIL",
+  "city": "Arapiraca",
+  "adminPin": "1234",
+  "blockCopy": true,
+  "categories": [
+    {
+      "id": "amor",
+      "name": "Amor"
+    },
+    {
+      "id": "aniversario",
+      "name": "Aniversário"
+    },
+    {
+      "id": "bodas-ouro",
+      "name": "Bodas de Ouro"
+    },
+    {
+      "id": "bodas-prata",
+      "name": "Bodas de Prata"
+    },
+    {
+      "id": "despedida",
+      "name": "Despedida"
+    },
+    {
+      "id": "pais",
+      "name": "Dia dos Pais"
+    },
+    {
+      "id": "reconciliacao",
+      "name": "Reconciliação"
+    }
+  ],
+  "messages": [
+    {
+      "id": "001",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "002",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "003",
+      "category": "pais",
+      "title": "Mens. filha para os pais",
+      "text": ""
+    },
+    {
+      "id": "004",
+      "category": "reconciliacao",
+      "title": "Reconciliaç╞o",
+      "text": ""
+    },
+    {
+      "id": "005",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "006",
+      "category": "reconciliacao",
+      "title": "Amor (Reconciliaç╞o)",
+      "text": ""
+    },
+    {
+      "id": "007",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "008",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "009",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "010",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "011",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "012",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "013",
+      "category": "reconciliacao",
+      "title": "Amor (Reconciliaç╞o)",
+      "text": ""
+    },
+    {
+      "id": "014",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "015",
+      "category": "reconciliacao",
+      "title": "mens. de reconciliaç╞o",
+      "text": ""
+    },
+    {
+      "id": "016",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "017",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "018",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "019",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "020",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "021",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "022",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "023",
+      "category": "aniversario",
+      "title": "Aniv.Amor",
+      "text": ""
+    },
+    {
+      "id": "024",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "025",
+      "category": "reconciliacao",
+      "title": "Amor (Reconciliaç╞o)",
+      "text": ""
+    },
+    {
+      "id": "026",
+      "category": "reconciliacao",
+      "title": "Amor (Reconciliaç╞o)",
+      "text": ""
+    },
+    {
+      "id": "027",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "028",
+      "category": "amor",
+      "title": "Rencociliaç╞o",
+      "text": ""
+    },
+    {
+      "id": "029",
+      "category": "reconciliacao",
+      "title": "Reconciliaç╞o",
+      "text": ""
+    },
+    {
+      "id": "030",
+      "category": "reconciliacao",
+      "title": "Reconciliaç╞o",
+      "text": ""
+    },
+    {
+      "id": "031",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "032",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "033",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "034",
+      "category": "bodas-prata",
+      "title": "Bodas de Prata (25 anos)",
+      "text": ""
+    },
+    {
+      "id": "035",
+      "category": "amor",
+      "title": "Dia das M╞es",
+      "text": "Cod. 035 dia das MãeCod. 035 dia das Mãe\n\nCod. 035 dia das Mãe\n\nCod. 035 dia das Mãe\n\nMãe. Você é capaz de esquecer o sofrimento e a dor para nos ver felizes!Hoje, queremos fazer por você uma prece muito bonita e sincera:Meu Deus, abençoa esta pessoa tão encantadora que me deu a vida.Abençoa esta mulher, amiga, nossa mãe, hoje e sempre!Mãe, você é o maior bem que temos neste mundo!Olhando o céu aberto, contemplamos o grande tesouro de paz,sabedoria, paciência, bondade,ternura e felicidade que temos ao seu lado.Você nos faz crer, que esta vida vale a pena ser vivida, quando temos amor em nosso coração!Às vezes, quando a vida começa a ficar mais difícil,pensando em você, mãe,surge uma nova esperança e nosso olhar começa a brilhar.Você sempre espera de braços abertos os seus filhosque precisam mais uma vez do seu aconchego,de sua compreensão e carinho, como se fosse a primeira vez.Mãe! Presente de Deus para nossa vida!Recebe hoje Mãe o nosso abraço e todo o nosso carinho!\n\nFeliz Dia das Mães"
+    },
+    {
+      "id": "036",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "037",
+      "category": "amor",
+      "title": "Dia das M╞e",
+      "text": "Cod. 037 dia das MãesCod. 037 dia das Mães\n\nCod. 037 dia das Mães\n\nCod. 037 dia das Mães\n\nMãe,\n\nUm dia, o Amor estendeu as mãospara o homem e abriu-se o encontro...\n\nUm dia, o Amor se tornouvida, e de tua vida eu existi...\n\nMãe, A imensidão do mar fala-me da tua bondade...As altas montanhas refletem teu heroísmo...A profundeza dos vales espelha tua humildade...A beleza das flores traduz teu carinho...\n\nTudo isso é o que queremos dizer a você neste dia especial.\n\nUm dia, o Amor se tornou vida de tua vida e eu existi.\n\nObrigado Mãe, por ser tão carinhosa, compreensiva, e por nos entender em momentos difíceis e nos mostrar o caminho da nossa felicidade.\n\nFeliz dia das Mães"
+    },
+    {
+      "id": "038",
+      "category": "amor",
+      "title": "Amor (Conquista)",
+      "text": ""
+    },
+    {
+      "id": "039",
+      "category": "amor",
+      "title": "Dia das M╞es",
+      "text": ""
+    },
+    {
+      "id": "040",
+      "category": "pais",
+      "title": "Dia dos pais (singular)",
+      "text": ""
+    },
+    {
+      "id": "041",
+      "category": "aniversario",
+      "title": "Aniv. (Neutra)",
+      "text": ""
+    },
+    {
+      "id": "042",
+      "category": "aniversario",
+      "title": "Aniv. Amor",
+      "text": ""
+    },
+    {
+      "id": "043",
+      "category": "pais",
+      "title": "Dia dos pais",
+      "text": ""
+    },
+    {
+      "id": "044",
+      "category": "pais",
+      "title": "Dia dos pais",
+      "text": ""
+    },
+    {
+      "id": "045",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "046",
+      "category": "bodas-ouro",
+      "title": "Bodas de Ouro (50 anos)",
+      "text": ""
+    },
+    {
+      "id": "047",
+      "category": "aniversario",
+      "title": "Aniv. Amor",
+      "text": ""
+    },
+    {
+      "id": "048",
+      "category": "aniversario",
+      "title": "Aniv. Amizade",
+      "text": ""
+    },
+    {
+      "id": "049",
+      "category": "amor",
+      "title": "Desde o dia que te conheci a palavra amor tem um significado…",
+      "text": "Desde o dia que te conheci a palavra amor tem um significado especial para mim.\n\nNão sabia o que era amar e nem imaginava que a minha vida podia se transformar através do amor.\n\nDepois que você começou a fazer parte da minha vida, fui descobrindo o sentido de viver.\n\nTe amo de um jeito diferente, porque nunca senti  algo tão profundo e verdadeiro.\n\nNa verdade você me ensinou o caminho e eu fui aprendendo aos poucos que o amor e a felicidade caminham juntos. Um completa o outro.\n\nDescobri a poesia das musicas, onde uma letra pode me trazer lembranças de você.\n\nDescobri a alegria de ter alguém pra dividir meus momentos e falar dos meus sonhos, enfim descobri que você realmente me trouxe o amor e junto veio a felicidade.\n\nNunca vou deixar de expressar o quanto te amo.\n\nBeijos com muito amor..."
+    },
+    {
+      "id": "050",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "051",
+      "category": "aniversario",
+      "title": "Aniv. Amor",
+      "text": ""
+    },
+    {
+      "id": "052",
+      "category": "aniversario",
+      "title": "Aniv. Família",
+      "text": ""
+    },
+    {
+      "id": "053",
+      "category": "aniversario",
+      "title": "Aniv. Infantil",
+      "text": ""
+    },
+    {
+      "id": "054",
+      "category": "aniversario",
+      "title": "Aniv. Amor",
+      "text": ""
+    },
+    {
+      "id": "055",
+      "category": "aniversario",
+      "title": "Aniv. Amor",
+      "text": ""
+    },
+    {
+      "id": "056",
+      "category": "aniversario",
+      "title": "Aniv. (M╞e)",
+      "text": ""
+    },
+    {
+      "id": "057",
+      "category": "aniversario",
+      "title": "Aniv. (Amizade)",
+      "text": ""
+    },
+    {
+      "id": "058",
+      "category": "amor",
+      "title": "Dia das M╞es",
+      "text": ""
+    },
+    {
+      "id": "059",
+      "category": "aniversario",
+      "title": "Aniv. (Amor)",
+      "text": ""
+    },
+    {
+      "id": "060",
+      "category": "aniversario",
+      "title": "Aniv.(Família)",
+      "text": ""
+    },
+    {
+      "id": "061",
+      "category": "aniversario",
+      "title": "Aniv. (Familia)",
+      "text": ""
+    },
+    {
+      "id": "062",
+      "category": "aniversario",
+      "title": "Aniv. (m╞e)",
+      "text": ""
+    },
+    {
+      "id": "063",
+      "category": "aniversario",
+      "title": "Aniv (Filha (o)",
+      "text": ""
+    },
+    {
+      "id": "064",
+      "category": "aniversario",
+      "title": "aniv. mae",
+      "text": ""
+    },
+    {
+      "id": "065",
+      "category": "aniversario",
+      "title": "Aniv. (Amizade)",
+      "text": ""
+    },
+    {
+      "id": "066",
+      "category": "reconciliacao",
+      "title": "Reconciliaç╞o",
+      "text": ""
+    },
+    {
+      "id": "067",
+      "category": "amor",
+      "title": "Dia das M╞es",
+      "text": ""
+    },
+    {
+      "id": "068",
+      "category": "aniversario",
+      "title": "Aniv. (Família)",
+      "text": ""
+    },
+    {
+      "id": "069",
+      "category": "amor",
+      "title": "Dia das M╞es",
+      "text": ""
+    },
+    {
+      "id": "070",
+      "category": "amor",
+      "title": "Dia das M╞es",
+      "text": ""
+    },
+    {
+      "id": "071",
+      "category": "amor",
+      "title": "Dia das M╞es",
+      "text": ""
+    },
+    {
+      "id": "072",
+      "category": "aniversario",
+      "title": "Aniv. (familia)",
+      "text": ""
+    },
+    {
+      "id": "073",
+      "category": "amor",
+      "title": "Natal",
+      "text": "COD. 073 Mensagem de natal\n\nPara ter um Natal repleto de amor é preciso cultivar a fé no coração.\n\nNatal é a presença de Jesus em nossa vida, representa fé e esperança.\n\nÉ o nascimento do Filho de Deus!\n\nÉ a consciência de família, amor, paz, felicidade! Que o sentido do Natal esteja sempre presente em nosso dia a dia e que a esperança seja um objetivo concretizado.Que a luz do Menino Jesus percorra cada lar trazendo alegria.Que a Fraternidade seja nossa meta e que haja somente amor em meio a tempos difíceis, assim encontraremos a Paz tão almejada! O Natal do Amor é a fé e esperança renascida nos olhos de uma criança!\n\nFeliz Natal!"
+    },
+    {
+      "id": "074",
+      "category": "amor",
+      "title": "Dia das M╞es",
+      "text": ""
+    },
+    {
+      "id": "075",
+      "category": "amor",
+      "title": "Dia das M╞es",
+      "text": ""
+    },
+    {
+      "id": "076",
+      "category": "amor",
+      "title": "Dia das M╞es",
+      "text": ""
+    },
+    {
+      "id": "077",
+      "category": "amor",
+      "title": "Dia das M╞es",
+      "text": ""
+    },
+    {
+      "id": "078",
+      "category": "amor",
+      "title": "Dia das M╞es",
+      "text": ""
+    },
+    {
+      "id": "079",
+      "category": "amor",
+      "title": "Dia das M╞es",
+      "text": ""
+    },
+    {
+      "id": "080",
+      "category": "aniversario",
+      "title": "Aniv. (15 Anos)",
+      "text": ""
+    },
+    {
+      "id": "081",
+      "category": "aniversario",
+      "title": "Aniv. (Amizade)",
+      "text": ""
+    },
+    {
+      "id": "082",
+      "category": "reconciliacao",
+      "title": "Reconciliaç╞o",
+      "text": ""
+    },
+    {
+      "id": "083",
+      "category": "aniversario",
+      "title": "Aniv. (Família)",
+      "text": ""
+    },
+    {
+      "id": "084",
+      "category": "aniversario",
+      "title": "Aniv. (M╞e)",
+      "text": ""
+    },
+    {
+      "id": "085",
+      "category": "aniversario",
+      "title": "Aniv. (Amor)",
+      "text": ""
+    },
+    {
+      "id": "086",
+      "category": "despedida",
+      "title": "Despedida (amizade)",
+      "text": ""
+    },
+    {
+      "id": "087",
+      "category": "aniversario",
+      "title": "Aniv. (família)",
+      "text": ""
+    },
+    {
+      "id": "088",
+      "category": "aniversario",
+      "title": "Aniv. (Família)",
+      "text": ""
+    },
+    {
+      "id": "089",
+      "category": "aniversario",
+      "title": "Aniv. Familia",
+      "text": "Neste dia desejamos que seus sonhos se tornem realidade, que você esteja sempre conquistandograndes vitórias e grandes ideais.\n\nVocê é uma  pessoa cheio de vida, que gosta de viver e essas são as razões para se conseguir viver bem, cada vez melhor.\n\nGrandes e maravilhosas realizações é o que desejamos neste dia em que você completa mais um ano de vida bem vivido.\n\nCom certeza Deus está sempre ao seu lado,  caminhando junto com você para que você realize seus sonhos.\n\nE é pensando assim que queremos que consiga realizar no seu aniversário e em todos os dias as suas aspirações, grandes ideais, enfim que você se complete.\n\nVocê é uma ótima pessoa e torcemos muito por você. Seja muito feliz.\n\nFeliz aniversário"
+    },
+    {
+      "id": "090",
+      "category": "aniversario",
+      "title": "Aniv. familia",
+      "text": "Cod. 090 aniversário família\n\nQueremos comemorar o Dom de vida que Deus te deu.\n\nFalar do seu jeito de ser é um pouco complicado, porque nem sempre você gosta de expressar o seu sentimento, mas é fácil notar que você é uma pessoa humilde e que se preocupa com todos que vivem ao seu lado.\n\nNeste mundo de ilusões que vivemos nem sempre encontramos alguém disposto a ajudar ou compreender alguém que sonha em ser feliz.\n\nMas em seu olhar existe uma luz que consegue mudar a nossa vida e faz cada momento ser de alegria.\n\nRealize seus sonhos e não tenha medo do futuro, porque no nosso destino é Deus quem manda, é Deus que acompanha nossa caminhada e nos ensina que para ser feliz precisamos de muito pouco.\n\nDeus te abençoe com muita saúde muita paz e muito amor. Nós te amamos.\n\nFeliz aniversário.\n\nHomenagem especial de..."
+    },
+    {
+      "id": "091",
+      "category": "aniversario",
+      "title": "Aniv. (Família)",
+      "text": ""
+    },
+    {
+      "id": "092",
+      "category": "aniversario",
+      "title": "Aniv. Amizade",
+      "text": ""
+    },
+    {
+      "id": "093",
+      "category": "aniversario",
+      "title": "Aniv. (Pai)",
+      "text": ""
+    },
+    {
+      "id": "094",
+      "category": "amor",
+      "title": "Dia das M╞es",
+      "text": ""
+    },
+    {
+      "id": "095",
+      "category": "aniversario",
+      "title": "Aniv. (Amizade)",
+      "text": ""
+    },
+    {
+      "id": "096",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "097",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "098",
+      "category": "reconciliacao",
+      "title": "Reconciliaç╞o",
+      "text": ""
+    },
+    {
+      "id": "099",
+      "category": "amor",
+      "title": "Natal",
+      "text": "COD. 099 Mensagem de Natal\n\nNatal é uma época maravilhosa para refletirmose buscarmos encontrar, a verdadeira felicidade,e o maior presente é Jesus.Ele pode te entregar a  felicidade verdadeira, pois está vivo no coração dos que o seguem.Jesus nasceu com uma missão determinada,ele nasceu para dar uma lição de amor.Insistimos em vivermos a nossa própria maneira, procurando alívio ao vazio interior.Felicidade é possível,desde que tenhamos coragemde nos comprometer com Deus,convidando-o  para assumiro controle total de nossa vida.Assim a época do Natal terá real significado para todos,as bênçãos serão eternas e o nosso Natal será feliz sobre os cuidados de Jesus.\n\nFeliz Natal!"
+    },
+    {
+      "id": "100",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "101",
+      "category": "amor",
+      "title": "Amizade (Perd╞o)",
+      "text": ""
+    },
+    {
+      "id": "102",
+      "category": "aniversario",
+      "title": "Aniv. (casamento)",
+      "text": ""
+    },
+    {
+      "id": "103",
+      "category": "aniversario",
+      "title": "Aniv. (Família)",
+      "text": ""
+    },
+    {
+      "id": "104",
+      "category": "amor",
+      "title": "Amor (Distante)",
+      "text": ""
+    },
+    {
+      "id": "105",
+      "category": "amor",
+      "title": "Amor (Distante)",
+      "text": ""
+    },
+    {
+      "id": "106",
+      "category": "aniversario",
+      "title": "Aniv. (m╞e)",
+      "text": ""
+    },
+    {
+      "id": "107",
+      "category": "aniversario",
+      "title": "Aniv.Família (Religioso)",
+      "text": ""
+    },
+    {
+      "id": "108",
+      "category": "aniversario",
+      "title": "Aniv. (Filha)",
+      "text": ""
+    },
+    {
+      "id": "109",
+      "category": "despedida",
+      "title": "Despedida (varias prof.)",
+      "text": ""
+    },
+    {
+      "id": "110",
+      "category": "aniversario",
+      "title": "Aniv. (Família)",
+      "text": ""
+    },
+    {
+      "id": "111",
+      "category": "aniversario",
+      "title": "Aniv. ( Amizade)",
+      "text": ""
+    },
+    {
+      "id": "112",
+      "category": "aniversario",
+      "title": "Aniv. (Amizade)",
+      "text": ""
+    },
+    {
+      "id": "113",
+      "category": "aniversario",
+      "title": "Aniv. (Amizade)",
+      "text": ""
+    },
+    {
+      "id": "114",
+      "category": "aniversario",
+      "title": "Aniv. (Amor)",
+      "text": ""
+    },
+    {
+      "id": "115",
+      "category": "aniversario",
+      "title": "Aniv. (M╞e)",
+      "text": ""
+    },
+    {
+      "id": "116",
+      "category": "amor",
+      "title": "Amor (Conquista)",
+      "text": ""
+    },
+    {
+      "id": "117",
+      "category": "aniversario",
+      "title": "Aniv. (Amor)",
+      "text": ""
+    },
+    {
+      "id": "118",
+      "category": "aniversario",
+      "title": "Aniv. Familia (Religiosa)",
+      "text": ""
+    },
+    {
+      "id": "119",
+      "category": "aniversario",
+      "title": "Aniv. (Família)",
+      "text": ""
+    },
+    {
+      "id": "120",
+      "category": "despedida",
+      "title": "Despedida (Amizade)",
+      "text": ""
+    },
+    {
+      "id": "121",
+      "category": "amor",
+      "title": "Homenagem (encontro de casais)",
+      "text": ""
+    },
+    {
+      "id": "122",
+      "category": "aniversario",
+      "title": "Aniv.Familia (Religiosa)",
+      "text": ""
+    },
+    {
+      "id": "123",
+      "category": "aniversario",
+      "title": "Aniv. Filha (o)",
+      "text": ""
+    },
+    {
+      "id": "124",
+      "category": "aniversario",
+      "title": "Aniv. (Família)",
+      "text": ""
+    },
+    {
+      "id": "125",
+      "category": "aniversario",
+      "title": "Aniv. (Casamento)",
+      "text": ""
+    },
+    {
+      "id": "126",
+      "category": "aniversario",
+      "title": "Aniv. (Amizade)",
+      "text": ""
+    },
+    {
+      "id": "127",
+      "category": "pais",
+      "title": "Dia dos Pais",
+      "text": ""
+    },
+    {
+      "id": "128",
+      "category": "pais",
+      "title": "Dia dos Pais",
+      "text": ""
+    },
+    {
+      "id": "129",
+      "category": "amor",
+      "title": "Homenagem Amiga (o)",
+      "text": ""
+    },
+    {
+      "id": "130",
+      "category": "pais",
+      "title": "Dia dos Pais",
+      "text": ""
+    },
+    {
+      "id": "131",
+      "category": "pais",
+      "title": "Dia dos Pais",
+      "text": ""
+    },
+    {
+      "id": "132",
+      "category": "pais",
+      "title": "Dia dos Pais",
+      "text": ""
+    },
+    {
+      "id": "133",
+      "category": "pais",
+      "title": "Dia dos Pais",
+      "text": ""
+    },
+    {
+      "id": "134",
+      "category": "aniversario",
+      "title": "Aniv. (Família)",
+      "text": ""
+    },
+    {
+      "id": "135",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "136",
+      "category": "aniversario",
+      "title": "Aniv. (M╞e)",
+      "text": ""
+    },
+    {
+      "id": "137",
+      "category": "pais",
+      "title": "Dia dos Pais",
+      "text": ""
+    },
+    {
+      "id": "138",
+      "category": "pais",
+      "title": "Dia dos Pais",
+      "text": ""
+    },
+    {
+      "id": "139",
+      "category": "pais",
+      "title": "Dia dos Pais",
+      "text": ""
+    },
+    {
+      "id": "140",
+      "category": "pais",
+      "title": "Dia dos Pais",
+      "text": ""
+    },
+    {
+      "id": "141",
+      "category": "pais",
+      "title": "Dia dos Pais",
+      "text": ""
+    },
+    {
+      "id": "142",
+      "category": "aniversario",
+      "title": "Aniv. (filha)",
+      "text": ""
+    },
+    {
+      "id": "143",
+      "category": "aniversario",
+      "title": "Aniv. (Amizade)",
+      "text": ""
+    },
+    {
+      "id": "144",
+      "category": "aniversario",
+      "title": "Aniv. (Amor)",
+      "text": ""
+    },
+    {
+      "id": "145",
+      "category": "aniversario",
+      "title": "Aniv. (filha)",
+      "text": ""
+    },
+    {
+      "id": "146",
+      "category": "aniversario",
+      "title": "Aniv. (Infantil)",
+      "text": ""
+    },
+    {
+      "id": "147",
+      "category": "aniversario",
+      "title": "Aniv. (Família)",
+      "text": ""
+    },
+    {
+      "id": "148",
+      "category": "aniversario",
+      "title": "Aniv. (Família)",
+      "text": ""
+    },
+    {
+      "id": "149",
+      "category": "reconciliacao",
+      "title": "Reconciliaç╞o",
+      "text": ""
+    },
+    {
+      "id": "150",
+      "category": "aniversario",
+      "title": "Aniv. (Família)",
+      "text": ""
+    },
+    {
+      "id": "151",
+      "category": "aniversario",
+      "title": "Aniv. (Amizade)",
+      "text": ""
+    },
+    {
+      "id": "152",
+      "category": "amor",
+      "title": "Noivado",
+      "text": ""
+    },
+    {
+      "id": "153",
+      "category": "aniversario",
+      "title": "Aniv. (Amor)",
+      "text": ""
+    },
+    {
+      "id": "154",
+      "category": "aniversario",
+      "title": "Aniv. (M╞e)",
+      "text": ""
+    },
+    {
+      "id": "155",
+      "category": "amor",
+      "title": "Conquista",
+      "text": ""
+    },
+    {
+      "id": "156",
+      "category": "amor",
+      "title": "Professor",
+      "text": ""
+    },
+    {
+      "id": "157",
+      "category": "amor",
+      "title": "Professor",
+      "text": ""
+    },
+    {
+      "id": "158",
+      "category": "reconciliacao",
+      "title": "Reconciliaç╞o",
+      "text": ""
+    },
+    {
+      "id": "159",
+      "category": "aniversario",
+      "title": "Aniv. (15 anos)",
+      "text": ""
+    },
+    {
+      "id": "160",
+      "category": "aniversario",
+      "title": "Aniv.(Casamento)",
+      "text": ""
+    },
+    {
+      "id": "161",
+      "category": "aniversario",
+      "title": "Aniv. (filha (o)",
+      "text": ""
+    },
+    {
+      "id": "162",
+      "category": "aniversario",
+      "title": "Aniv. Família",
+      "text": ""
+    },
+    {
+      "id": "163",
+      "category": "amor",
+      "title": "Natal romantico",
+      "text": ""
+    },
+    {
+      "id": "164",
+      "category": "aniversario",
+      "title": "Aniv. (m╞e)",
+      "text": ""
+    },
+    {
+      "id": "165",
+      "category": "aniversario",
+      "title": "Aniv. (Família)",
+      "text": ""
+    },
+    {
+      "id": "166",
+      "category": "aniversario",
+      "title": "Aniv. (Amizade)",
+      "text": ""
+    },
+    {
+      "id": "167",
+      "category": "aniversario",
+      "title": "Aniv. (Amor)",
+      "text": ""
+    },
+    {
+      "id": "168",
+      "category": "amor",
+      "title": "Natal (familia)",
+      "text": ""
+    },
+    {
+      "id": "169",
+      "category": "aniversario",
+      "title": "Aniv. (Amizade)",
+      "text": ""
+    },
+    {
+      "id": "170",
+      "category": "aniversario",
+      "title": "Aniv. (Amor)",
+      "text": ""
+    },
+    {
+      "id": "171",
+      "category": "aniversario",
+      "title": "Aniv. (Familia)",
+      "text": ""
+    },
+    {
+      "id": "172",
+      "category": "reconciliacao",
+      "title": "Reconciliaç╞o",
+      "text": ""
+    },
+    {
+      "id": "173",
+      "category": "aniversario",
+      "title": "Aniv. (Amizade)",
+      "text": ""
+    },
+    {
+      "id": "174",
+      "category": "aniversario",
+      "title": "Aniv. (M╞e)",
+      "text": ""
+    },
+    {
+      "id": "175",
+      "category": "aniversario",
+      "title": "Aniv. (Amizade)",
+      "text": ""
+    },
+    {
+      "id": "176",
+      "category": "aniversario",
+      "title": "Aniv. (Amizade)",
+      "text": ""
+    },
+    {
+      "id": "177",
+      "category": "aniversario",
+      "title": "Aniv. (Casamento)",
+      "text": ""
+    },
+    {
+      "id": "178",
+      "category": "aniversario",
+      "title": "Aniv. (Esposa)",
+      "text": ""
+    },
+    {
+      "id": "179",
+      "category": "aniversario",
+      "title": "Aniv. (Amizade)",
+      "text": ""
+    },
+    {
+      "id": "180",
+      "category": "aniversario",
+      "title": "Aniv. (Amor)",
+      "text": ""
+    },
+    {
+      "id": "181",
+      "category": "aniversario",
+      "title": "Aniv. (M╞e)",
+      "text": ""
+    },
+    {
+      "id": "182",
+      "category": "aniversario",
+      "title": "Aniv. (Filha)",
+      "text": ""
+    },
+    {
+      "id": "183",
+      "category": "aniversario",
+      "title": "Aniv. (M╞e)",
+      "text": ""
+    },
+    {
+      "id": "184",
+      "category": "aniversario",
+      "title": "Aniv. ( 15 anos)",
+      "text": ""
+    },
+    {
+      "id": "185",
+      "category": "aniversario",
+      "title": "Aniv. (Família)",
+      "text": ""
+    },
+    {
+      "id": "186",
+      "category": "reconciliacao",
+      "title": "Reconciliaç╞o",
+      "text": ""
+    },
+    {
+      "id": "187",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "188",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "189",
+      "category": "amor",
+      "title": "Mens. Amor",
+      "text": ""
+    },
+    {
+      "id": "190",
+      "category": "aniversario",
+      "title": "Aniv. (Amizade)",
+      "text": ""
+    },
+    {
+      "id": "191",
+      "category": "aniversario",
+      "title": "Aniv. familia",
+      "text": ""
+    },
+    {
+      "id": "192",
+      "category": "aniversario",
+      "title": "Aniv. Filha (o)",
+      "text": ""
+    },
+    {
+      "id": "193",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "194",
+      "category": "amor",
+      "title": "Mens.  Ano Novo (CD-086 D) M.",
+      "text": ""
+    },
+    {
+      "id": "195",
+      "category": "amor",
+      "title": "Mens. (Natal)",
+      "text": ""
+    },
+    {
+      "id": "196",
+      "category": "amor",
+      "title": "Mens. (Natal)",
+      "text": ""
+    },
+    {
+      "id": "197",
+      "category": "amor",
+      "title": "Natal",
+      "text": ""
+    },
+    {
+      "id": "198",
+      "category": "aniversario",
+      "title": "Aniv. (15 anos)",
+      "text": ""
+    },
+    {
+      "id": "199",
+      "category": "amor",
+      "title": "Natal (familia)",
+      "text": ""
+    },
+    {
+      "id": "200",
+      "category": "amor",
+      "title": "Natal",
+      "text": ""
+    },
+    {
+      "id": "201",
+      "category": "amor",
+      "title": "Natal",
+      "text": ""
+    },
+    {
+      "id": "202",
+      "category": "amor",
+      "title": "Natal",
+      "text": ""
+    },
+    {
+      "id": "203",
+      "category": "amor",
+      "title": "Casamento",
+      "text": ""
+    },
+    {
+      "id": "204",
+      "category": "amor",
+      "title": "Natal",
+      "text": ""
+    },
+    {
+      "id": "205",
+      "category": "aniversario",
+      "title": "Aniv. (Amizade)",
+      "text": ""
+    },
+    {
+      "id": "206",
+      "category": "amor",
+      "title": "Natal (Uma prece de Natal)",
+      "text": ""
+    },
+    {
+      "id": "207",
+      "category": "aniversario",
+      "title": "Aniv. (Neutra)",
+      "text": ""
+    },
+    {
+      "id": "208",
+      "category": "aniversario",
+      "title": "Aniv. (Casamento)",
+      "text": ""
+    },
+    {
+      "id": "209",
+      "category": "aniversario",
+      "title": "Aniv. (Família)",
+      "text": ""
+    },
+    {
+      "id": "210",
+      "category": "aniversario",
+      "title": "Aniv. (Família)",
+      "text": ""
+    },
+    {
+      "id": "211",
+      "category": "amor",
+      "title": "Mens. de Ano Novo Neutra (086 D)",
+      "text": ""
+    },
+    {
+      "id": "212",
+      "category": "amor",
+      "title": "Mens. Ano Novo (086 G)",
+      "text": ""
+    },
+    {
+      "id": "213",
+      "category": "despedida",
+      "title": "Mens. (Despedida)",
+      "text": ""
+    },
+    {
+      "id": "214",
+      "category": "aniversario",
+      "title": "Aniv. (m╞e)",
+      "text": ""
+    },
+    {
+      "id": "215",
+      "category": "amor",
+      "title": "Mens. (Otimismo)",
+      "text": ""
+    },
+    {
+      "id": "216",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "217",
+      "category": "aniversario",
+      "title": "Aniv. (Pai)",
+      "text": ""
+    },
+    {
+      "id": "218",
+      "category": "despedida",
+      "title": "Mens. Despedida (Profofessor)",
+      "text": ""
+    },
+    {
+      "id": "219",
+      "category": "aniversario",
+      "title": "Aniv.Família",
+      "text": ""
+    },
+    {
+      "id": "220",
+      "category": "aniversario",
+      "title": "Aniv. (Família)",
+      "text": ""
+    },
+    {
+      "id": "221",
+      "category": "amor",
+      "title": "Conquista Melosa",
+      "text": ""
+    },
+    {
+      "id": "222",
+      "category": "aniversario",
+      "title": "Aniv. familia",
+      "text": ""
+    },
+    {
+      "id": "223",
+      "category": "reconciliacao",
+      "title": "Reconciliaç╞o",
+      "text": ""
+    },
+    {
+      "id": "224",
+      "category": "aniversario",
+      "title": "Aniv. (Infantil)",
+      "text": ""
+    },
+    {
+      "id": "225",
+      "category": "aniversario",
+      "title": "Aniv. (Casamento)",
+      "text": ""
+    },
+    {
+      "id": "226",
+      "category": "amor",
+      "title": "Dia das M╞es",
+      "text": ""
+    },
+    {
+      "id": "227",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "228",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "229",
+      "category": "aniversario",
+      "title": "Aniv. mae",
+      "text": "COD. 229 ANIV. MÃE\n\nMãe, estamos felizes em comemorar o seu aniversário.\n\nSabemos o quanto senhora pensa em cada um de nós, pois você tem uma palavra de esperança em cada momento difícil.\n\nSer mãe é uma dádiva que Deus concede as mulheres, porque sabe que uma mãe entrega sua própria vida para salvar um filho.\n\nExpressar o amor que sentimos pela senhora nos emociona e nos trás muitas recordações.\n\nNão é fácil falar do amor que sentimos por você.\n\nEm você podemos confiar a nossa vida e ter certeza que tudo tem valor porque você existe.\n\nMãe se um dia estiver precisando de carinho venha ao nosso encontro.\n\nMuitas vezes te magoamos com nossos erros, mais nos desculpe por esses erros, porque através de um erro se aprende a viver.\n\nDesejamos que esta data seja cheia de amor e que você continue sendo esta mulher de Fé que tanto admiramos.\n\nNós te amamos.\n\nFeliz aniversário."
+    },
+    {
+      "id": "230",
+      "category": "amor",
+      "title": "Casamento",
+      "text": ""
+    },
+    {
+      "id": "231",
+      "category": "aniversario",
+      "title": "Mens. Aniv. (Família)",
+      "text": ""
+    },
+    {
+      "id": "232",
+      "category": "amor",
+      "title": "Mens. (Otimismo Religiosa)",
+      "text": ""
+    },
+    {
+      "id": "233",
+      "category": "aniversario",
+      "title": "Mens. Aniv. (Amizade Religiosa)",
+      "text": ""
+    },
+    {
+      "id": "234",
+      "category": "aniversario",
+      "title": "Mens. Aniv. (familia)",
+      "text": ""
+    },
+    {
+      "id": "235",
+      "category": "despedida",
+      "title": "Mens. (Despedida de uma pra uma pessoa)",
+      "text": ""
+    },
+    {
+      "id": "236",
+      "category": "amor",
+      "title": "Mens. ( Encontro de Jovens)",
+      "text": ""
+    },
+    {
+      "id": "237",
+      "category": "aniversario",
+      "title": "Aniv. (Amor Distante)",
+      "text": ""
+    },
+    {
+      "id": "238",
+      "category": "amor",
+      "title": "Reconsiliaç╞o",
+      "text": ""
+    },
+    {
+      "id": "239",
+      "category": "aniversario",
+      "title": "Mens. Aniv. familia",
+      "text": ""
+    },
+    {
+      "id": "240",
+      "category": "aniversario",
+      "title": "Aniv. M╞e",
+      "text": ""
+    },
+    {
+      "id": "241",
+      "category": "aniversario",
+      "title": "Aniv. (Família)",
+      "text": ""
+    },
+    {
+      "id": "242",
+      "category": "amor",
+      "title": "Conquista",
+      "text": ""
+    },
+    {
+      "id": "243",
+      "category": "amor",
+      "title": "Conquista",
+      "text": ""
+    },
+    {
+      "id": "244",
+      "category": "reconciliacao",
+      "title": "Reconciliaç╞o",
+      "text": ""
+    },
+    {
+      "id": "245",
+      "category": "reconciliacao",
+      "title": "Reconciliaç╞o",
+      "text": ""
+    },
+    {
+      "id": "246",
+      "category": "aniversario",
+      "title": "Aniv. Amor",
+      "text": ""
+    },
+    {
+      "id": "247",
+      "category": "aniversario",
+      "title": "Aniv. Amor",
+      "text": ""
+    },
+    {
+      "id": "248",
+      "category": "aniversario",
+      "title": "Aniv. Filha (o)",
+      "text": ""
+    },
+    {
+      "id": "249",
+      "category": "amor",
+      "title": "Otimismo",
+      "text": ""
+    },
+    {
+      "id": "250",
+      "category": "aniversario",
+      "title": "Aniv. (Família)",
+      "text": ""
+    },
+    {
+      "id": "251",
+      "category": "aniversario",
+      "title": "Aniv. Pai",
+      "text": ""
+    },
+    {
+      "id": "252",
+      "category": "aniversario",
+      "title": "Aniv. (M╞e)",
+      "text": ""
+    },
+    {
+      "id": "253",
+      "category": "aniversario",
+      "title": "Aniv. (Família)",
+      "text": ""
+    },
+    {
+      "id": "254",
+      "category": "aniversario",
+      "title": "Aniv. Filha (o)",
+      "text": ""
+    },
+    {
+      "id": "255",
+      "category": "aniversario",
+      "title": "Aniv. Filho (a)",
+      "text": ""
+    },
+    {
+      "id": "256",
+      "category": "amor",
+      "title": "Dia das m╞es",
+      "text": ""
+    },
+    {
+      "id": "257",
+      "category": "amor",
+      "title": "Dia das m╞es",
+      "text": ""
+    },
+    {
+      "id": "258",
+      "category": "amor",
+      "title": "Dia das m╞es",
+      "text": ""
+    },
+    {
+      "id": "259",
+      "category": "amor",
+      "title": "dia das m╞es",
+      "text": ""
+    },
+    {
+      "id": "260",
+      "category": "aniversario",
+      "title": "Aniv (Amizade)",
+      "text": ""
+    },
+    {
+      "id": "261",
+      "category": "amor",
+      "title": "Dia das m╞es",
+      "text": ""
+    },
+    {
+      "id": "262",
+      "category": "amor",
+      "title": "Dia das m╞es",
+      "text": ""
+    },
+    {
+      "id": "263",
+      "category": "amor",
+      "title": "Dia das m╞es",
+      "text": ""
+    },
+    {
+      "id": "264",
+      "category": "amor",
+      "title": "Dia das M╞es",
+      "text": ""
+    },
+    {
+      "id": "265",
+      "category": "aniversario",
+      "title": "Aniv. (Pastor)",
+      "text": ""
+    },
+    {
+      "id": "266",
+      "category": "bodas-prata",
+      "title": "Bodas de Prata",
+      "text": ""
+    },
+    {
+      "id": "267",
+      "category": "despedida",
+      "title": "Despedida",
+      "text": ""
+    },
+    {
+      "id": "268",
+      "category": "amor",
+      "title": "Homenagem (Assistente Social)",
+      "text": ""
+    },
+    {
+      "id": "269",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "270",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "271",
+      "category": "aniversario",
+      "title": "Aniv. (Amizade)",
+      "text": ""
+    },
+    {
+      "id": "272",
+      "category": "aniversario",
+      "title": "Aniv. (Pastor)",
+      "text": ""
+    },
+    {
+      "id": "273",
+      "category": "aniversario",
+      "title": "Aniv, (Religiosa)",
+      "text": ""
+    },
+    {
+      "id": "274",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "275",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "276",
+      "category": "aniversario",
+      "title": "Aniv. (Família)",
+      "text": ""
+    },
+    {
+      "id": "277",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "278",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "279",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "280",
+      "category": "aniversario",
+      "title": "Aniv. (Religiosa)",
+      "text": ""
+    },
+    {
+      "id": "281",
+      "category": "aniversario",
+      "title": "Aniv. (Família)",
+      "text": ""
+    },
+    {
+      "id": "282",
+      "category": "amor",
+      "title": "dia dos Professores",
+      "text": ""
+    },
+    {
+      "id": "283",
+      "category": "amor",
+      "title": "Encontro",
+      "text": ""
+    },
+    {
+      "id": "284",
+      "category": "aniversario",
+      "title": "Aniv. (Família)",
+      "text": ""
+    },
+    {
+      "id": "285",
+      "category": "aniversario",
+      "title": "Aniv. (Família)",
+      "text": ""
+    },
+    {
+      "id": "286",
+      "category": "pais",
+      "title": "DIA DOS PAIS",
+      "text": ""
+    },
+    {
+      "id": "287",
+      "category": "pais",
+      "title": "DIA DOS PAIS",
+      "text": ""
+    },
+    {
+      "id": "288",
+      "category": "pais",
+      "title": "DIA DOS PAIS",
+      "text": ""
+    },
+    {
+      "id": "289",
+      "category": "pais",
+      "title": "DIA DOS PAIS",
+      "text": ""
+    },
+    {
+      "id": "290",
+      "category": "aniversario",
+      "title": "Aniv. (Pastor)",
+      "text": ""
+    },
+    {
+      "id": "291",
+      "category": "pais",
+      "title": "DIA DOS PAIS",
+      "text": ""
+    },
+    {
+      "id": "292",
+      "category": "pais",
+      "title": "DIA DOS PAIS",
+      "text": ""
+    },
+    {
+      "id": "293",
+      "category": "pais",
+      "title": "DIA DOS PAIS",
+      "text": ""
+    },
+    {
+      "id": "294",
+      "category": "pais",
+      "title": "DIA DOS PAIS",
+      "text": ""
+    },
+    {
+      "id": "295",
+      "category": "aniversario",
+      "title": "Aniv. (Família)",
+      "text": ""
+    },
+    {
+      "id": "296",
+      "category": "aniversario",
+      "title": "Aniv. (Amizade)",
+      "text": ""
+    },
+    {
+      "id": "297",
+      "category": "aniversario",
+      "title": "Aniv. (Família)",
+      "text": ""
+    },
+    {
+      "id": "298",
+      "category": "aniversario",
+      "title": "Aniv. (Religiosa)",
+      "text": ""
+    },
+    {
+      "id": "299",
+      "category": "aniversario",
+      "title": "Aniv. (Família)",
+      "text": ""
+    },
+    {
+      "id": "300",
+      "category": "aniversario",
+      "title": "Aniv. (M╞e)",
+      "text": ""
+    },
+    {
+      "id": "301",
+      "category": "aniversario",
+      "title": "Aniv. (Amor)",
+      "text": ""
+    },
+    {
+      "id": "302",
+      "category": "aniversario",
+      "title": "Aniv. (Família)",
+      "text": ""
+    },
+    {
+      "id": "303",
+      "category": "aniversario",
+      "title": "Aniv. (amizade)",
+      "text": ""
+    },
+    {
+      "id": "304",
+      "category": "aniversario",
+      "title": "Aniv. Fillha (o)",
+      "text": ""
+    },
+    {
+      "id": "305",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "306",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "307",
+      "category": "aniversario",
+      "title": "Aniv. Amor",
+      "text": ""
+    },
+    {
+      "id": "308",
+      "category": "amor",
+      "title": "Dia das M╞es",
+      "text": ""
+    },
+    {
+      "id": "309",
+      "category": "amor",
+      "title": "Dia das M╞es",
+      "text": ""
+    },
+    {
+      "id": "310",
+      "category": "amor",
+      "title": "Dia das M╞es",
+      "text": ""
+    },
+    {
+      "id": "311",
+      "category": "amor",
+      "title": "Mens. (Natal)",
+      "text": ""
+    },
+    {
+      "id": "312",
+      "category": "amor",
+      "title": "Conquista",
+      "text": ""
+    },
+    {
+      "id": "313",
+      "category": "despedida",
+      "title": "Mens. (Despedida de amor)",
+      "text": ""
+    },
+    {
+      "id": "314",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "315",
+      "category": "aniversario",
+      "title": "Aniv.(Família)",
+      "text": ""
+    },
+    {
+      "id": "316",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "317",
+      "category": "reconciliacao",
+      "title": "Reconciliaç╞o",
+      "text": ""
+    },
+    {
+      "id": "318",
+      "category": "aniversario",
+      "title": "Aniv. (Amor)",
+      "text": ""
+    },
+    {
+      "id": "319",
+      "category": "reconciliacao",
+      "title": "Reconciliaç╞o",
+      "text": ""
+    },
+    {
+      "id": "320",
+      "category": "aniversario",
+      "title": "Aniv. (Amor)",
+      "text": ""
+    },
+    {
+      "id": "321",
+      "category": "aniversario",
+      "title": "Aniv. (Religiosa)",
+      "text": ""
+    },
+    {
+      "id": "322",
+      "category": "aniversario",
+      "title": "Aniv. (Família)",
+      "text": ""
+    },
+    {
+      "id": "323",
+      "category": "amor",
+      "title": "Dia das M╞es",
+      "text": ""
+    },
+    {
+      "id": "324",
+      "category": "amor",
+      "title": "Dia das M╞es",
+      "text": ""
+    },
+    {
+      "id": "325",
+      "category": "amor",
+      "title": "Dia das M╞es",
+      "text": ""
+    },
+    {
+      "id": "326",
+      "category": "amor",
+      "title": "Dia das M╞es",
+      "text": ""
+    },
+    {
+      "id": "327",
+      "category": "amor",
+      "title": "Dia das M╞es",
+      "text": ""
+    },
+    {
+      "id": "328",
+      "category": "amor",
+      "title": "Dia das M╞es",
+      "text": ""
+    },
+    {
+      "id": "329",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "330",
+      "category": "amor",
+      "title": "Dia das M╞es",
+      "text": ""
+    },
+    {
+      "id": "331",
+      "category": "aniversario",
+      "title": "Aniv. (Amizade)",
+      "text": ""
+    },
+    {
+      "id": "332",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "333",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "334",
+      "category": "aniversario",
+      "title": "Aniv. (Família)",
+      "text": ""
+    },
+    {
+      "id": "335",
+      "category": "amor",
+      "title": "Mens. (Nascimento de Bebe)",
+      "text": ""
+    },
+    {
+      "id": "336",
+      "category": "amor",
+      "title": "Mens. (Nascimento de Bebe)",
+      "text": ""
+    },
+    {
+      "id": "337",
+      "category": "amor",
+      "title": "Mens. (Dia do Médico)",
+      "text": ""
+    },
+    {
+      "id": "338",
+      "category": "aniversario",
+      "title": "Aniv. (Amor)",
+      "text": ""
+    },
+    {
+      "id": "339",
+      "category": "amor",
+      "title": "Mens. (Volta as aulas)",
+      "text": ""
+    },
+    {
+      "id": "340",
+      "category": "aniversario",
+      "title": "Aniv. (Religiosa)",
+      "text": ""
+    },
+    {
+      "id": "341",
+      "category": "aniversario",
+      "title": "Aniv. (Família)",
+      "text": ""
+    },
+    {
+      "id": "342",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "343",
+      "category": "aniversario",
+      "title": "Aniv. (Família)",
+      "text": ""
+    },
+    {
+      "id": "344",
+      "category": "amor",
+      "title": "Natal",
+      "text": ""
+    },
+    {
+      "id": "345",
+      "category": "reconciliacao",
+      "title": "Reconciliuaç╞o",
+      "text": ""
+    },
+    {
+      "id": "346",
+      "category": "reconciliacao",
+      "title": "Reconciliaç╞o",
+      "text": ""
+    },
+    {
+      "id": "347",
+      "category": "amor",
+      "title": "Conquista",
+      "text": ""
+    },
+    {
+      "id": "348",
+      "category": "amor",
+      "title": "Natal agradecimento amigos",
+      "text": "COD. 348 NATAL Agradecimento (amigos)\n\nAmizade, uma palavra tão especial e tão importante em nossa vida.\n\nOs amigos são formados por personalidades diferentes, alguns são brincalhões, outros sérios, uns são sonhadores, outros realistas, uns são falantes, outros calados, mas o que seria do mundo se não existisse os amigos, as brincadeiras, as conversas agradáveis e a alegria de estarmos todos com saúde e esperança.\n\nAgradecemos por mais um ano de amizade, pois são em momentos difíceis que conhecemos os amigos verdadeiros.\n\nDesejamos um Natal cheio de paz, realizações, compreensão, humildade e felicidades.\n\nQue Deus nos abençoe com um natal repleto de bênçãos.\n\nFeliz natal!"
+    },
+    {
+      "id": "349",
+      "category": "amor",
+      "title": "Mens. de Ano Novo",
+      "text": ""
+    },
+    {
+      "id": "350",
+      "category": "aniversario",
+      "title": "Aniv. (Família)",
+      "text": ""
+    },
+    {
+      "id": "351",
+      "category": "aniversario",
+      "title": "Aniv. (Família)",
+      "text": ""
+    },
+    {
+      "id": "352",
+      "category": "reconciliacao",
+      "title": "Reconciliaç╞o",
+      "text": ""
+    },
+    {
+      "id": "353",
+      "category": "amor",
+      "title": "Dia das M╞es",
+      "text": ""
+    },
+    {
+      "id": "354",
+      "category": "amor",
+      "title": "Dia das M╞es",
+      "text": ""
+    },
+    {
+      "id": "355",
+      "category": "amor",
+      "title": "Dia das M╞es",
+      "text": ""
+    },
+    {
+      "id": "356",
+      "category": "reconciliacao",
+      "title": "Reconciliaç╞o",
+      "text": ""
+    },
+    {
+      "id": "357",
+      "category": "aniversario",
+      "title": "aniv. casamento",
+      "text": ""
+    },
+    {
+      "id": "358",
+      "category": "aniversario",
+      "title": "aniv. casamento",
+      "text": ""
+    },
+    {
+      "id": "359",
+      "category": "pais",
+      "title": "Dia dos Pais",
+      "text": ""
+    },
+    {
+      "id": "360",
+      "category": "aniversario",
+      "title": "Aniv. (Família)",
+      "text": ""
+    },
+    {
+      "id": "361",
+      "category": "amor",
+      "title": "Conquista",
+      "text": ""
+    },
+    {
+      "id": "362",
+      "category": "amor",
+      "title": "Amor Proibido",
+      "text": ""
+    },
+    {
+      "id": "363",
+      "category": "aniversario",
+      "title": "Aniv. infantil",
+      "text": ""
+    },
+    {
+      "id": "364",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "365",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "366",
+      "category": "reconciliacao",
+      "title": "Reconciliaç╞o",
+      "text": ""
+    },
+    {
+      "id": "367",
+      "category": "aniversario",
+      "title": "Aniv. Amizade",
+      "text": ""
+    },
+    {
+      "id": "368",
+      "category": "reconciliacao",
+      "title": "Reconciliaç╞o",
+      "text": ""
+    },
+    {
+      "id": "369",
+      "category": "aniversario",
+      "title": "Aniv. (Amizade)",
+      "text": ""
+    },
+    {
+      "id": "370",
+      "category": "aniversario",
+      "title": "Aniv. (Amizade)",
+      "text": ""
+    },
+    {
+      "id": "371",
+      "category": "reconciliacao",
+      "title": "Reconciliaç╞o",
+      "text": ""
+    },
+    {
+      "id": "372",
+      "category": "aniversario",
+      "title": "Aniv. (Amizade)",
+      "text": ""
+    },
+    {
+      "id": "373",
+      "category": "aniversario",
+      "title": "Aniv. Família",
+      "text": ""
+    },
+    {
+      "id": "374",
+      "category": "aniversario",
+      "title": "Aniv. Família",
+      "text": ""
+    },
+    {
+      "id": "375",
+      "category": "aniversario",
+      "title": "Aniv. Família",
+      "text": ""
+    },
+    {
+      "id": "376",
+      "category": "aniversario",
+      "title": "Aniv. Família",
+      "text": ""
+    },
+    {
+      "id": "377",
+      "category": "reconciliacao",
+      "title": "Reconciliaç╞o",
+      "text": ""
+    },
+    {
+      "id": "378",
+      "category": "aniversario",
+      "title": "Aniv. família",
+      "text": ""
+    },
+    {
+      "id": "379",
+      "category": "aniversario",
+      "title": "Aniv. (15 anos)",
+      "text": ""
+    },
+    {
+      "id": "380",
+      "category": "aniversario",
+      "title": "Aniv. (casamento)",
+      "text": ""
+    },
+    {
+      "id": "381",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "382",
+      "category": "amor",
+      "title": "amor",
+      "text": ""
+    },
+    {
+      "id": "383",
+      "category": "amor",
+      "title": "amor",
+      "text": ""
+    },
+    {
+      "id": "384",
+      "category": "amor",
+      "title": "amor",
+      "text": ""
+    },
+    {
+      "id": "385",
+      "category": "amor",
+      "title": "amor",
+      "text": ""
+    },
+    {
+      "id": "386",
+      "category": "aniversario",
+      "title": "Aniv. Amor",
+      "text": ""
+    },
+    {
+      "id": "387",
+      "category": "reconciliacao",
+      "title": "Reconciliaçao",
+      "text": ""
+    },
+    {
+      "id": "388",
+      "category": "aniversario",
+      "title": "Aniv. (Família)",
+      "text": ""
+    },
+    {
+      "id": "389",
+      "category": "amor",
+      "title": "Conquista",
+      "text": ""
+    },
+    {
+      "id": "390",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "391",
+      "category": "reconciliacao",
+      "title": "Reconciliaç╞o",
+      "text": ""
+    },
+    {
+      "id": "392",
+      "category": "aniversario",
+      "title": "Aniv. Família",
+      "text": ""
+    },
+    {
+      "id": "393",
+      "category": "aniversario",
+      "title": "Aniv. (15 anos)",
+      "text": ""
+    },
+    {
+      "id": "394",
+      "category": "aniversario",
+      "title": "Aniv. Amor",
+      "text": ""
+    },
+    {
+      "id": "395",
+      "category": "aniversario",
+      "title": "Aniv. (família)",
+      "text": ""
+    },
+    {
+      "id": "396",
+      "category": "amor",
+      "title": "Mens. (Formatura)",
+      "text": ""
+    },
+    {
+      "id": "397",
+      "category": "aniversario",
+      "title": "Aniv. (Amor)",
+      "text": ""
+    },
+    {
+      "id": "398",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "399",
+      "category": "aniversario",
+      "title": "Aniv. (15 anos)",
+      "text": ""
+    },
+    {
+      "id": "400",
+      "category": "aniversario",
+      "title": "Aniv. (Neutra)",
+      "text": ""
+    },
+    {
+      "id": "401",
+      "category": "aniversario",
+      "title": "Aniv. (Amor)",
+      "text": ""
+    },
+    {
+      "id": "402",
+      "category": "aniversario",
+      "title": "Aniv. (Família)",
+      "text": ""
+    },
+    {
+      "id": "403",
+      "category": "aniversario",
+      "title": "Aniv. (Familia).",
+      "text": ""
+    },
+    {
+      "id": "404",
+      "category": "aniversario",
+      "title": "Aniv. (Neutra)",
+      "text": ""
+    },
+    {
+      "id": "405",
+      "category": "aniversario",
+      "title": "Aniv. Neutra",
+      "text": ""
+    },
+    {
+      "id": "406",
+      "category": "amor",
+      "title": "Mens. Natal (Família)",
+      "text": ""
+    },
+    {
+      "id": "407",
+      "category": "amor",
+      "title": "Mens.  (Natal)",
+      "text": ""
+    },
+    {
+      "id": "408",
+      "category": "amor",
+      "title": "Mens. (Natal)",
+      "text": ""
+    },
+    {
+      "id": "409",
+      "category": "amor",
+      "title": "Mens. de Natal",
+      "text": "COD. 409 Mensagem de NatalNeste Natal desejamos que a \"Paz e a Harmonia\" encontrem moradia em todos os corações.Que a Esperança seja um sentimento constante em cada um de nós.Que o Amor e a Amizade prevaleçam acima de todas as coisas materiais.Que a Tristeza ou Mágoa, seja esquecida dando lugar ao Carinho.Que a \"Dor Física\", seja amenizada e que Deus esteja ao lado de todos, dando muita força e fé.Que a Solidão não exista, pois quem tem amigos verdadeiros nunca sentira solidão.Que a Humildade e o Respeito esteja presente no Coração de todos. \"Que saibamos Amar e Respeitar o Próximo como a nós mesmos\".Que as pessoas procurem olhar mais a sua \"Volta\", e não tanto para sua própria vida. Que todos os nossos sonhos se realizem!\n\nFeliz Natal!"
+    },
+    {
+      "id": "410",
+      "category": "amor",
+      "title": "Mens. (Natal)",
+      "text": ""
+    },
+    {
+      "id": "411",
+      "category": "amor",
+      "title": "Mens. (Natal))",
+      "text": ""
+    },
+    {
+      "id": "412",
+      "category": "amor",
+      "title": "Natal amizade",
+      "text": ""
+    },
+    {
+      "id": "413",
+      "category": "amor",
+      "title": "Mens. (Natal)",
+      "text": ""
+    },
+    {
+      "id": "414",
+      "category": "amor",
+      "title": "Mens. (Nata)l",
+      "text": ""
+    },
+    {
+      "id": "415",
+      "category": "amor",
+      "title": "Mens. (Nata)l",
+      "text": ""
+    },
+    {
+      "id": "416",
+      "category": "amor",
+      "title": "Mens. (Natal)",
+      "text": ""
+    },
+    {
+      "id": "417",
+      "category": "amor",
+      "title": "Mens. (Nata)l",
+      "text": ""
+    },
+    {
+      "id": "418",
+      "category": "aniversario",
+      "title": "Aniv. (Família)",
+      "text": ""
+    },
+    {
+      "id": "419",
+      "category": "aniversario",
+      "title": "Aniv. Amizade",
+      "text": "Cod. 419 Aniv Amizade\n\nConhecemos, descobrimos e nos aprofundamosnaquilo que vai nos enriquecer e nos acrescentar,estou falando das amizades que se formam e que se tornam importantese vitais em nossa rotina diária.Queremos muito agradecer hoje pelo dia especial que é só seu, por tudo que você conquistou em sua vidae principalmente pela amizade que nos liga.Ser amigo de alguém é algo incrívelque não se pode definir e nem se explicar,é uma pessoa que sempre nos acompanha,que compartilha silênciose que se solidariza em nossas dificuldades.Queremos ser sempre amigos especiais, com quem você sempre poderá contar em todas as etapase situações de sua vida.gostamos muito de vocêe te consideramos um pessoa excepcional e de grande valor, por isso receba a nossa homenagem de carinho e respeito a você que é muito especial em nossas viidas.                                   Feliz aniversário !!!"
+    },
+    {
+      "id": "420",
+      "category": "amor",
+      "title": "Mens. (Natal)",
+      "text": ""
+    },
+    {
+      "id": "421",
+      "category": "aniversario",
+      "title": "Aniv. Amor",
+      "text": ""
+    },
+    {
+      "id": "422",
+      "category": "aniversario",
+      "title": "Aniv. (Família)",
+      "text": ""
+    },
+    {
+      "id": "423",
+      "category": "amor",
+      "title": "Mens.Natal (Família)",
+      "text": ""
+    },
+    {
+      "id": "424",
+      "category": "amor",
+      "title": "Páscoa (Amor)",
+      "text": ""
+    },
+    {
+      "id": "425",
+      "category": "amor",
+      "title": "Mens.Natal (Família)",
+      "text": ""
+    },
+    {
+      "id": "426",
+      "category": "aniversario",
+      "title": "Aniv. Amizade",
+      "text": ""
+    },
+    {
+      "id": "427",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "428",
+      "category": "amor",
+      "title": "Mens.Natal (Religiosa)",
+      "text": ""
+    },
+    {
+      "id": "429",
+      "category": "amor",
+      "title": "Mens. Natal (Família)",
+      "text": ""
+    },
+    {
+      "id": "430",
+      "category": "amor",
+      "title": "Páscoa",
+      "text": ""
+    },
+    {
+      "id": "431",
+      "category": "aniversario",
+      "title": "Aniv. (Família)",
+      "text": ""
+    },
+    {
+      "id": "432",
+      "category": "amor",
+      "title": "Ano Novo amizade",
+      "text": ""
+    },
+    {
+      "id": "433",
+      "category": "amor",
+      "title": "Páscoa",
+      "text": ""
+    },
+    {
+      "id": "434",
+      "category": "aniversario",
+      "title": "Aniv. de casamento",
+      "text": ""
+    },
+    {
+      "id": "435",
+      "category": "aniversario",
+      "title": "Aniv. de casamento",
+      "text": ""
+    },
+    {
+      "id": "436",
+      "category": "aniversario",
+      "title": "Aniv. neutra",
+      "text": ""
+    },
+    {
+      "id": "437",
+      "category": "aniversario",
+      "title": "Aniv. (família)",
+      "text": ""
+    },
+    {
+      "id": "438",
+      "category": "reconciliacao",
+      "title": "Reconciliaç╞o",
+      "text": ""
+    },
+    {
+      "id": "439",
+      "category": "aniversario",
+      "title": "Aniv. (Familia)",
+      "text": ""
+    },
+    {
+      "id": "440",
+      "category": "aniversario",
+      "title": "Aniv. (Amizade)",
+      "text": ""
+    },
+    {
+      "id": "441",
+      "category": "aniversario",
+      "title": "Aniv. (15 anos)",
+      "text": ""
+    },
+    {
+      "id": "442",
+      "category": "amor",
+      "title": "Mens. de (Formatura)",
+      "text": ""
+    },
+    {
+      "id": "443",
+      "category": "aniversario",
+      "title": "Aniv. (Esposo)",
+      "text": ""
+    },
+    {
+      "id": "444",
+      "category": "aniversario",
+      "title": "Aniv. neutra",
+      "text": ""
+    },
+    {
+      "id": "445",
+      "category": "amor",
+      "title": "Mens. (Dia  Internacional da Mulher)",
+      "text": ""
+    },
+    {
+      "id": "446",
+      "category": "amor",
+      "title": "Mens. (Dia Internacional da mulher)",
+      "text": ""
+    },
+    {
+      "id": "447",
+      "category": "aniversario",
+      "title": "Aniv. (Amor)",
+      "text": ""
+    },
+    {
+      "id": "448",
+      "category": "aniversario",
+      "title": "Aniv. familia",
+      "text": ""
+    },
+    {
+      "id": "449",
+      "category": "aniversario",
+      "title": "Aniv. m╞e)",
+      "text": ""
+    },
+    {
+      "id": "450",
+      "category": "amor",
+      "title": "Dia das M╞es",
+      "text": ""
+    },
+    {
+      "id": "451",
+      "category": "aniversario",
+      "title": "Aniv. m╞e",
+      "text": ""
+    },
+    {
+      "id": "452",
+      "category": "aniversario",
+      "title": "Aniv. m╞e",
+      "text": ""
+    },
+    {
+      "id": "453",
+      "category": "aniversario",
+      "title": "Aniv. pai",
+      "text": ""
+    },
+    {
+      "id": "454",
+      "category": "aniversario",
+      "title": "Aniv. amizade",
+      "text": ""
+    },
+    {
+      "id": "455",
+      "category": "amor",
+      "title": "amor",
+      "text": ""
+    },
+    {
+      "id": "456",
+      "category": "aniversario",
+      "title": "Aniv. amizade",
+      "text": ""
+    },
+    {
+      "id": "457",
+      "category": "pais",
+      "title": "Dia dos pais",
+      "text": ""
+    },
+    {
+      "id": "458",
+      "category": "pais",
+      "title": "Dia dos pais",
+      "text": ""
+    },
+    {
+      "id": "459",
+      "category": "pais",
+      "title": "Dia dos Pais",
+      "text": ""
+    },
+    {
+      "id": "460",
+      "category": "aniversario",
+      "title": "Aniv. (Neutra)",
+      "text": ""
+    },
+    {
+      "id": "461",
+      "category": "aniversario",
+      "title": "Aniv. Amor",
+      "text": ""
+    },
+    {
+      "id": "462",
+      "category": "aniversario",
+      "title": "Aniv. (Amor)",
+      "text": ""
+    },
+    {
+      "id": "463",
+      "category": "aniversario",
+      "title": "Aniv. Religiosa",
+      "text": ""
+    },
+    {
+      "id": "464",
+      "category": "aniversario",
+      "title": "Aniv. familia",
+      "text": ""
+    },
+    {
+      "id": "465",
+      "category": "aniversario",
+      "title": "Aniv. Amizade",
+      "text": ""
+    },
+    {
+      "id": "466",
+      "category": "amor",
+      "title": "Natal familia",
+      "text": ""
+    },
+    {
+      "id": "467",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "468",
+      "category": "amor",
+      "title": "Natal e Ano Novo amizade",
+      "text": ""
+    },
+    {
+      "id": "469",
+      "category": "amor",
+      "title": "Natal familia",
+      "text": ""
+    },
+    {
+      "id": "470",
+      "category": "amor",
+      "title": "Natal Romantico",
+      "text": ""
+    },
+    {
+      "id": "471",
+      "category": "aniversario",
+      "title": "Aniv. amizade",
+      "text": ""
+    },
+    {
+      "id": "472",
+      "category": "aniversario",
+      "title": "Aniv. familia.",
+      "text": ""
+    },
+    {
+      "id": "473",
+      "category": "amor",
+      "title": "Ano Novo",
+      "text": ""
+    },
+    {
+      "id": "474",
+      "category": "aniversario",
+      "title": "Aniv. 15 anos",
+      "text": ""
+    },
+    {
+      "id": "475",
+      "category": "aniversario",
+      "title": "Aniv. familia",
+      "text": ""
+    },
+    {
+      "id": "476",
+      "category": "aniversario",
+      "title": "Aniv. familia",
+      "text": ""
+    },
+    {
+      "id": "477",
+      "category": "aniversario",
+      "title": "Aniv. amizade",
+      "text": ""
+    },
+    {
+      "id": "478",
+      "category": "aniversario",
+      "title": "Aniv. Amor",
+      "text": ""
+    },
+    {
+      "id": "479",
+      "category": "bodas-prata",
+      "title": "Bodas de Prata (25 anos)",
+      "text": ""
+    },
+    {
+      "id": "480",
+      "category": "bodas-ouro",
+      "title": "Bodas de Ouro (50 anos)",
+      "text": ""
+    },
+    {
+      "id": "481",
+      "category": "aniversario",
+      "title": "Aniv. Amizade",
+      "text": ""
+    },
+    {
+      "id": "482",
+      "category": "aniversario",
+      "title": "Aniv. Religioso",
+      "text": ""
+    },
+    {
+      "id": "483",
+      "category": "amor",
+      "title": "Dia das M╞es",
+      "text": ""
+    },
+    {
+      "id": "484",
+      "category": "amor",
+      "title": "Dia das M╞es",
+      "text": ""
+    },
+    {
+      "id": "485",
+      "category": "amor",
+      "title": "Dia das M╞es",
+      "text": ""
+    },
+    {
+      "id": "486",
+      "category": "amor",
+      "title": "Dia das M╞es",
+      "text": ""
+    },
+    {
+      "id": "487",
+      "category": "amor",
+      "title": "Dia das M╞es",
+      "text": ""
+    },
+    {
+      "id": "488",
+      "category": "amor",
+      "title": "Mens. de Natal (filhos mandando)",
+      "text": ""
+    },
+    {
+      "id": "489",
+      "category": "amor",
+      "title": "amor",
+      "text": ""
+    },
+    {
+      "id": "490",
+      "category": "amor",
+      "title": "amor",
+      "text": ""
+    },
+    {
+      "id": "491",
+      "category": "amor",
+      "title": "Casamento",
+      "text": ""
+    },
+    {
+      "id": "492",
+      "category": "amor",
+      "title": "agradecimento M╞e",
+      "text": ""
+    },
+    {
+      "id": "493",
+      "category": "amor",
+      "title": "amor",
+      "text": ""
+    },
+    {
+      "id": "494",
+      "category": "aniversario",
+      "title": "Aniv. de  esposo para Esposa",
+      "text": ""
+    },
+    {
+      "id": "495",
+      "category": "aniversario",
+      "title": "Mens. aniv. familia",
+      "text": ""
+    },
+    {
+      "id": "496",
+      "category": "aniversario",
+      "title": "aniv. amor",
+      "text": ""
+    },
+    {
+      "id": "497",
+      "category": "aniversario",
+      "title": "Aniv, familia",
+      "text": ""
+    },
+    {
+      "id": "498",
+      "category": "amor",
+      "title": "amor",
+      "text": ""
+    },
+    {
+      "id": "499",
+      "category": "aniversario",
+      "title": "Aniv. Familia",
+      "text": ""
+    },
+    {
+      "id": "500",
+      "category": "aniversario",
+      "title": "Mens. Aniv.de pai",
+      "text": ""
+    },
+    {
+      "id": "501",
+      "category": "pais",
+      "title": "Dia dos Pais Infantil",
+      "text": ""
+    },
+    {
+      "id": "502",
+      "category": "aniversario",
+      "title": "Aniv. neutra",
+      "text": ""
+    },
+    {
+      "id": "503",
+      "category": "amor",
+      "title": "amor",
+      "text": ""
+    },
+    {
+      "id": "504",
+      "category": "aniversario",
+      "title": "Aniv. Amizade",
+      "text": ""
+    },
+    {
+      "id": "505",
+      "category": "aniversario",
+      "title": "Aniv. Amizade",
+      "text": ""
+    },
+    {
+      "id": "506",
+      "category": "amor",
+      "title": "Mens. Natal Familia",
+      "text": ""
+    },
+    {
+      "id": "507",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "508",
+      "category": "aniversario",
+      "title": "Aniv. Amizade (arvore dos amigos)",
+      "text": ""
+    },
+    {
+      "id": "509",
+      "category": "amor",
+      "title": "Mens. de Ano Novo",
+      "text": ""
+    },
+    {
+      "id": "510",
+      "category": "aniversario",
+      "title": "Aniv. Amor",
+      "text": ""
+    },
+    {
+      "id": "511",
+      "category": "amor",
+      "title": "Mens. de Ano Novo",
+      "text": ""
+    },
+    {
+      "id": "512",
+      "category": "amor",
+      "title": "Ano Novo (AMOR)",
+      "text": ""
+    },
+    {
+      "id": "513",
+      "category": "amor",
+      "title": "Casamento",
+      "text": ""
+    },
+    {
+      "id": "514",
+      "category": "reconciliacao",
+      "title": "Reconciliaç╞o",
+      "text": ""
+    },
+    {
+      "id": "515",
+      "category": "aniversario",
+      "title": "Aniv. Familia",
+      "text": ""
+    },
+    {
+      "id": "516",
+      "category": "amor",
+      "title": "Mens. Encontro de Casais",
+      "text": ""
+    },
+    {
+      "id": "517",
+      "category": "amor",
+      "title": "Você conseguiu me enfeitiçar,Minha vida está repleta de enca…",
+      "text": "Você conseguiu me enfeitiçar,Minha vida está repleta de encantos por você!Sua maneira de sorrir, de falar, de me olhar...Enfim todas as suas ações me deixaram apaixonado mais e mais por vocêO que ontem eram dúvidas, hoje são certezas.Bate aquela vontade de lhe ver, ter você do meu lado,Me olhando com os olhos cheios de ternura, Transformando o mundo simples a nossa volta,Em um mundo de sonhos, em um paraíso do amor.Estar longe de você é um castigo,Estar em seus braços um presente.Você possuiu meus sonhos. Foi por sua causa que meus sonhos se tornaram reais.A cada amanhecer desejo mais e mais a sua doce presença ao meu lado.E declaro que:Não somos donos do mundo, mas se fossemos,Minha ordem seria você sempre do meu ladoMe encantando com seu olhar,Me enfeitiçando com seu amor,\n\nEnfim te amo e não consigo mais esconder.\n\nBeijos com amor..."
+    },
+    {
+      "id": "518",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "519",
+      "category": "aniversario",
+      "title": "Aniv. de casamento",
+      "text": ""
+    },
+    {
+      "id": "520",
+      "category": "aniversario",
+      "title": "Mens.aniv. familia",
+      "text": ""
+    },
+    {
+      "id": "521",
+      "category": "aniversario",
+      "title": "Aniv. pai",
+      "text": ""
+    },
+    {
+      "id": "522",
+      "category": "aniversario",
+      "title": "Aniv.(reconciliaç╞o)",
+      "text": "COD. 522 aniv. (reconciliação)\n\nLogo que o dia amanheceu recordei quantas vezes comemorei o dia do seu aniversário, comemorei a sua alegria de viver e o Dom de ser especial que só quem te ama sabe que é verdadeiro o que estou expressando nesta surpresa que preparei pra você.\n\nSaudade é ter lembranças de momentos que guardamos no pensamento, pois tenho muita saudade do que você significou em minha vida.\n\nÉ difícil falar quando a distancia nos separa num dia tão especial, mas não quero que pense que me esqueci de você.\n\nDeus te trouxe ao mundo para brilhar e sabia que você seria especial em meu coração. Deus realmente sabia que eu te amaria e que você seria a minha felicidade.\n\nAinda tenho esperança de ter você ao meu lado e de expressar os meus sentimentos.\n\nDesejo muita saúde, muita paz e que cada dia seja um dia de conquistas e de muitos momentos especiais. Seja muito feliz e nunca se esqueça do quanto te amo.\n\nFeliz aniversário.\n\nBeijos com muito amor..."
+    },
+    {
+      "id": "523",
+      "category": "amor",
+      "title": "Mens. de conforto (morte)",
+      "text": ""
+    },
+    {
+      "id": "524",
+      "category": "reconciliacao",
+      "title": "Reconciliaç╞o",
+      "text": ""
+    },
+    {
+      "id": "525",
+      "category": "aniversario",
+      "title": "Aniv. amizade",
+      "text": ""
+    },
+    {
+      "id": "526",
+      "category": "aniversario",
+      "title": "Mens. aniv. 15 anos",
+      "text": ""
+    },
+    {
+      "id": "527",
+      "category": "aniversario",
+      "title": "Aniv. religioso",
+      "text": ""
+    },
+    {
+      "id": "528",
+      "category": "reconciliacao",
+      "title": "reconciliaç╞o",
+      "text": ""
+    },
+    {
+      "id": "529",
+      "category": "reconciliacao",
+      "title": "Reconciliaç╞o",
+      "text": ""
+    },
+    {
+      "id": "530",
+      "category": "aniversario",
+      "title": "Mens. aniv. (15 anos)",
+      "text": ""
+    },
+    {
+      "id": "531",
+      "category": "aniversario",
+      "title": "Aniv. amizade",
+      "text": ""
+    },
+    {
+      "id": "532",
+      "category": "reconciliacao",
+      "title": "Reconciliaç╞o",
+      "text": "Saber que você existe é maravilhoso. Algumas vezes sei que não consigo compreender seus pensamentos, mas tenha certeza que estou tentando mudar o meu jeito de pensar.\n\nMudar a maneira de ser nem sempre é fácil, porque já nascemos com a nossa personalidade, mas para encontrar a felicidade é preciso mudar algo profundo dentro do coração.\n\nTenho refletido sobre minha vida e percebi que preciso mudar para ter o seu amor. Preciso esquecer o passado e seguir em frente.\n\nFicar distante de você é muito difícil, confesso que são dias tristes, dias de muita angustia.\n\nAprendi que preciso de você para realizar os meus sonhos, mas foi bom passar por este momento difícil e encontrar Deus no meio do caminho e ter uma nova chance de lutar por um amor que faz parte de toda minha vida.\n\nEspero que me entenda e me de esta chance de provar o quanto te amo.\n\nBeijos com muito amor..."
+    },
+    {
+      "id": "533",
+      "category": "amor",
+      "title": "Casamento",
+      "text": "Esta é uma prova do amor que sinto por você, por isso, resolvi eternizar esse momento.\n\nTratam-se de alguns pedidos que fiz a Deus e hoje quero te contar.\n\nEspero que com o passar do tempo, continuemos a sair correndo um ao encontro do outro e possamos nos abraçar forte e carinhosamente dizendo: Eu estava com saudades.\n\nQue o tempo não tire a maneira maravilhosa de conversarmos qualquer assunto...\n\nQue o passar do tempo não tire de nós dois o aperto no coração e não nos tire o brilho nos olhos... A sinceridade... A confiança...O respeito...\n\nQue o passar do tempo não nos leve embora a paciência... A compreensão... A amizade... A cumplicidade... A alegria... A fidelidade...\n\nE a capacidade de transformar momentos simples em momentos inesquecíveis.\n\nQue o tempo não leve de mim tua presença... Teu cheiro... Tua pele... Teu calor... O nosso amor.\n\nQue o passar do tempo não faça os momentos se tornarem cinzas, mas que a cada dia possamos dar um passo á frente rumo à felicidade.\n\nQue o passar do tempo nos traga mais fé.\n\nQue o nosso futuro seja sempre o tempo presente; pois o tempo já nos trouxe o namoro e tantos momentos felizes.\n\nE que o tempo ainda nos traga muitos momentos especiais.\n\nQue nossa história seja uma história sem fim.\n\nPois o senhor Deus nos prometeu a vida eterna.\n\nE sabemos que quando se cumprir “até que a morte nos separe” ainda assim não se cumprirá.\n\nNem mesmo a morte pode nos separar, pois:\n\nO nosso amor é eterno.\n\nHomenagem especial de..."
+    },
+    {
+      "id": "534",
+      "category": "aniversario",
+      "title": "Aniv. Familia (Religioso)",
+      "text": "Hoje não é um dia qualquer.\n\nHoje é um dia muito especial.\n\nVocê está completando mais um ano de vida e estamos felizes em celebrar essa data com você.\n\nQue sua vida seja sempre presenteada com bons e felizes momentos.\n\nComo não darmos graças a Deus por hoje? Ele nos deu o presente mais precioso que temos, você.\n\nQue Deus te envie nesta data… Saúde, paz, alegria, prosperidade, amor, e uma infinidade de coisas boas, pois você merece.\n\nQue Deus em sua infinita bondade lhe dê tudo de bom.\n\nFeliz aniversário!"
+    },
+    {
+      "id": "535",
+      "category": "aniversario",
+      "title": "Aniv. Amizade",
+      "text": "Nesse dia queremos comemorar com você este data tão feliz que é o seu aniversário.\n\nGostaríamos de dizer-lhe muitas palavras, mas primeiramente dizer obrigado por termos a sua amizade.\n\nObrigado por você ser essa pessoa adorável e sincera.\n\nUma pessoa que tivemos o privilégio de conhecer e com certeza nossa vida não seria a mesma se não tivéssemos conhecido você.\n\nDeus foi muito bom conosco. Ele nos deu a oportunidade de fazer parte da sua vida, e fazendo parte dela, é que desejamos de todo coração, que você seja muito feliz.\n\nDesejamos que todos os seus sonhos se tornem realidade, que você tenha paz, e que continue sendo sempre assim, uma pessoa maravilhosa.\n\nTemos certeza de que todos que fazem parte de sua vida se orgulham de você, porque como você, existem poucos.\n\nQue Deus ilumine todos os dias de sua vida.\n\nFeliz Aniversário!"
+    },
+    {
+      "id": "536",
+      "category": "aniversario",
+      "title": "Aniv. Familia",
+      "text": "Hoje existem muitas pessoas que tem motivos de sobra para estar muito feliz.\n\nVocê em especial, deve ser a pessoa mais feliz do mundo, afinal, além de ter completado mais um ano de conquistas e alegrias, ainda sabe que existem pessoas que fazem de tudo para que você sinta a felicidade de comemorar mais um aniversário.\n\nPensamos em mil maneiras para lhe dizer o quanto estamos felizes por este dia que é seu.\n\nE então achamos que desta forma poderia demonstrar todo nosso amor e carinho por você…\n\nHoje podemos dizer que você aprendeu muito, e que sempre encantou a todos…\n\nCada ano que passa você nos surpreende em alegria e companheirismo.\n\nÉ muito bom saber que podemos contar sempre com você.\n\nAliás, é muito bom ter você ao nosso lado.\n\nParabéns pelo seu dia e muitas felicidades.\n\nNos te amamos.\n\nFeliz Aniversário..."
+    },
+    {
+      "id": "537",
+      "category": "aniversario",
+      "title": "Aniv. M╞e",
+      "text": "Existem momentos em nossas vidas, que jamais poderiam ser resumidos em simples palavras.\n\nAo longo desses anos fomos convivendo com uma pessoa que nos despertava diariamente para uma realidade, que nos fazia acreditar sempre mais e mais no verdadeiro significado das palavras com determinação, respeito e amor.\n\nVocê foi ao longo desses anos à pessoa que mais nos ouviu.\n\nA amiga e mãe, que mais soube dos nossos medos e das alegrias que tivemos, participou intensamente do nosso crescimento e nos ajudou a tomar as decisões mais difíceis.\n\nSem dúvida alguma você é a pessoa que mais nos conhece e por isso queremos abrir o nosso coração e dizer como estamos felizes em participar do seu aniversário.\n\nQueremos que a nossa alegria transmita a você, o nosso mais puro e sincero amor, e toda a gratidão que temos por tudo que fez durante esses anos.\n\nEsperamos estar sempre ao seu lado e poder retribuir cada palavra e gesto de carinho que dedicou a nos.\n\nVocê é a melhor mãe do mundo.\n\nTe amamos muito.\n\nFeliz aniversário."
+    },
+    {
+      "id": "538",
+      "category": "aniversario",
+      "title": "Aniv. Evangélica",
+      "text": "Deus nos criou a sua imagem e semelhança.\n\nE deu-nos pessoas maravilhosas em nossos caminhos.\n\nE agradecemos a Deus supremo por ter colocado você em nossa vida…\n\nVocê, que é um grande exemplo de pessoa,     Batalhadora, franca, amiga e acima de tudo isso…                 Você é uma pessoa muito importante para Deus e para nós.\n\nTodos os dias, agradecemos a este Deus maravilhoso que nos deu a vida, por ter você em nosso caminho.\n\nE é em nome deste Deus que queremos te homenagear com estas palavras de nosso Senhor Jesus Cristo:\n\nEu sou o caminho, a verdade e a vida… Ele nos ensinou o caminho que devemos seguir.\n\nTambém o caminho da verdade, e que fazemos parte de sua vida.\n\nParabéns pelo seu dia.\n\nQue Deus te dê muita paz e muitas felicidades!\n\nFeliz Aniversário..."
+    },
+    {
+      "id": "539",
+      "category": "aniversario",
+      "title": "Aniv. 15 Anos",
+      "text": "Hoje, você está completando 15 anos…\n\nQue data especial para se fazer planos de felicidade! Solte sua alegria e deixe-se viver no compasso da emoção!\n\nVocê está deixando para trás um mundo de fantasias infantis, para fazer parte do mundo maduro e complicado dos adultos.\n\nNão tema nada, estaremos sempre seu lado,  pois nosso amor por você é infinito, forte e ultrapassa qualquer fronteira de tempo ou de distância.\n\nTe amamos muito e queremos que sinta a nossa emoção por te ver completar 15 anos.\n\nViva intensamente o dia de hoje, ele é inteiramente seu e receba o carinho de todas as pessoas que te cercam e que te desejam somente o bem.\n\nEste momento agora é somente o começo, o início de uma vida linda e plena de realizações que você irá trilhar, com todo o meu amor e o nosso apoio por muitos anos.\n\nParabéns pelos seus 15 anos!\n\nFeliz Aniversário..."
+    },
+    {
+      "id": "540",
+      "category": "aniversario",
+      "title": "Aniv. Familia",
+      "text": "Hoje é o grande dia, o dia do seu aniversário.\n\nEsperamos que o dia de hoje seja melhor que o de ontem, e que o amanhã… Ah, o amanhã você pensa depois com serenidade, porque o ontem, você deixou para trás guardando-o na memória.\n\nSe você quiser, hoje o dia será lindo! Porque a felicidade de comemorar uma data tão bela vem da fé, da esperança, do desejo de que cada dia seja melhor…\n\nE, neste dia especial, nos sentimos felizes em podermos compartilhar com você essa data maravilhosa.\n\nQue você trilhe o caminho da vida em busca da realização de todos os seus sonhos, afinal de contas, você é uma bênção do céu.\n\nPor isso, queremos te homenagear, porque uma das alegrias que nos consiste é podermos dar os parabéns pelo seu aniversário.\n\nParabéns por essa data bonita da sua vida.\n\nQue a luz do céu derrame sobre você todas as bênçãos de paz, de alegria, de felicidade e de muito amor.\n\nSeja muito feliz…\n\nFeliz aniversário!"
+    },
+    {
+      "id": "541",
+      "category": "aniversario",
+      "title": "Aniv. Neutra",
+      "text": "Que dia lindo, hoje é o seu aniversário.\n\nQue bom te ver feliz por esta data tão especial, sendo sempre essa pessoa alegre, de um astral impressionante.\n\nTe ver muito feliz neste dia é o que nos mais queremos, do fundo do nosso coração.\n\nQue todos os anjos digam amém a todos os votos que te desejarem no dia de hoje, para que sua vida daqui pra frente seja repleta de belezas e realizações.\n\nDesejamos a você muitas felicidades, que tenha sempre uma estrela brilhando no seu caminho para conseguir tudo em sua vida.\n\nNeste dia tão feliz, que a paz e a tranquilidade invadam o seu coração, levando os seus pensamentos e desejos ao mais alto dos degraus celestes, para alcançar as bênçãos do nosso Senhor.\n\nGostamos muito de você e queremos que seja sempre mais e mais feliz.\n\nParabéns pelo seu dia.\n\nParabéns e tudo de bom pra você!\n\nFeliz Aniversário..."
+    },
+    {
+      "id": "542",
+      "category": "aniversario",
+      "title": "Aniv. Familia",
+      "text": "Tudo que vivemos tem o seu significado e a sua razão para ter acontecido.\n\nNão lamentar é a regra básica para se sentir bem e colher de todas as situações o melhor proveito que possam ter.\n\nPensando desta forma, desejamos que este seu aniversário seja um marco importante, para que possa obter a chance que tanta busca para encontrar o caminho que falta.\n\nConte conosco sempre, pois estaremos sempre ao seu lado, torcendo muito para que tudo possa dar certo.\n\nTenha certeza na força que existe dentro de você e todas as coisas se encaminharão da melhor maneira possível.\n\nDê um largo sorriso de confiança e tranquilidade e entregue nas mãos de Deus a solução dos seus problemas.\n\nNós sabemos que tudo vai dar certo, porque depende muito da sua força de vontade e do seu real desejo transformá-lo em realidade.\n\nFeliz Aniversário!"
+    },
+    {
+      "id": "543",
+      "category": "aniversario",
+      "title": "Aniv. Familia",
+      "text": "Nada como chegar nesta data e ver tudo que passamos, o quanto somos queridos neste mundo que vivemos.\n\nÉ muito bom saber, que os anos vão, a idade chega, e você sempre continua a mesma pessoa, sempre com o mesmo sorriso, sempre com a mesma alegria de viver.\n\nParabéns e muitas felicidades a você, que com esse seu jeitinho, consegue transmitir toda a alegria, para fazer uma pessoa feliz.\n\nQue neste aniversário, você consiga descobrir muito mais ideais, do que aqueles já conseguidos, e fazer disso uma lição de vida.\n\nNos te amamos.\n\nFeliz Aniversário..."
+    },
+    {
+      "id": "544",
+      "category": "aniversario",
+      "title": "Aniv. de Esposa para Esposo",
+      "text": "Hoje você completa mais um ano de vida e quem ganha o presente sou eu por ter o prazer de conviver diariamente com a pessoa magnífica que você é!\n\nFeliz aniversário meu amor, você é extremamente importante para mim e para nossa família.\n\nDesejo toda saúde, paz, amor e felicidade do mundo para você.\n\nVocê merece o melhor por ser esse esposo atencioso, dedicado, esse exemplo de homem na minha vida.\n\nSerei eternamente grata a Deus por colocar você em minha vida e torço para que essa união seja abençoada e o amor dure a eternidade.\n\nQue a data do seu aniversário se repita por muitos e muitos anos.\n\nTe Amo e admiro muito você.\n\nFeliz Aniversário, Parabéns!"
+    },
+    {
+      "id": "545",
+      "category": "aniversario",
+      "title": "Aniv. 15 Anos (Filha)",
+      "text": "Há 15 anos Deus trazia você ao mundo, uma linda menina com olhos que iluminavam nossas vidas.\n\nPor isso hoje não é um dia comum, é o dia em que você passará de menina à mulher.\n\nTodos nós estamos felizes e queremos compartilhar esse momento com você.\n\nDesejamos que essa nova fase da sua vida seja de muitas felicidades e que você tenha maturidade para superar todos os obstáculos.\n\nEstaremos sempre torcendo para que o seu destino seja brilhante – e será – porque pessoas como você merecem toda felicidade do mundo.\n\nTenha certeza que terá a nossa companhia para o que precisar.\n\nObrigado por tudo!\n\nAproveite esse dia que é só seu.\n\nNós te amamos muito\n\nFeliz Aniversário..."
+    },
+    {
+      "id": "546",
+      "category": "despedida",
+      "title": "Despedida (Falecimento)",
+      "text": "Já está chegando a hora de ir.Essa frase é bonita para se cantar,mas muito triste para se viver. Você vai e nós ficamos,que bom seria se não houvesse despedida,não houvesse \" até mais\", ou \" até breve\".Seria bem melhor se em nossas vidaspudéssemos optar e pedir pelo ficar.Mas não é assim.Não podemos mudar certas situações,e certos destinos.Sentiremos muito a sua falta, Você esta partindo e Ficaremos aqui, a partir de agora, sua lembrançaserá nossa companheira constante.\n\nFicaremos aqui lamentando a sua despedida, tendo em conta a plena certeza, de que estará em um lindo lugar junto de Deus.\n\nVá com Deus."
+    },
+    {
+      "id": "547",
+      "category": "aniversario",
+      "title": "Aniv. Pai",
+      "text": "Pai neste dia que você completa mais um aniversário, a Nossa alegria é tão Grande que quase não cabe dentro do nosso peito. Você é uma das maiores razões das nossas vidas, seus conselhos, suas explicações são todas de grande importância para nós. Sabemos que não tem encontrado somente flores em sua caminhada, mais graças a Deus você é cheio de força de vontade, de fé e esperanças.\n\nE neste dia Pai, queremos desejar com todo nosso carinho e amor toda felicidade que você merece nesta vida.\n\nQue seus caminhos se abram para as belezas da vida, toda bondade e misericórdia de Deus, fizeram de você o nosso Pai.\n\nVocê é maravilhoso, nosso amigo, por isso temos tanta admiração e respeito por você Pai.\n\nVocê nos ensinou a ser Honestos e também Felizes, dono da coragem e da força, virtudes de um verdadeiro homem, um homem que sabe compreender os passos da vida, e a maneira certa de ensinar o que é viver.\n\nQue sua coragem e força se torna cada vez mais imensos, que cada amanhecer seus olhos brilhem com amor, que o seu coração siga a direção da verdade, neste dia reservado especialmente a você Pai, queremos pedir a Deus que te proteja, proteja seus passos, lhe cobrindo de inúmeras bênçãos, ascendendo cada vez mais a chama do amor existente em seu coração de Pai.\n\nTe amamos muito querido Pai, parabéns pelo seu dia!\n\nFeliz Aniversário."
+    },
+    {
+      "id": "548",
+      "category": "amor",
+      "title": "Agradecimento Pai",
+      "text": "Pai\n\nDizer OBRIGADO às vezes não é suficiente para agradecera tão AMÁVEL e GENTIL PESSOA que nos momentos de nossas vidas, aqueles mais difíceis, nos estende a mão amiga e nos oferece amparo.        Estamos AGRADESCENDO A VOCÊ e não sabemos neste instante como retribuir tanto carinho, mas é claro que encontrarmos uma maneira de expressar.        Estamos a sua DISPOSIÇÃO para quando precisar,a qualquer momento e a qualquer hora.        Talvez não existam palavras suficientes e significativas que nos permitam agradecer você com justiça, com o devido merecimento.\n\nPai, Sua ajuda e seu apoio foram para nos de valor inestimável, contudo, tudo o que nos resta, é expressar através da limitação de meras palavras, e com elas lhe prestar esta humilde mais sincera, homenagem.        Agradecemos Por tudo, Nosso Muito obrigado! Com todo o nosso carinho\n\nHomenagem especial..."
+    },
+    {
+      "id": "549",
+      "category": "aniversario",
+      "title": "Aniv. Familia",
+      "text": "Hoje é um dia de alegria para o nosso coração, é dia de acordar feliz e adormecer nos braços dessa felicidade, da felicidade que é estar com você, participando da sua vida, do seu mundo da sua história.      Hoje é o seu aniversário, queremos agradecer a Deus a cada instantepor essa dádiva que Ele nos deu ... você.\n\nNão conseguimos disfarçar a nossa satisfação, o nosso orgulho e o prazer de ter você ao nosso lado      Estamos aqui em nosso nome e em nome do Pai celestial para dizer que gostamos muito de você e desejamos que esta data se repita por muitos e muitos anos.\n\nQue Deus te abençoe.\n\nFeliz Aniversário!"
+    },
+    {
+      "id": "550",
+      "category": "amor",
+      "title": "Amor",
+      "text": ""
+    },
+    {
+      "id": "551",
+      "category": "amor",
+      "title": "Homenagem a Pai e M╞e",
+      "text": "Pai, mãeRazões da nossa vida, nossa força, nossa inspiraçãoLuz no nosso caminho que nos guia e nos dá direçãoAbraço que ampara e acalma o nosso coração.\n\nPai, mãeQuantas vezes nos momentos de bobeira e desilusãoNão ouvimos os seus conselhos e com isso nos vemos sem chão.Todo mundo dando as costas e vocês nos estendendo a mão\n\nPai, mãeQueríamos lhes dizer o que sentimos aqui dentro do nosso coração.Sentimento puro e verdadeiro de um amor sem fim.Resumindo te amamos, e sempre será assim\n\nPai, mãeVocês são as batidas do nosso coraçãoA letra e a melodia da nossa cançãoA força que alimenta a nossa inspiração.\n\nPai, mãeCom vocês nós já sorrimos e choramos de emoçãoAprendemos que é perdoando que se tem o perdãoPor amor é que fizemos essa declaração.\n\nAmamos Vocês"
+    },
+    {
+      "id": "552",
+      "category": "amor",
+      "title": "Pedido de Casamento",
+      "text": "Olhando no Mais profundo dos teus olhos.\n\nSenti me olhando para os grandes espelhos.\n\nComo se os reflexos dos teus Olhos, fossem os meus.\n\nNaquela hora de encantamento, pensei.\n\nComo faria um pedido tão importante.\n\nComo moveria suas mãos para encontrarem as minhas.\n\nQuando seria o grande dia, em que eu estivesse a sua frente para te pedir em casamento.\n\nEnfim o momento do pedido chegou, e estou muito feliz olhando pra você neste momento, meu coração é pura felicidade e esta batendo mais forte agora.\n\nVocê aceita se casar comigo?"
+    },
+    {
+      "id": "553",
+      "category": "aniversario",
+      "title": "Aniv. Irm╞o (Homem)cx",
+      "text": "Um irmão pode ser a continuação de nós mesmos, como a nossa mão é a extensão de nosso braço.\n\nVocê é isso para nós, uma continuação do Nosso jeito de ser, de viver e de olhar o mundo.       Temos a Certeza que conseguimos aprender o que nossos pais nos ensinaram com tanto amor.\n\nPor isso mesmo, hoje comemoramos com você o seu aniversário, como se fosse o nosso.\n\nNão queremos com isso, roubar a sua vida, apenas dividir com você os momentos importantes, e por isso nós fizemos esta mensagem para que você ouvisse neste dia especial que é o seu aniversário.       Você tem sido um irmão especial, maravilhoso, sempre presente e que pedirmos a Deus para protegê-lo mais e mais.\n\nSeu caminho haverá de ser sempre cheio de luz e a felicidade sua companheira do dia-a-dia.\n\nQueremos que você seja sempre esse homem íntegro, forte e bondoso para ser sempre bem amado por todos.\n\nFeliz Aniversário."
+    },
+    {
+      "id": "554",
+      "category": "aniversario",
+      "title": "Aniv. Irm╞ (Mulher)",
+      "text": "Hoje é o seu dia, é um grande dia.\n\nDias e anos se passaram, e você continua especial e querida por todos que a conhecem e a admiram.       Gostaríamos de lhe fazer uma Homenagem, que ficasse registrada em seu coração, como presente e recordação.       Você é um presente de Deus, luz que encoraja e faz viver.\n\nÉ uma rosa perfumada, pura e cristalina, é rocha que não se abala, é como uma brisa leve e descontraída, é uma Irmã linda.\n\nVocê tem o dom de amar, tem a simplicidade, a paciência, e o carisma que fazem de você uma Pessoa maravilhosa.\n\nAdoramos e admiramos você por tudo que é, por tudo que representa, pelo simples fato de existir.       Que este dia seja como o Sol, brilhe com toda intensidade, com toda sua plenitude e magia.\n\nDesejamos a você toda a felicidade do mundo!\n\nQue hoje seja um grande dia, que o amor que nos uniu um dia por laços familiares, possa nos unir sempre.\n\nVocê é uma grande irmã.\n\nFeliz aniversário!"
+    },
+    {
+      "id": "555",
+      "category": "aniversario",
+      "title": "Aniv. de Casamento",
+      "text": "Hoje vocês estão comemorando um dia muito especial, daqueles que nunca se esquecem, que nunca se apagam da memória: o aniversário de casamento!       Muita dificuldade vocês enfrentaram na vida, muita luta vocês venceram juntos; isso é uma demonstração de amor, carinho e perseverança.\n\nFoi preciso ter muita coragem para vencer tudo que vocês venceram, tudo que passaram.       Isso tudo é um grande exemplo de vida, do verdadeiro sentimento que vocês têm um pelo outro.\n\nE neste dia tão bonito e alegre que vocês estão comemorando esta data especial, queremos desejar muitas felicidades, muito sucesso, e que este casamento dure para sempre! É o nosso desejo sincero.       Parabéns pelo aniversário de casamento!"
+    },
+    {
+      "id": "556",
+      "category": "amor",
+      "title": "Agradecimento ao Professor",
+      "text": "Um bom professor deixa em cada um dos seus alunos uma marca indestrutível, um pedacinho do seu ‘eu’, da sua sabedoria, que não atrapalha, que muitas vezes não se consegue rastrear até ele, mas que está lá e cresce e evoluí com cada um dos alunos.           Esse bom professor é você, e por isso mesmo chega esta inevitável melancolia por saber que vamos nos separar.\n\nObrigado por tudo, professor!          A você, ao maravilhoso profissional e pessoa que você é e sempre foi, à sua infinita paciência, ao seu carisma, à sua sabedoria, muito obrigado.\n\nEsta é uma homenagem em forma de agradecimento que todos os que passaram pela sua vida profissional lhe desejariam prestar.          Agora se abre uma nova etapa na sua vida, mas saiba que ficará para sempre a saudade de um professor que jamais será possível substituir.\n\nObrigado por tudo, professor!"
+    },
+    {
+      "id": "557",
+      "category": "amor",
+      "title": "Bodas de neve 67 anos",
+      "text": "cód. 557 Bodas de neve 67 anoscód. 557 Bodas de neve 67 anos\n\ncód. 557 Bodas de neve 67 anos\n\ncód. 557 Bodas de neve 67 anos\n\nEstamos comemorando hoje os 67 anos de casamento de vocês, bodas de neve.\n\nÉ uma alegria muito grande fazer parte de uma família com valores baseados no amor que vocês criaram e que foram fortalecendo ao longo do tempo.     Uma família assim, com referências como vocês, só poderia ser linda como a nossa. Para nós, seus netos, bisnetos, filhos, e toda família, todos esses princípios foram passados e serão continuidade do seu legado.     Vocês são o maior exemplo de amor que existe no mundo! Um casamento com muitos e muitos anos de conquista, luta, força, onde sempre imperou o amor, inclusive em momentos de maior dificuldade e de tristeza.\n\nSe existe história de amor que mexe com os sentimentos de quem a conhece é a de vocês.       Continuem sempre com esse ar de felicidade, com essa forma absolutamente fascinante de encarar a vida e as oportunidades que ela oferece a toda a hora.\n\nVocês são o nosso orgulho!\n\nDesejamos um Dia repleto de amor!\n\nFelicidades ..."
+    },
+    {
+      "id": "559",
+      "category": "amor",
+      "title": "Revelaç╞o Filho (a)",
+      "text": "cod. 559 Revelação filho (a)\n\nPapai e Mamãe, vocês devem estar ansiosos para descobrir se sou menina ou menino, não é mesmo?\n\nSegurem a curiosidade um pouquinho mais, pois antes eu gostaria de dizer algumas coisas importante a vocês.\n\nQuero que saibam, que eu tenho a certeza de que serei muito feliz ao lado de vocês.\n\nPor isso não precisam ficarem inseguros e nem exigir demais de vocês mesmos, pois serão os melhores Pais do mundo, e tudo que fizerem por mim será por amor.\n\nA rotina de vocês vai mudar bastante com a minha chegada, e haverá noites longas tentando decifrar os meus choros.\n\nNesses momentos por favor me envolvam com todo amor e me ajudem a me adaptar a este mundo tão novo e diferente para mim.\n\nSaibam que eu já amo muito vocês e daqui de dentro posso ouvir o som de suas vozes e sentir todo amor que também já sentem por mim.\n\nE este amor é o que me ajuda a crescer forte e saudável até o momento de nascer.\n\nJá estou pulando de tanta felicidade e expectativa de conhecer e conviver todos os dias com vocês.\n\nEnquanto eu não chego, que tal matar a curiosidade.\n\nPapi e Mamãe vamos logo para a revelação e acabar com esta ansiedade."
+    },
+    {
+      "id": "560",
+      "category": "amor",
+      "title": "Dia intrenacional da Mulher",
+      "text": "O dia de hoje merece ser lembrado para reconhecer o esforço das mulheres que lutaram para que conquistássemos o que temos hoje.\n\nVocê é mulher, por isso tem um espírito generoso.\n\nVocê é mulher, por isso é delicada e as flores te cativam.\n\nVocê é mulher, por isso o amor faz parte de sua essência.\n\nQue esse dia seja marcado com muita alegria e todo o reconhecimento que você merece.\n\nVocê tem o dom de gerar a vida. Sua natureza é protetora, caridosa e amorosa.\n\nVocê consegue ser guerreira e ao mesmo tempo sensível, sempre pronta a suprir necessidades.\n\nEm casa ou no trabalho, cuida do que é seu com zelo e determinação.\n\nVocê enfrenta batalhas diárias, na luta por seus objetivos e na busca por equilíbrio.\n\nNosso agradecimento a você, e que seus esforços sejam sempre reconhecidos.\n\nFeliz dia da mulher!"
+    },
+    {
+      "id": "561",
+      "category": "amor",
+      "title": "Revelaç╞o filho (a)",
+      "text": "cod. 561 Revelação filho (a)\n\nCarta aberta do bebe aos pais, amigos e família.\n\nSei que todo mundo foram surpreendidos com a minha vinda.\n\nQue os meus pais não poderiam imaginar e que os demais nem se quer sonhariam com esta noticia.\n\nMais o que foi surpresa pra vocês, já estava escrito nos planos de Deus desde o principio, pois eu venho como renovo da história e do amor dos meus pais.\n\nComo amadurecimento e trazendo grandes ensinamentos.\n\nMamãe sei que você ficou assustada quando me descobriu, mais também sei que serei o amor maior da sua vida.\n\nQue te ensinarei lições valiosas e grandiosas, que teremos sorte em sermos tanto um para o outro.\n\nVocê gera vida, a minha vida e desde já temos a conexão maior do mundo.\n\nPapai, você trasbordou alegria desde o primeiro instante,\n\nE arrisco dizer que já sabe a dimensão que carrego.\n\nO quão mudarei os seus dias para melhor, e trarei mais felicidade e cor, seremos sempre unidos como um porto seguro e uma vida regada a amor.\n\nJá a minha família vibra com a minha chegada, trans borda alegria e anseia o dia em que estarei em seus braços, Presentes em todos os encontros e reuniões.\n\nTambém não vejo a hora de conhecer cada um de vocês.\n\nAlguns dizem que me chamo --------- e outros dizem que me chamo ----------\n\nAfinal quem eu sou, e quem aqui acertou desde do inicio.\n\nSerá que minha mamãe coloca diversos laços e fará incansáveis penteados nos meus cabelos, ou será que brincarei de bola na rua com o meu pai.\n\nNão importa como me chamo, mais sim o tamanho do amor que já recebo.\n\nMeu nome é ........"
+    },
+    {
+      "id": "562",
+      "category": "aniversario",
+      "title": "Aniv. Pastor e Pastora (duas pessoas)",
+      "text": "Querido pastor e pastora, hoje nosso coração despertou sentindo grande alegria e gratidão, pois vocês completam mais um ano de vida. A Deus agradecemos diariamente por ter trazido  vocês para nossa vida, pois rapidamente se tornaram pessoas indispensáveis para Nos.\n\nNão só pelo exemplar ministério da fé, mas também como amiga e amigo.Hoje devemos muito a vocês e mesmo sabendo que nada nunca nos pediram nada em troca, queremos retribuir com nossa eterna lealdade, amizade e gratidão.Que Deus lhes conceda muitos anos de vida feliz e saudável, e os conserve sempre junto de nós. Parabéns e que o Senhor os abençoe com muita saúde, sabedoria, paz e amor.\n\nFique na paz de Cristo!\n\nFeliz aniversário"
+    },
+    {
+      "id": "563",
+      "category": "pais",
+      "title": "Dia dos Pais de Um Fiilho(a) pequeno(a)",
+      "text": "Há momentos na vida em que as palavras parecem tão pequenas diante do amor que sinto por você.\n\nNo Dia dos Pais, cada mensagem se transforma em algo mágico capaz de expressar toda a admiração que sinto por quem esta me ajudando a trilhar os caminhos da vida.\n\nA você, pai, que me deu a vida.A você, pai, que em plena juventude esta cuidando de mim.A você, pai, que me segurou em seus braços para não cair em meus primeiros passos.A você, pai, que renunciou de muitos sonhos para cuidar de mim.A você, pai, que me amou antes de se amar.A você, pai, que esta me vendo crescer\n\nA você, pai, hoje só tenho uma coisa a lhe dizer:Obrigado por fazer minha vida feliz! Te amo!\n\nFeliz dia dos Pais"
+    },
+    {
+      "id": "564",
+      "category": "aniversario",
+      "title": "Aniv Avó",
+      "text": "Querida Vovó,\n\nHoje é um dia muito especial, o dia de comemorar a vida de uma pessoa tão incrível quanto você! Não existem palavras suficientes para expressar o quanto te amamos e admiramos.\n\nCada abraço seu, cada conselho e cada sorriso trazem uma sensação de conforto e alegria que só uma avó maravilhosa como você pode proporcionar.\n\nVocê é a base de nossa família, o exemplo de força, carinho e sabedoria.\n\nSomos imensamente gratos por tudo o que você fez e continua fazendo por nós, sempre com tanto amor e dedicação.\n\nTer você como nossa avó é um presente que guardamos no coração todos os dias.\n\nQue seu dia seja cheio de felicidade, amor e muita saúde!\n\nDesejamos que você continue sendo essa luz em nossas vidas por muitos e muitos anos.\n\nCom todo o amor do mundo,\n\nfeliz aniversario homenagem especial dos Seus netos"
+    },
+    {
+      "id": "565",
+      "category": "aniversario",
+      "title": "Aniv. Neto (a)",
+      "text": "Hoje o meu coração está cheio de alegria, pois é o dia de celebrar a sua vida!\n\nDesde o momento em que você nasceu, trouxe luz e felicidade para a nossa família, e é uma bênção ver esta pessoa maravilhosa que você está se tornando.\n\nTenho tanto orgulho de você! Sua bondade, sua determinação e seu coração generoso são apenas algumas das coisas que me fazem te admirar ainda mais.\n\nCada momento que passo ao seu lado é precioso, e sou grata por ter você sempre ao meu lado.\n\nQue seu aniversário seja repleto de amor, felicidade e muitas alegrias! Que Deus abençoe sua vida com muita saúde e sucesso, hoje e sempre.\n\nCom todo o amor do mundo,Feliz Aniversario Sua vovó que te ama"
+    },
+    {
+      "id": "566",
+      "category": "amor",
+      "title": "pedido de desculpas Pai e M╞e",
+      "text": "Pai e Mãe,\n\nEu amo muito vocês! Obrigado por tudo, por cada gesto de amor, paciência e dedicação. Obrigado por nunca desistirem de mim, mesmo nos momentos mais difíceis, quando a angústia e a aflição pareciam me cercar. Em cada desafio que enfrentei, vocês estavam lá, firmes, segurando a minha mão e me dando força para continuar.\n\nCom o passar do tempo, fui amadurecendo e percebi a grandeza de Deus ao abrir os meus olhos. Hoje, consigo enxergar ainda mais o valor imenso que vocês têm na minha vida. Vocês são meu porto seguro, meu exemplo e minha inspiração.\n\nPeço desculpas por qualquer erro, por qualquer momento em que, talvez, eu não tenha demonstrado o quanto vocês são importantes para mim. Mas saibam que, do fundo do meu coração, eu sempre carreguei e sempre carregarei vocês comigo.\n\nPrometo honrar vocês até o fim da minha vida, porque o amor que sinto é imenso, e nada pode mudar isso. Vocês são especiais demais para mim, e não há palavras suficientes para descrever o quanto agregam à minha vida.\n\nCom todo o meu amor e gratidão,\n\nHomenagem de Seu filho (a)"
+    },
+    {
+      "id": "567",
+      "category": "amor",
+      "title": "Pedido de Noivado",
+      "text": "Hoje completamos mais um ano de uma história incrível que estamos escrevendo juntos. Parece que foi ontem que nos conhecemos, e desde então, cada momento ao seu lado tem sido uma verdadeira bênção. Você trouxe tanta alegria, amor e luz para a minha vida, que não consigo imaginar um futuro sem você ao meu lado.\n\nA cada dia que passa, meu amor por você só cresce, e me sinto mais grato por ter você em minha vida. Você é minha companheira, minha melhor amiga e a pessoa com quem quero compartilhar todos os momentos da minha vida.\n\nE é por isso que hoje, com todo o meu coração, eu quero dar o próximo passo na nossa jornada juntos.\n\nvocê aceita ser minha noiva e continuar construindo essa linda história ao meu lado?\n\nCom todo o meu amor,"
+    }
+  ],
+  "orders": []
+};
+
+    let state = LS.get('diskmsg_state', defaults);
+
+    // ----------------------- Tabs (top-level) -----------------------
+    $$('.tab[data-tab]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        $$('.tab[data-tab]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const tab = btn.getAttribute('data-tab');
+        $('#tab-cliente').classList.toggle('hidden', tab !== 'cliente');
+        $('#tab-admin').classList.toggle('hidden', tab !== 'admin');
+      });
+    });
+
+    // ----------------------- Cliente: Category and Messages -----------------------
+    const catSelect = $('#catSelect');
+    const msgSearch = $('#msgSearch');
+    const msgList = $('#msgList');
+    let selectedMessage = null;
+    function showSelected(){
+      const box = document.getElementById('selectedBox');
+      if (!selectedMessage) { box.classList.add('hidden'); return; }
+      document.getElementById('selTitle').textContent = selectedMessage.title;
+      document.getElementById('selCode').textContent = selectedMessage.id;
+      document.getElementById('selText').innerHTML = selectedMessage.text.replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      box.classList.remove('hidden');
+    }
+    document.addEventListener('click', (e) => {
+      if (e.target && e.target.id === 'btnChangeMsg') {
+        selectedMessage = null;
+        showSelected();
+        renderMessages();
+      }
+    });
+
+
+    function renderCats() {
+      catSelect.innerHTML = state.categories.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+    }
+    
+    function renderMessages() {
+      const term = (msgSearch.value||'').toLowerCase();
+      const cat = catSelect.value;
+      const items = state.messages.filter(m => (!cat || m.category === cat) && ((m.title||'').toLowerCase().includes(term) || (m.text||'').toLowerCase().includes(term)));
+      msgList.innerHTML = items.map(m => `
+        <div class="card ${selectedMessage && selectedMessage.id===m.id ? 'selected' : ''}">
+          <div class="row" style="justify-content:space-between;align-items:center;">
+            <div><b>${m.title}</b><div class="muted">Cód: ${m.id}</div></div>
+            <div class="choose">
+              <input type="radio" name="msgPick" value="${m.id}" ${selectedMessage && selectedMessage.id===m.id ? 'checked' : ''}/>
+              <button data-pick="${m.id}" class="primary">Selecionar</button>
+            </div>
+          </div>
+          <div class="sep"></div>
+          <div class="msg-box ${state.blockCopy ? 'no-copy' : ''}" oncopy="return false" oncut="return false" oncontextmenu="return false">
+            ${m.text.replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+          </div>
+        </div>
+      `).join('');
+      $$('button[data-pick]').forEach(btn => {
+        btn.onclick = () => {
+          const id = btn.getAttribute('data-pick');
+          selectedMessage = state.messages.find(x => x.id === id);
+          showSelected();
+          renderMessages();
+          checkOneYearWarning();
+          window.scrollTo({top: document.getElementById('selectedBox').offsetTop - 80, behavior:'smooth'});
+        };
+      });
+      $$('input[name="msgPick"]').forEach(r => {
+        r.onchange = () => {
+          const id = r.value;
+          selectedMessage = state.messages.find(x => x.id === id);
+          showSelected();
+          renderMessages();
+          checkOneYearWarning();
+        };
+      });
+    }
+</b><div class="muted">Cód: ${m.id}</div></div>
+            <button data-pick="${m.id}" class="primary">Usar esta</button>
+          </div>
+          <div class="sep"></div>
+          <div class="msg-box ${state.blockCopy ? 'no-copy' : ''}" oncopy="return false" oncut="return false" oncontextmenu="return false">
+            ${m.text.replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+          </div>
+        </div>
+      `).join('');
+      $$('button[data-pick]').forEach(btn => {
+        btn.onclick = () => {
+          const id = btn.getAttribute('data-pick');
+          selectedMessage = state.messages.find(x => x.id === id);
+          alert('Mensagem selecionada: ' + selectedMessage.title + ' (cód ' + selectedMessage.id + ')');
+          checkOneYearWarning();
+        };
+      });
+    }
+    catSelect.onchange = renderMessages;
+    msgSearch.oninput = renderMessages;
+
+    // ----------------------- Cliente: YouTube + form + Pix -----------------------
+    const ytFirst = $('#ytFirst'), ytLast = $('#ytLast');
+    const toName = $('#toName'), fromName = $('#fromName'), address = $('#address');
+    const date = $('#date'), time = $('#time'), placeType = $('#placeType');
+    const pixKeyInput = $('#pixKey'), pixCode = $('#pixCode'), priceEl = $('#price'), clientPhone = $('#clientPhone');
+    const warnSame = $('#warnSame');
+
+    function updateOutOfCity() {
+      const out = placeType.value !== 'cidade';
+      $('#outOfCity').classList.toggle('hidden', !out);
+      $('#whatsLink1').href = 'https://wa.me/' + state.whatsapp;
+    }
+    placeType.onchange = updateOutOfCity;
+
+    function updatePix() {
+      pixKeyInput.value = state.pixKey;
+      priceEl.textContent = (Number(state.price).toFixed(2)).replace('.', ',');
+      const payload = buildPix({
+        merchantName: state.merchant,
+        merchantCity: state.city || 'BRASIL',
+        pixKey: state.pixKey,
+        amount: Number(state.price||0),
+        txid: 'DISKMSG' // static label
+      });
+      pixCode.value = payload;
+    }
+
+    $('#btnCopyPix').onclick = () => {
+      pixCode.select();
+      document.execCommand('copy');
+      alert('Código Pix copiado.');
+    };
+
+    // ----------------------- One-year warning -----------------------
+    function checkOneYearWarning() {
+      warnSame.classList.add('hidden');
+      if (!selectedMessage) return;
+      const phone = (clientPhone.value||'').replace(/\D/g,'');
+      if (!phone) return;
+      const oneYearAgo = new Date(); oneYearAgo.setFullYear(oneYearAgo.getFullYear()-1);
+      const prev = (state.orders||[]).find(o => o.clientPhone === phone && o.messageId === selectedMessage.id && new Date(o.createdAt) < new Date() && new Date(o.createdAt) >= oneYearAgo);
+      if (prev) { warnSame.classList.remove('hidden'); }
+    }
+    clientPhone.oninput = checkOneYearWarning;
+
+    // ----------------------- Send via WhatsApp -----------------------
+    function buildOrder() {
+      if (!selectedMessage) { alert('Selecione uma mensagem.'); return null; }
+      if (!ytFirst.value || !ytLast.value) { alert('Cole os dois links do YouTube.'); return null; }
+      if (!toName.value || !fromName.value || !address.value || !date.value || !time.value) {
+        alert('Preencha todos os dados do agendamento.'); return null;
+      }
+      const phone = (clientPhone.value||'').replace(/\D/g,'');
+      if (!phone || phone.length < 10) { alert('Digite seu celular (com DDD).'); return null; }
+
+      const order = {
+        id: 'PED' + Math.random().toString(36).slice(2,8).toUpperCase(),
+        createdAt: new Date().toISOString(),
+        clientPhone: phone,
+        toName: toName.value.trim(),
+        fromName: fromName.value.trim(),
+        address: address.value.trim(),
+        date: date.value,
+        time: time.value,
+        placeType: placeType.value,
+        firstSong: sanitizeURL(ytFirst.value),
+        lastSong: sanitizeURL(ytLast.value),
+        messageId: selectedMessage.id,
+        messageTitle: selectedMessage.title,
+        value: placeType.value === 'cidade' ? Number(state.price) : null,
+        status: 'pendente',
+      };
+      return order;
+    }
+
+    $('#btnSend').onclick = () => {
+      const order = buildOrder();
+      if (!order) return;
+
+      // Save locally
+      state.orders.unshift(order);
+      LS.set('diskmsg_state', state);
+      renderOrders();
+
+      // Compose WhatsApp message
+      const lines = [
+        '🛻 *Novo pedido de Disk Mensagem*',
+        '—',
+        `📅 Quando: *${order.date}* às *${order.time}*`,
+        `🎯 Local: ${order.address} (${order.placeType})`,
+        `🎁 Para: *${order.toName}*`,
+        `👤 De: *${order.fromName}* (tel ${order.clientPhone})`,
+        `💬 Mensagem: ${order.messageTitle} (cód ${order.messageId})`,
+        `🎵 Início: ${order.firstSong}`,
+        `🎵 Final: ${order.lastSong}`,
+        order.value ? `💰 Valor: ${fmtBRL(order.value)} (cidade)` : `💰 Valor: a combinar (fora da cidade)`,
+        '—',
+        `🔗 Pix chave (cel): ${state.pixKey}`,
+        `💳 Pague e envie o comprovante aqui mesmo no WhatsApp.`,
+        `Obs: Pix Copia e Cola disponível no app.`
+      ];
+      const text = encodeURIComponent(lines.join('\n'));
+      const wa = 'https://wa.me/' + state.whatsapp + '?text=' + text;
+      window.open(wa, '_blank');
+
+      alert('Pedido pronto para enviar no WhatsApp. Obrigado!');
+    };
+
+    // ----------------------- Admin auth -----------------------
+    const adminLogin = $('#adminLogin');
+    const adminPanel = $('#adminPanel');
+    $('#btnAdminLogin').onclick = () => {
+      const pin = $('#adminPin').value.trim();
+      if (pin === (state.adminPin||'1234')) {
+        adminLogin.classList.add('hidden');
+        adminPanel.classList.remove('hidden');
+        renderAllAdmin();
+      } else {
+        alert('PIN incorreto.');
+      }
+    };
+    $('#btnLogout').onclick = () => {
+      adminPanel.classList.add('hidden');
+      adminLogin.classList.remove('hidden');
+    };
+
+    // ----------------------- Admin tabs -----------------------
+    $$('.tab[data-admin]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        $$('.tab[data-admin]').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const pane = btn.getAttribute('data-admin');
+        $$('.admin-pane').forEach(p => p.classList.add('hidden'));
+        $('#admin-' + pane).classList.remove('hidden');
+      });
+    });
+
+    // ----------------------- Admin: Orders -----------------------
+    function renderOrders() {
+      const tbody = $('#ordersTable tbody');
+      const dFilter = $('#filterDate').value;
+      const sFilter = $('#filterStatus').value;
+      const q = ($('#filterSearch').value||'').toLowerCase();
+      const rows = (state.orders||[]).filter(o => {
+        let ok = true;
+        if (dFilter) ok = ok && o.date === dFilter;
+        if (sFilter) ok = ok && o.status === sFilter;
+        if (q) {
+          ok = ok && (o.toName.toLowerCase().includes(q) || o.fromName.toLowerCase().includes(q) || (o.messageTitle||'').toLowerCase().includes(q) || (o.clientPhone||'').includes(q));
+        }
+        return ok;
+      });
+
+      tbody.innerHTML = rows.map((o, i) => `
+        <tr>
+          <td>${rows.length - i}</td>
+          <td>${o.date} ${o.time}</td>
+          <td><b>${o.fromName}</b> → ${o.toName}<br><span class="muted">${o.clientPhone}</span></td>
+          <td>${o.messageTitle} <span class="badge">${o.messageId}</span></td>
+          <td><a href="${o.firstSong}" target="_blank">início</a> · <a href="${o.lastSong}" target="_blank">final</a></td>
+          <td>${o.address} <span class="badge">${o.placeType}</span></td>
+          <td>${o.value ? fmtBRL(o.value) : '-'}</td>
+          <td><span class="badge">${o.status}</span></td>
+          <td>
+            <button data-status="${o.id}:pago" class="ok">Marcar pago</button>
+            <button data-status="${o.id}:pendente" class="warn">Pendente</button>
+            <button data-del="${o.id}" class="danger">Excluir</button>
+          </td>
+        </tr>
+      `).join('');
+
+      $$('button[data-status]').forEach(b => {
+        b.onclick = () => {
+          const [id, st] = b.getAttribute('data-status').split(':');
+          const idx = state.orders.findIndex(x => x.id === id);
+          if (idx >= 0) { state.orders[idx].status = st; LS.set('diskmsg_state', state); renderOrders(); }
+        };
+      });
+      $$('button[data-del]').forEach(b => {
+        b.onclick = () => {
+          const id = b.getAttribute('data-del');
+          if (confirm('Excluir este pedido?')) {
+            state.orders = state.orders.filter(x => x.id !== id);
+            LS.set('diskmsg_state', state);
+            renderOrders();
+          }
+        };
+      });
+    }
+    $('#filterDate').oninput = renderOrders;
+    $('#filterStatus').onchange = renderOrders;
+    $('#filterSearch').oninput = renderOrders;
+
+    function exportCSV() {
+      const header = ['id','data','hora','cliente','telefone','destinatario','mensagemId','mensagemTitulo','firstSong','lastSong','endereco','tipo','valor','status','criadoEm'];
+      const rows = (state.orders||[]).map(o => [
+        o.id, o.date, o.time, o.fromName, o.clientPhone, o.toName, o.messageId, (o.messageTitle||'').replace(/,/g,';'),
+        o.firstSong, o.lastSong, o.address.replace(/,/g,';'), o.placeType, o.value ?? '', o.status, o.createdAt
+      ]);
+      const csv = [header.join(','), ...rows.map(r => r.join(','))].join('\n');
+      const blob = new Blob([csv], {type:'text/csv'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'pedidos.csv';
+      a.click();
+    }
+    $('#btnExport').onclick = exportCSV;
+
+    // ----------------------- Admin: Messages -----------------------
+    function renderAdminCats() {
+      $('#adminCats').innerHTML = state.categories.map(c => `
+        <div class="card">
+          <div class="row" style="justify-content:space-between; align-items:center;">
+            <div><b>${c.name}</b><div class="muted">${c.id}</div></div>
+            <div class="row">
+              <button data-edit-cat="${c.id}">Editar</button>
+              <button data-del-cat="${c.id}" class="danger">Excluir</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+      $$('button[data-edit-cat]').forEach(b => {
+        b.onclick = () => {
+          const id = b.getAttribute('data-edit-cat');
+          const c = state.categories.find(x => x.id === id);
+          const name = prompt('Nome da categoria:', c.name);
+          if (!name) return;
+          c.name = name.trim();
+          LS.set('diskmsg_state', state);
+          renderCats(); renderAdminCats();
+        };
+      });
+      $$('button[data-del-cat]').forEach(b => {
+        b.onclick = () => {
+          const id = b.getAttribute('data-del-cat');
+          if (confirm('Excluir categoria? (as mensagens continuam, mas podem ficar sem categoria)')) {
+            state.categories = state.categories.filter(c => c.id !== id);
+            LS.set('diskmsg_state', state);
+            renderCats(); renderAdminCats(); renderAdminMsgs(); renderMessages();
+          }
+        };
+      });
+    }
+    function renderAdminMsgs() {
+      $('#adminMsgs').innerHTML = state.messages.map(m => `
+        <div class="card">
+          <div class="row" style="justify-content:space-between; align-items:center;">
+            <div><b>${m.title}</b> <span class="badge">${m.id}</span><div class="muted">Cat: ${m.category}</div></div>
+            <div class="row">
+              <button data-edit-msg="${m.id}">Editar</button>
+              <button data-del-msg="${m.id}" class="danger">Excluir</button>
+            </div>
+          </div>
+          <div class="sep"></div>
+          <div class="msg-box ${state.blockCopy ? 'no-copy' : ''}" oncopy="return false" oncut="return false" oncontextmenu="return false">${m.text.replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
+        </div>
+      `).join('');
+      $$('button[data-edit-msg]').forEach(b => {
+        b.onclick = () => {
+          const id = b.getAttribute('data-edit-msg');
+          const m = state.messages.find(x => x.id === id);
+          const title = prompt('Título da mensagem:', m.title); if (!title) return;
+          const cat = prompt('Categoria (id):', m.category) || m.category;
+          const code = prompt('Código (ex.: ANIV-001):', m.id) || m.id;
+          const text = prompt('Texto da mensagem:', m.text); if (!text) return;
+          m.title = title.trim(); m.category = cat.trim(); m.id = code.trim(); m.text = text;
+          LS.set('diskmsg_state', state);
+          renderMessages(); renderAdminMsgs();
+        };
+      });
+      $$( 'button[data-del-msg]').forEach(b => {
+        b.onclick = () => {
+          const id = b.getAttribute('data-del-msg');
+          if (confirm('Excluir esta mensagem?')) {
+            state.messages = state.messages.filter(x => x.id !== id);
+            LS.set('diskmsg_state', state);
+            renderMessages(); renderAdminMsgs();
+          }
+        };
+      });
+      $('#toggleNoCopy').checked = !!state.blockCopy;
+    }
+    $('#toggleNoCopy').onchange = (e) => {
+      state.blockCopy = !!e.target.checked;
+      LS.set('diskmsg_state', state);
+      renderMessages(); renderAdminMsgs();
+    };
+    $('#btnAddCategory').onclick = () => {
+      const id = prompt('ID da categoria (sem espaços, ex.: aniversario)'); if (!id) return;
+      const name = prompt('Nome da categoria (ex.: Aniversário)'); if (!name) return;
+      state.categories.push({id:id.trim(), name:name.trim()});
+      LS.set('diskmsg_state', state);
+      renderCats(); renderAdminCats();
+    };
+    $('#btnAddMessage').onclick = () => {
+      const id = prompt('Código (ex.: ANIV-010)'); if (!id) return;
+      const cat = prompt('Categoria (id, ex.: aniversario)'); if (!cat) return;
+      const title = prompt('Título'); if (!title) return;
+      const text = prompt('Texto da mensagem'); if (!text) return;
+      state.messages.push({id:id.trim(), category:cat.trim(), title:title.trim(), text:text});
+      LS.set('diskmsg_state', state);
+      renderMessages(); renderAdminMsgs();
+    };
+
+    // ----------------------- Admin: Config -----------------------
+    function renderConfig() {
+      $('#cfgAppName').value = state.appName;
+      $('#cfgWhats').value = state.whatsapp;
+      $('#cfgPix').value = state.pixKey;
+      $('#cfgPrice').value = state.price;
+      $('#cfgCity').value = state.city;
+      $('#cfgMerchant').value = state.merchant;
+      $('#cfgPin').value = state.adminPin;
+    }
+    $('#cfgLogo').onchange = (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        const img = new Image();
+        img.onload = () => {
+          // save as dataURL
+          const canvas = document.createElement('canvas');
+          canvas.width = 512; canvas.height = 512;
+          const ctx = canvas.getContext('2d');
+          ctx.fillStyle = '#000'; ctx.fillRect(0,0,512,512);
+          ctx.drawImage(img, 0,0,512,512);
+          const dataURL = canvas.toDataURL('image/png');
+          LS.set('diskmsg_logo', dataURL);
+          document.querySelector('.logo img').src = dataURL;
+          alert('Logo atualizada!');
+        };
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    };
+    $('#btnSaveConfig').onclick = () => {
+      state.appName = $('#cfgAppName').value.trim() || state.appName;
+      state.whatsapp = ($('#cfgWhats').value||'').replace(/\D/g,'');
+      state.pixKey = $('#cfgPix').value.trim() || state.pixKey;
+      state.price = Number($('#cfgPrice').value||state.price);
+      state.city = $('#cfgCity').value.trim() || state.city;
+      state.merchant = $('#cfgMerchant').value.trim() || state.merchant;
+      state.adminPin = $('#cfgPin').value.trim() || state.adminPin;
+      LS.set('diskmsg_state', state);
+      document.title = state.appName;
+      updatePix(); renderOrders();
+      alert('Configurações salvas.');
+    };
+
+    // ----------------------- Admin: Backup -----------------------
+    $('#btnExportJSON').onclick = () => {
+      const data = JSON.stringify(state, null, 2);
+      const blob = new Blob([data], {type:'application/json'});
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = 'diskmensagem-backup.json';
+      a.click();
+    };
+    $('#importJSON').onchange = (e) => {
+      const file = e.target.files[0]; if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const obj = JSON.parse(reader.result);
+          if (!obj) throw new Error('JSON inválido');
+          state = obj;
+          LS.set('diskmsg_state', state);
+          renderAll(); showSelected();
+          alert('Importado!');
+        } catch (err) {
+          alert('Falha ao importar: ' + err.message);
+        }
+      };
+      reader.readAsText(file);
+    };
+
+    // ----------------------- Render all -----------------------
+    function renderAll() {
+      // logo
+      const savedLogo = LS.get('diskmsg_logo', null);
+      if (savedLogo) { document.querySelector('.logo img').src = savedLogo; }
+
+      // header texts
+      document.title = state.appName;
+      document.querySelector('h1').textContent = state.appName;
+
+      // client
+      renderCats();
+      renderMessages();
+      updatePix();
+      updateOutOfCity();
+
+      // default date/time
+      $('#date').value = todayISO();
+    }
+    function renderAllAdmin() { renderOrders(); renderAdminCats(); renderAdminMsgs(); renderConfig(); }
+
+    // Init
+    renderAll(); showSelected();
+
+    // Extra: block global copy if enabled (except inside textarea#pixCode)
+    if (state.blockCopy) {
+      document.addEventListener('copy', function(e) {
+        const sel = window.getSelection && window.getSelection().toString();
+        if (!sel) return;
+        // allow copying from Pix textarea only
+        if (document.activeElement && document.activeElement.id === 'pixCode') return;
+        e.preventDefault();
+      });
+      document.addEventListener('contextmenu', function(e) {
+        // allow context menu on inputs/textarea
+        if (e.target.closest('input,textarea')) return;
+        e.preventDefault();
+      });
+    }
+
+    // PWA
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js'); });
+    }
+
+    // Top tabs switching
+    $$('.tab[data-tab]').forEach(btn => btn.addEventListener('click', () => window.scrollTo({top:0, behavior:'smooth'})));
+
+  </script>
+</body>
+</html>
