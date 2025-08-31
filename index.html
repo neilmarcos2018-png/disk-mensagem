@@ -7,16 +7,14 @@
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#111111"/>
   <style>
-    :root{
-      --bg:#0c0c0f; --panel:#121219; --muted:#a6a6b0; --text:#f2f2f7; --gold:#f5e258; --gold2:#d7c651; --accent:#1f6feb; --ok:#2ea043; --warn:#d29922; --danger:#f85149;
-    }
-    *{box-sizing:border-box} html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;}
+    :root{--bg:#0c0c0f;--panel:#121219;--muted:#a6a6b0;--text:#f2f2f7;--gold:#f5e258;--gold2:#d7c651;--accent:#1f6feb;--ok:#2ea043;--warn:#d29922;--danger:#f85149;}
+    *{box-sizing:border-box}html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;}
     a{color:var(--accent)}
     .wrap{max-width:1040px;margin:0 auto;padding:18px}
     header{display:flex;gap:16px;align-items:center;padding:10px 0 16px;position:sticky;top:0;background:linear-gradient(180deg,rgba(12,12,15,.98),rgba(12,12,15,.8) 70%,rgba(12,12,15,0));backdrop-filter:blur(8px);z-index:10}
-    .logo{width:44px;height:44px;border-radius:12px;background:linear-gradient(135deg,#f6e27a,#b68d1e 60%,#f6e27a);display:flex;align-items:center;justify-content:center;overflow:hidden}
+    .logo{width:44px;height:44px;border-radius:12px;overflow:hidden}
     .logo img{width:100%;height:100%;object-fit:cover}
-    h1{font-size:20px;margin:0 0 2px;letter-spacing:.2px}.subtitle{color:var(--muted);font-size:12px}
+    h1{font-size:20px;margin:0 0 2px}.subtitle{color:var(--muted);font-size:12px}
     .tabs{margin-top:10px;display:flex;gap:6px}.tab{border:1px solid #2a2a3a;background:#15151f;color:var(--text);padding:8px 12px;border-radius:12px;cursor:pointer;font-weight:600}.tab.active{outline:2px solid var(--gold2);background:#1a1a25}
     .card{background:var(--panel);border:1px solid #242436;border-radius:18px;padding:16px;box-shadow:0 6px 18px rgba(0,0,0,.25)}
     .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
@@ -26,14 +24,28 @@
     input[type=text],input[type=url],input[type=date],input[type=time],input[type=number],textarea,select{width:100%;background:#0e0e14;border:1px solid #26263a;color:var(--text);padding:12px 12px;border-radius:12px;outline:none}
     textarea{min-height:120px;resize:vertical}
     button{background:#1a1a24;color:var(--text);border:1px solid #2b2b3a;padding:10px 14px;border-radius:12px;cursor:pointer;font-weight:700}
-    button.primary{background:#252532;border-color:#353547} button.cta{background:linear-gradient(135deg,#f6e27a,#b68d1e);color:#121212;border:none}
-    button.ok{background:var(--ok);border:none} button.warn{background:var(--warn);border:none} button.danger{background:var(--danger);border:none}
+    button.primary{background:#252532;border-color:#353547}button.cta{background:linear-gradient(135deg,#f6e27a,#b68d1e);color:#121212;border:none}
+    button.ok{background:var(--ok);border:none}button.warn{background:var(--warn);border:none}button.danger{background:var(--danger);border:none}
     .pill{padding:4px 10px;border-radius:999px;border:1px solid #2b2b3a;font-size:12px;color:var(--muted)}
     .sep{height:1px;background:#21212b;margin:16px 0}.title{font-size:18px;font-weight:800;margin-bottom:10px}.muted{color:var(--muted);font-size:13px}
-    .hidden{display:none!important}.center{text-align:center}.no-copy{-webkit-user-select:none;-ms-user-select:none;user-select:none}.msg-box{white-space:pre-wrap;line-height:1.45;border:1px dashed #2b2b3a;padding:12px;border-radius:12px;background:#0b0b12;overflow:visible;max-height:none}
-    .badge{font-size:11px;border:1px solid #2d2d3d;padding:2px 8px;border-radius:999px;color:#ddd;background:#161622}
-    .table{width:100%;border-collapse:collapse}.table th,.table td{padding:10px 8px;border-bottom:1px solid #222233;font-size:13px}.table th{color:var(--muted);font-weight:600;text-align:left}
+    .hidden{display:none!important}.no-copy{-webkit-user-select:none;-ms-user-select:none;user-select:none}
+    .msg-box{white-space:pre-wrap;line-height:1.45;border:1px dashed #2b2b3a;padding:12px;border-radius:12px;background:#0b0b12;overflow:visible;max-height:none}
+    .badge{font-size:11px;border:1px solid #2d2d3d;padding:2px 8px;border-radius:999px;color:#ddd;background:#161622; display:inline-block; vertical-align:middle; margin-left:6px;}
+    .badge-ok{background:var(--ok)!important;border:none;color:#111}
+    .badge-warn{background:var(--warn)!important;border:none;color:#111}
     .k{color:#bfbfcb}.card.selected{outline:2px solid var(--gold2)}.choose{display:flex;align-items:center;gap:8px}
+    /* Modal */
+    #modalBackdrop,#okBackdrop{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:50}
+    .modal{background:#141422;border:1px solid #2a2a3a;border-radius:16px;width:min(840px,92%);max-height:86vh;overflow:auto;box-shadow:0 12px 28px rgba(0,0,0,.45);padding:18px}
+    .modal .actions{display:flex;gap:8px;justify-content:flex-end;margin-top:14px}
+    .modal .title{margin:0 0 6px}
+    /* Category grid */
+    #categoryGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin:8px 0}
+    .cat-card{background:#151525;border:1px solid #2a2a3a;border-radius:14px;padding:12px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:transform .05s ease}
+    .cat-card:hover{transform:translateY(-1px)}
+    .cat-card .dot{width:10px;height:10px;border-radius:999px;background:#d7c651;box-shadow:0 0 0 2px rgba(215,198,81,.2)}
+    /* Steps bar */
+    #stepsBar{position:sticky;top:64px;z-index:9;margin:8px 0 16px}
   </style>
 </head>
 <body>
@@ -42,61 +54,51 @@
       <div class="logo"><img src="assets/logo.png" alt="logo"/></div>
       <div>
         <h1>Disk Mensagem Stúdio Neil Marcos</h1>
-        <div class="subtitle">Agende sua mensagem com carro de som + trilha do YouTube • pagamento via Pix</div>
+        <div class="subtitle">Agende sua mensagem com carro de som • trilha do YouTube • pagamento via Pix</div>
         <div class="tabs">
           <button class="tab active" data-tab="cliente">Área do Cliente</button>
-          <button class="tab" data-tab="admin">Admin</button>
+          <button class="tab" data-tab="admin">Admin <span id="orderCount" class="badge">0</span></button>
         </div>
       </div>
     </header>
 
-
-    <div id="stepsBar" class="steps card" style="position:sticky; top:64px; z-index:9; margin:8px 0 16px;">
-      <div class="row" style="justify-content:space-between; align-items:center;">
-        <div class="row" style="gap:6px; flex-wrap:wrap;">
-          <button class="pill" data-goto="#step1">1) Mensagem</button>
+    <div id="stepsBar" class="steps card">
+      <div class="row" style="justify-content:space-between;align-items:center;">
+        <div class="row" style="gap:6px;flex-wrap:wrap;">
+          <button class="pill" data-goto="#step1">1) Dados</button>
           <button class="pill" data-goto="#step2">2) Músicas</button>
-          <button class="pill" data-goto="#step3">3) Dados</button>
-          <button class="pill" data-goto="#step4">4) Pix</button>
+          <button class="pill" data-goto="#step3">3) Pix</button>
+          <button class="pill" data-goto="#step4">4) Mensagens</button>
           <button class="pill" data-goto="#step5">5) Enviar</button>
         </div>
-        <div class="muted">Selecione a mensagem e clique em <b>Ir para Dados</b>.</div>
+        <div class="muted">Preencha os <b>dados</b>, confirme as músicas, faça o Pix (se for na cidade), <b>escolha a mensagem</b> e <b>envie o pedido pelo app</b>.</div>
       </div>
     </div>
 
     <!-- CLIENTE -->
     <section id="tab-cliente" class="card">
-      <a id="step1"></a><div class="title">1) Escolha uma categoria e a mensagem</div>
-      <div class="row">
-        <div class="field" style="min-width:250px;flex:1;">
-          <label>Categoria</label>
-          <select id="catSelect"></select>
+      <a id="step1"></a><div class="title">1) Dados do agendamento</div>
+      <div class="grid">
+        <div class="field"><label>Quem vai receber a mensagem?</label><input id="toName" type="text" placeholder="Nome de quem recebe"/></div>
+        <div class="field"><label>Quem está mandando?</label><input id="fromName" type="text" placeholder="Seu nome"/></div>
+        <div class="field"><label>Seu celular (para contato e histórico)</label><input id="clientPhone" type="text" placeholder="(DDD) 9xxxx-xxxx"/></div>
+        <div class="field"><label>Endereço</label><input id="address" type="text" placeholder="Rua, número, bairro, referência"/></div>
+        <div class="field"><label>Tipo de local</label>
+          <select id="placeType">
+            <option value="cidade">Somente na cidade (R$ 70,00)</option>
+            <option value="chacara">Chácara / sítio</option>
+            <option value="outra">Outra cidade</option>
+          </select>
         </div>
-        <div class="field" style="min-width:250px;flex:2;">
-          <label>Pesquisar mensagem</label>
-          <input id="msgSearch" type="text" placeholder="digite um trecho, ex.: parabéns, amor, gratidão..."/>
-        </div>
+        <div class="field"><label>Que dia?</label><input id="date" type="date"/></div>
+        <div class="field"><label>Que horas?</label><input id="time" type="time"/></div>
       </div>
-      <div id="categoryGrid"></div>
-      <div id="msgList" class="grid"></div>
-
-      <div id="selectedBox" class="card hidden" style="margin-top:10px;">
-        <div class="row" style="justify-content: space-between; align-items:center;">
-          <div>
-            <b id="selTitle"></b>
-            <div class="muted">Cód: <span id="selCode"></span></div>
-          </div>
-          <div class="row">
-            <span class="pill">Mensagem selecionada</span>
-            <button id="btnChangeMsg">Trocar</button>
-          </div>
-        </div>
-        <div class="sep"></div>
-        <div id="selText" class="msg-box"></div>
+      <div id="outOfCity" class="muted hidden">
+        Para <b>chácara/sítio</b> ou <b>outra cidade</b>, entre em contato para combinar valor e deslocamento.
       </div>
 
       <div class="sep"></div>
-      <a id="step2"></a><div class="title">2) Configure as músicas (YouTube)</div>
+      <a id="step2"></a><div class="title">2) Confirme as músicas (YouTube)</div>
       <div class="grid">
         <div class="field">
           <label>Primeira música (toca só um trecho, até o carro chegar)</label>
@@ -109,65 +111,46 @@
       </div>
 
       <div class="sep"></div>
-      <a id="step3"></a><div class="title">3) Dados do agendamento</div>
+      <a id="step3"></a><div class="title">3) Pagamento via Pix (R$ <span id="price">70,00</span>)</div>
       <div class="grid">
-        <div class="field"><label>Quem vai receber a mensagem?</label><input id="toName" type="text" placeholder="Nome de quem recebe"/></div>
-        <div class="field"><label>Quem está mandando?</label><input id="fromName" type="text" placeholder="Seu nome"/></div>
-        <div class="field"><label>Seu celular (para contato e histórico)</label><input id="clientPhone" type="text" placeholder="(DDD) 9xxxx-xxxx"/></div>
-        <div class="field"><label>Endereço</label><input id="address" type="text" placeholder="Rua, número, bairro, ponto de referência"/></div>
-        <div class="field"><label>Tipo de local</label>
-          <select id="placeType">
-            <option value="cidade">Somente na cidade (R$ 70,00)</option>
-            <option value="chacara">Chácara / sítio</option>
-            <option value="outra">Outra cidade</option>
-          </select>
+        <div class="field"><label>Chave Pix (celular)</label><input id="pixKey" type="text" readonly/></div>
+        <div class="field"><label>Pix Copia & Cola</label><textarea id="pixCode" readonly></textarea>
+          <div class="row"><button id="btnCopyPix" class="primary">Copiar código</button><span class="muted">* Use no app do seu banco</span></div>
         </div>
-        <div class="field"><label>Que dia?</label><input id="date" type="date"/></div>
-        <div class="field"><label>Que horas?</label><input id="time" type="time"/></div>
-      </div>
-
-      <div id="outOfCity" class="muted hidden">
-        Para <b>chácara/sítio</b> ou <b>outra cidade</b>, entre em contato para combinar valor e deslocamento:
-        <a id="whatsLink1" target="_blank" rel="noopener">Abrir WhatsApp</a>
       </div>
 
       <div class="sep"></div>
-      <a id="step4"></a><div class="title">4) Pagamento via Pix (R$ <span id="price">70,00</span>)</div>
-      <div class="grid">
-        <div class="field">
-          <label>Chave Pix (celular)</label>
-          <input id="pixKey" type="text" readonly/>
+      <a id="step4"></a><div class="title">4) Escolher a mensagem</div>
+      <div class="row">
+        <div class="field" style="min-width:250px;flex:1;"><label>Categoria</label><select id="catSelect"></select></div>
+        <div class="field" style="min-width:250px;flex:2;"><label>Pesquisar</label><input id="msgSearch" type="text" placeholder="digite um trecho, ex.: parabéns, amor..."/></div>
+      </div>
+      <div id="categoryGrid"></div>
+      <div id="msgList" class="grid"></div>
+
+      <div id="selectedBox" class="card hidden" style="margin-top:10px;">
+        <div class="row" style="justify-content: space-between; align-items:center;">
+          <div><b id="selTitle"></b><div class="muted">Cód: <span id="selCode"></span></div></div>
+          <div class="row"><span class="pill">Mensagem selecionada</span><button id="btnChangeMsg">Trocar</button></div>
         </div>
-        <div class="field">
-          <label>Pix Copia & Cola (use no app do seu banco)</label>
-          <textarea id="pixCode" readonly></textarea>
-          <div class="row">
-            <button id="btnCopyPix" class="primary">Copiar código</button>
-            <span class="muted">* Gere e pague antes de enviar o pedido.</span>
-          </div>
-        </div>
+        <div class="sep"></div>
+        <div id="selText" class="msg-box"></div>
       </div>
 
       <div class="sep"></div>
       <a id="step5"></a><div class="title">5) Enviar pedido</div>
-      <div class="muted">Ao enviar, abriremos seu WhatsApp com o pedido pronto para <b>Disk Mensagem Stúdio Neil Marcos</b>. Você também receberá um aviso se já usou a mesma mensagem há cerca de 1 ano.</div>
+      <div class="muted">Ao enviar, seu pedido fica registrado no nosso sistema. Você verá o número do pedido na tela.</div>
       <div class="row" style="gap:8px;flex-wrap:wrap;">
-        <button id="btnSend" class="cta">Enviar pelo WhatsApp</button>
+        <button id="btnSend" class="cta">Enviar pedido (pelo app)</button>
         <span id="warnSame" class="pill hidden">⚠️ Esta mesma mensagem foi usada por você ~1 ano atrás. Confirme antes de enviar.</span>
       </div>
-    
-      <button id="fabNext" class="cta hidden" style="position:fixed; right:16px; bottom:16px; padding:14px 18px; border-radius:999px; box-shadow:0 10px 24px rgba(0,0,0,.35);">
-        Ir para Dados (3) ⟶
-      </button>
     </section>
 
     <!-- ADMIN -->
     <section id="tab-admin" class="card hidden">
       <div id="adminLogin">
         <div class="title">Admin</div>
-        <div class="grid">
-          <div class="field"><label>PIN de acesso</label><input id="adminPin" type="password" placeholder="padrão: 1234"/></div>
-        </div>
+        <div class="grid"><div class="field"><label>PIN de acesso</label><input id="adminPin" type="password" placeholder="padrão: 1234"/></div></div>
         <button id="btnAdminLogin" class="primary">Entrar</button>
         <div class="muted" style="margin-top:8px">Dica: altere o PIN em Configurações.</div>
       </div>
@@ -175,9 +158,7 @@
       <div id="adminPanel" class="hidden">
         <div class="row" style="justify-content: space-between; align-items:center;">
           <div class="title">Painel do Admin</div>
-          <div class="row">
-            <button id="btnLogout">Sair</button>
-          </div>
+          <div class="row"><button id="btnLogout">Sair</button></div>
         </div>
 
         <div class="tabs">
@@ -187,17 +168,13 @@
           <button class="tab" data-admin="backup">Backup</button>
         </div>
 
-        <!-- PEDIDOS -->
         <div id="admin-pedidos" class="admin-pane">
           <table class="table" id="ordersTable">
-            <thead>
-              <tr><th>#</th><th>Quando</th><th>Cliente</th><th>Mensagem (cód)</th><th>Músicas</th><th>Endereço</th><th>Valor</th><th>Status</th><th>Ações</th></tr>
-            </thead>
+            <thead><tr><th>#</th><th>Quando</th><th>Cliente</th><th>Mensagem</th><th>Músicas</th><th>Endereço</th><th>Valor</th><th>Status</th><th>Ações</th></tr></thead>
             <tbody></tbody>
           </table>
         </div>
 
-        <!-- MENSAGENS -->
         <div id="admin-mensagens" class="admin-pane hidden">
           <div class="row" style="align-items:center; justify-content:space-between;">
             <div class="title">Biblioteca de Mensagens</div>
@@ -212,7 +189,6 @@
           <div class="grid" id="adminMsgs"></div>
         </div>
 
-        <!-- CONFIG -->
         <div id="admin-config" class="admin-pane hidden">
           <div class="title">Configurações</div>
           <div class="grid">
@@ -228,7 +204,6 @@
           <button id="btnSaveConfig" class="ok">Salvar</button>
         </div>
 
-        <!-- BACKUP -->
         <div id="admin-backup" class="admin-pane hidden">
           <div class="title">Backup & Restauração</div>
           <div class="row">
@@ -240,34 +215,43 @@
     </section>
   </div>
 
+  <!-- Modal de leitura -->
+  <div id="modalBackdrop"><div class="modal">
+    <div class="row" style="justify-content:space-between;align-items:center;">
+      <div><div class="title" id="modalTitle"></div><div class="muted">Cód: <span id="modalCode"></span> · Categoria: <span id="modalCat"></span></div></div>
+      <button id="modalClose">✕</button>
+    </div>
+    <div class="sep"></div>
+    <div id="modalText" class="msg-box"></div>
+    <div class="actions"><button id="modalChoose" class="cta">Escolher esta mensagem</button><button id="modalCancel">Voltar</button></div>
+  </div></div>
+
+  <!-- Modal de confirmação do pedido -->
+  <div id="okBackdrop"><div class="modal">
+    <div class="title">Pedido enviado!</div>
+    <div id="okSummary" class="muted"></div>
+    <div class="actions"><button id="okClose" class="ok">Fechar</button></div>
+  </div></div>
+
   <script>
-    // Util
-    const $ = sel => document.querySelector(sel);
-    const $$ = sel => Array.from(document.querySelectorAll(sel));
-    const fmtBRL = (v) => (Number(v||0)).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    const $ = s => document.querySelector(s);
+    const $$ = s => Array.from(document.querySelectorAll(s));
+    const fmtBRL = v => (Number(v||0)).toLocaleString('pt-BR', {style:'currency', currency:'BRL'});
     const todayISO = () => new Date().toISOString().slice(0,10);
     function sanitizeURL(u){ try{ return new URL(u).href; }catch{ return ''; } }
 
-    // CRC16 PIX helpers
+    // CRC16/EMV Pix
     function crc16(str){ let crc=0xFFFF; for(let i=0;i<str.length;i++){ crc ^= str.charCodeAt(i)<<8; for(let j=0;j<8;j++){ crc = (crc & 0x8000) ? ((crc<<1)^0x1021) : (crc<<1); crc &= 0xFFFF; } } return crc.toString(16).toUpperCase().padStart(4,'0'); }
     function emv(id, value){ const v=String(value); return id + String(v.length).padStart(2,'0') + v; }
-    function buildPix({merchantName, merchantCity, pixKey, amount, txid}){
-      const gui = emv('00','BR.GOV.BCB.PIX'); const key = emv('01', pixKey); const mai = emv('26', gui + key);
-      const payload = emv('00','01') + emv('01','11') + mai + emv('52','0000') + emv('53','986') + emv('54', Number(amount).toFixed(2)) + emv('58','BR') + emv('59', merchantName.slice(0,25)) + emv('60',(merchantCity||'BRASIL').toUpperCase().slice(0,15)) + emv('62', emv('05', (txid||'DISKMSG') ));
-      const toCRC = payload + '6304'; const crc = crc16(toCRC); return toCRC + crc;
-    }
+    function buildPix({merchantName, merchantCity, pixKey, amount, txid}){ const gui=emv('00','BR.GOV.BCB.PIX'); const key=emv('01',pixKey); const mai=emv('26',gui+key); const payload=emv('00','01')+emv('01','11')+mai+emv('52','0000')+emv('53','986')+emv('54',Number(amount).toFixed(2))+emv('58','BR')+emv('59',merchantName.slice(0,25))+emv('60',(merchantCity||'BRASIL').toUpperCase().slice(0,15))+emv('62', emv('05', (txid||'DISKMSG') )); const toCRC=payload+'6304'; const crc=crc16(toCRC); return toCRC+crc; }
 
     // Storage
-    const LS = {
-      get(k, def){ try { return JSON.parse(localStorage.getItem(k)) ?? def; } catch { return def; } },
-      set(k, v){ localStorage.setItem(k, JSON.stringify(v)); }
-    };
+    const LS = { get(k,d){ try{return JSON.parse(localStorage.getItem(k)) ?? d;}catch{return d;} }, set(k,v){ localStorage.setItem(k, JSON.stringify(v)); } };
 
-    // Load external catalog on first run
     async function maybeLoadCatalog(){
       if (localStorage.getItem('diskmsg_state')) return;
       try{
-        const res = await fetch('./catalog.json?ver=3', {cache:'no-store'});
+        const res = await fetch('./catalog.json?ver=6', {cache:'no-store'});
         if(!res.ok) throw 0;
         const data = await res.json();
         if (data && Array.isArray(data.messages)) {
@@ -278,269 +262,185 @@
           }
           LS.set('diskmsg_state', state);
         }
-      }catch(e){ console.warn('Sem catalogo.json (usando defaults)'); }
+      }catch(e){ console.warn('Sem catalogo.json'); }
     }
 
-    // Defaults (mínimos; catálogo virá do catalog.json)
-    const defaults = {
-      appName:'Disk Mensagem Stúdio Neil Marcos',
-      whatsapp:'5518997053664',
-      price:70.00,
-      pixKey:'18997053664',
-      merchant:'DISK MENSAGEM NEIL',
-      city:'Arapiraca',
-      adminPin:'1234',
-      blockCopy:true,
-      categories:[{id:'amor',name:'Amor'}],
-      messages:[{id:'001',category:'amor',title:'Exemplo',text:'Se o catálogo ainda não carregou, este é um exemplo. Atualize a página.'}],
-      orders:[]
-    };
-
+    const defaults = { appName:'Disk Mensagem Stúdio Neil Marcos', whatsapp:'5518997053664', price:70.00, pixKey:'18997053664', merchant:'DISK MENSAGEM NEIL', city:'Arapiraca', adminPin:'1234', blockCopy:true, categories:[{id:'amor',name:'Amor'}], messages:[{id:'001',category:'amor',title:'Exemplo',text:'Se o catálogo ainda não carregou, este é um exemplo. Atualize a página.'}], orders:[] };
     let state = LS.get('diskmsg_state', defaults);
 
-    // Tabs topo
-    $$('.tab[data-tab]').forEach(btn => btn.addEventListener('click', () => {
-      $$('.tab[data-tab]').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      const tab = btn.getAttribute('data-tab');
-      $('#tab-cliente').classList.toggle('hidden', tab !== 'cliente');
-      $('#tab-admin').classList.toggle('hidden', tab !== 'admin');
-      window.scrollTo({top:0,behavior:'smooth'});
-    }));
-
-    // Cliente: mensagens
-    const catSelect = $('#catSelect');
-    const msgSearch = $('#msgSearch');
-    const msgList = $('#msgList');
-    let selectedMessage = null;
+    // Top tabs
+    $$('.tab[data-tab]').forEach(b=>b.addEventListener('click',()=>{ $$('.tab[data-tab]').forEach(x=>x.classList.remove('active')); b.classList.add('active'); const t=b.getAttribute('data-tab'); $('#tab-cliente').classList.toggle('hidden',t!=='cliente'); $('#tab-admin').classList.toggle('hidden',t!=='admin'); window.scrollTo({top:0,behavior:'smooth'});}));
 
     
-    function renderCats(){
-      const opts = ['<option value="">Selecione...</option>'].concat((state.categories||[]).map(c => `<option value="${c.id}">${c.name}</option>`));
-      catSelect.innerHTML = opts.join('');
-      renderCategoryGrid();
-    }
-    function renderCategoryGrid(){
-      const grid = document.getElementById('categoryGrid');
-      grid.innerHTML = (state.categories||[]).map(c => `
-        <div class="cat-card" data-cat="${c.id}">
-          <div class="dot"></div>
-          <div><b>${c.name}</b><div class="muted">${c.id}</div></div>
-        </div>`).join('');
-      $$('#categoryGrid .cat-card').forEach(card => {
-        card.onclick = () => { catSelect.value = card.getAttribute('data-cat'); renderMessages(); grid.scrollIntoView({behavior:'smooth', block:'start'}); };
-      });
+    // Beep simples via WebAudio
+    function beep(freq=880, dur=150){
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const o = ctx.createOscillator(); const g = ctx.createGain();
+        o.connect(g); g.connect(ctx.destination);
+        o.frequency.value = freq; o.type='sine';
+        g.gain.setValueAtTime(0.001, ctx.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.3, ctx.currentTime + 0.02);
+        o.start();
+        setTimeout(()=>{ g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.02); o.stop(ctx.currentTime + 0.04); }, dur);
+      } catch(e){ /* ignore */ }
     }
 
+    // Atualiza badge de pedidos
     
-    function renderMessages() {
-      const term = (msgSearch.value||'').toLowerCase();
-      const cat = catSelect.value;
-      const items = (state.messages||[]).filter(m => (!cat || m.category===cat) && (((m.title||'').toLowerCase().includes(term)) || ((m.text||'').toLowerCase().includes(term))));
-      if (!cat) { msgList.innerHTML = '<div class="muted">Escolha uma categoria acima para ver as mensagens.</div>'; return; }
-      msgList.innerHTML = items.map(m => `
-        <div class="card ${selectedMessage && selectedMessage.id===m.id ? 'selected' : ''}">
+    function updateOrderCount(){
+      const el = document.getElementById('orderCount');
+      if (!el) return;
+      const rows = (state.orders||[]);
+      const pending = rows.filter(o => (o.status||'').toLowerCase() === 'pendente').length;
+      const paid = rows.filter(o => (o.status||'').toLowerCase() === 'pago').length;
+      el.textContent = pending; // mostra apenas pendentes
+      el.classList.remove('badge-ok','badge-warn');
+      if (pending > 0) {
+        el.classList.add('badge-warn'); // atenção (laranja) se houver pendente
+      } else if (paid > 0) {
+        el.classList.add('badge-ok'); // verde se não há pendente e há pago
+      }
+    }
+    
+
+    // Steps bar navigation
+    $$('#stepsBar [data-goto]').forEach(btn=>btn.addEventListener('click',()=>{ const sel=btn.getAttribute('data-goto'); const el=document.querySelector(sel); if(el) el.scrollIntoView({behavior:'smooth',block:'start'});}));
+
+    // Cliente vars
+    const catSelect=$('#catSelect'), msgSearch=$('#msgSearch'), msgList=$('#msgList');
+    const ytFirst=$('#ytFirst'), ytLast=$('#ytLast'), toName=$('#toName'), fromName=$('#fromName'), address=$('#address'), date=$('#date'), time=$('#time'), placeType=$('#placeType'), pixKeyInput=$('#pixKey'), pixCode=$('#pixCode'), priceEl=$('#price'), clientPhone=$('#clientPhone'), warnSame=$('#warnSame');
+    let selectedMessage=null;
+
+    function renderCategoryGrid(){ const grid=$('#categoryGrid'); grid.innerHTML=(state.categories||[]).map(c=>`<div class="cat-card" data-cat="${c.id}"><div class="dot"></div><div><b>${c.name}</b><div class="muted">${c.id}</div></div></div>`).join(''); $$('#categoryGrid .cat-card').forEach(card=>card.onclick=()=>{ catSelect.value=card.getAttribute('data-cat'); renderMessages(); grid.scrollIntoView({behavior:'smooth',block:'start'}); }); }
+    function renderCats(){ catSelect.innerHTML=['<option value=\"\">Selecione...</option>'].concat((state.categories||[]).map(c=>`<option value="${c.id}">${c.name}</option>`)).join(''); renderCategoryGrid(); }
+    function renderMessages(){
+      const term=(msgSearch.value||'').toLowerCase(); const cat=catSelect.value;
+      const items=(state.messages||[]).filter(m=>(!cat||m.category===cat)&&(((m.title||'').toLowerCase().includes(term))||((m.text||'').toLowerCase().includes(term))));
+      if(!cat){ msgList.innerHTML='<div class="muted">Escolha uma categoria acima para ver as mensagens.</div>'; return; }
+      msgList.innerHTML=items.map(m=>`
+        <div class="card ${selectedMessage && selectedMessage.id===m.id ? 'selected': ''}">
           <div class="row" style="justify-content:space-between;align-items:center;">
             <div><b>${m.title}</b><div class="muted">Cód: ${m.id}</div></div>
             <div class="choose">
               <button data-read="${m.id}" class="primary">Ler</button>
-              <input type="radio" name="msgPick" value="${m.id}" ${selectedMessage && selectedMessage.id===m.id ? 'checked' : ''}/>
+              <input type="radio" name="msgPick" value="${m.id}" ${selectedMessage && selectedMessage.id===m.id ? 'checked':''}/>
               <button data-pick="${m.id}" class="primary">Selecionar</button>
             </div>
           </div>
           <div class="sep"></div>
-          <div class="msg-box ${state.blockCopy ? 'no-copy' : ''}" oncopy="return false" oncut="return false" oncontextmenu="return false">
-            ${(m.text||'').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
-          </div>
+          <div class="msg-box ${state.blockCopy?'no-copy':''}" oncopy="return false" oncut="return false" oncontextmenu="return false">${(m.text||'').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
         </div>
       `).join('');
-      $$('button[data-pick]').forEach(btn => btn.onclick = () => {
-        const id = btn.getAttribute('data-pick');
-        selectedMessage = state.messages.find(x => x.id === id);
-        showSelected();
-        renderMessages();
-        checkOneYearWarning();
-        updateFab();
-        window.scrollTo({top: document.getElementById('selectedBox').offsetTop - 80, behavior:'smooth'});
-      });
-      $$('input[name="msgPick"]').forEach(r => r.onchange = () => {
-        const id = r.value;
-        selectedMessage = state.messages.find(x => x.id === id);
-        showSelected();
-        renderMessages();
-        checkOneYearWarning();
-        updateFab();
-      });
-      $$('button[data-read]').forEach(btn => btn.onclick = () => {
-        const id = btn.getAttribute('data-read');
-        const m = state.messages.find(x => x.id === id);
-        openModal(m);
-      });
+      $$('button[data-read]').forEach(btn=>btn.onclick=()=>{ const m=state.messages.find(x=>x.id===btn.getAttribute('data-read')); openModal(m); });
+      $$('button[data-pick]').forEach(btn=>btn.onclick=()=>{ const id=btn.getAttribute('data-pick'); selectedMessage=state.messages.find(x=>x.id===id); showSelected(); renderMessages(); checkRepeatWarning(); setBrowseVisible(false); document.querySelector('#step5').scrollIntoView({behavior:'smooth',block:'start'}); });
+      $$('input[name="msgPick"]').forEach(r=>r.onchange=()=>{ const id=r.value; selectedMessage=state.messages.find(x=>x.id===id); showSelected(); renderMessages(); checkRepeatWarning(); setBrowseVisible(false); });
     }
-    catSelect.onchange = renderMessages
- = renderMessages;
-    msgSearch.oninput = renderMessages;
+    catSelect.onchange=renderMessages; msgSearch.oninput=renderMessages;
 
-    // Cliente: YouTube + form + Pix
-    const ytFirst=$('#ytFirst'), ytLast=$('#ytLast'), toName=$('#toName'), fromName=$('#fromName'), address=$('#address'), date=$('#date'), time=$('#time'), placeType=$('#placeType'), pixKeyInput=$('#pixKey'), pixCode=$('#pixCode'), priceEl=$('#price'), clientPhone=$('#clientPhone'), warnSame=$('#warnSame');
-
-    function updateOutOfCity(){ const out=placeType.value!=='cidade'; $('#outOfCity').classList.toggle('hidden',!out); $('#whatsLink1').href='https://wa.me/'+state.whatsapp; }
-    placeType.onchange=updateOutOfCity;
-
-    function updatePix(){
-      pixKeyInput.value=state.pixKey; priceEl.textContent=(Number(state.price).toFixed(2)).replace('.',',');
-      const payload=buildPix({merchantName:state.merchant, merchantCity:state.city||'BRASIL', pixKey:state.pixKey, amount:Number(state.price||0), txid:'DISKMSG'});
-      pixCode.value=payload;
-    }
-    $('#btnCopyPix').onclick=()=>{ pixCode.select(); document.execCommand('copy'); alert('Código Pix copiado.'); };
-
-    function checkOneYearWarning(){
-      warnSame.classList.add('hidden'); if(!selectedMessage) return;
-      const phone=(clientPhone.value||'').replace(/\D/g,''); if(!phone) return;
-      const oneYearAgo=new Date(); oneYearAgo.setFullYear(oneYearAgo.getFullYear()-1);
-      const prev=(state.orders||[]).find(o => o.clientPhone===phone && o.messageId===selectedMessage.id && new Date(o.createdAt)>=oneYearAgo);
-      if(prev){ warnSame.classList.remove('hidden'); }
-    }
-    clientPhone.oninput = checkOneYearWarning;
-
-    function buildOrder(){
-      if(!selectedMessage){ alert('Selecione uma mensagem.'); return null; }
-      if(!ytFirst.value||!ytLast.value){ alert('Cole os dois links do YouTube.'); return null; }
-      if(!toName.value||!fromName.value||!address.value||!date.value||!time.value){ alert('Preencha todos os dados do agendamento.'); return null; }
-      const phone=(clientPhone.value||'').replace(/\D/g,''); if(!phone||phone.length<10){ alert('Digite seu celular (com DDD).'); return null; }
-      return { id:'PED'+Math.random().toString(36).slice(2,8).toUpperCase(), createdAt:new Date().toISOString(), clientPhone:phone, toName:toName.value.trim(), fromName:fromName.value.trim(), address:address.value.trim(), date:date.value, time:time.value, placeType:placeType.value, firstSong:sanitizeURL(ytFirst.value), lastSong:sanitizeURL(ytLast.value), messageId:selectedMessage.id, messageTitle:selectedMessage.title, value:placeType.value==='cidade'?Number(state.price):null, status:'pendente' };
-    }
-
-    $('#btnSend').onclick=()=>{
-      const order=buildOrder(); if(!order) return;
-      state.orders.unshift(order); LS.set('diskmsg_state', state); renderOrders();
-      const lines=[ '🛻 *Novo pedido de Disk Mensagem*','—',`📅 Quando: *${order.date}* às *${order.time}*`,`🎯 Local: ${order.address} (${order.placeType})`,`🎁 Para: *${order.toName}*`,`👤 De: *${order.fromName}* (tel ${order.clientPhone})`,`💬 Mensagem: ${order.messageTitle} (cód ${order.messageId})`,`🎵 Início: ${order.firstSong}`,`🎵 Final: ${order.lastSong}`, order.value?`💰 Valor: ${fmtBRL(order.value)} (cidade)`: `💰 Valor: a combinar (fora da cidade)`, '—', `🔗 Pix chave (cel): ${state.pixKey}`, `💳 Pague e envie o comprovante aqui mesmo no WhatsApp.`, `Obs: Pix Copia e Cola disponível no app.` ];
-      const text=encodeURIComponent(lines.join('\n')); const wa='https://wa.me/'+state.whatsapp+'?text='+text; window.open(wa,'_blank'); alert('Pedido pronto para enviar no WhatsApp. Obrigado!');
-    };
-
+    function setBrowseVisible(show){ ['categoryGrid','msgList','catSelect','msgSearch'].forEach(id=>{ const el=document.getElementById(id); if(!el) return; if(show) el.classList.remove('hidden'); else el.classList.add('hidden'); }); }
     function showSelected(){ const box=$('#selectedBox'); if(!selectedMessage){ box.classList.add('hidden'); return; } $('#selTitle').textContent=selectedMessage.title; $('#selCode').textContent=selectedMessage.id; $('#selText').innerHTML=(selectedMessage.text||'').replace(/</g,'&lt;').replace(/>/g,'&gt;'); box.classList.remove('hidden'); }
-    document.addEventListener('click', e => { if(e.target && e.target.id==='btnChangeMsg'){ selectedMessage=null; showSelected(); renderMessages(); updateFab(); setBrowseVisible(true); document.querySelector('#step1').scrollIntoView({behavior:'smooth', block:'start'}); } });
 
-    // Admin auth
-    const adminLogin=$('#adminLogin'), adminPanel=$('#adminPanel');
-    $('#btnAdminLogin').onclick=()=>{ const pin=$('#adminPin').value.trim(); if(pin===(state.adminPin||'1234')){ adminLogin.classList.add('hidden'); adminPanel.classList.remove('hidden'); renderAllAdmin(); } else alert('PIN incorreto.'); };
-    $('#btnLogout').onclick=()=>{ adminPanel.classList.add('hidden'); adminLogin.classList.remove('hidden'); };
-
-    // Admin tabs
-    $$('.tab[data-admin]').forEach(btn => btn.addEventListener('click', () => {
-      $$('.tab[data-admin]').forEach(b => b.classList.remove('active')); btn.classList.add('active');
-      const pane=btn.getAttribute('data-admin'); $$('.admin-pane').forEach(p => p.classList.add('hidden')); $('#admin-'+pane).classList.remove('hidden');
-    }));
-
-    // Admin: orders
-    function renderOrders(){ const tbody=$('#ordersTable tbody'); if(!tbody) return; const rows=(state.orders||[]); tbody.innerHTML = rows.map((o,i)=>`
-      <tr><td>${rows.length-i}</td><td>${o.date} ${o.time}</td><td><b>${o.fromName}</b> → ${o.toName}<br><span class="muted">${o.clientPhone}</span></td><td>${o.messageTitle} <span class="badge">${o.messageId}</span></td><td><a href="${o.firstSong}" target="_blank">início</a> · <a href="${o.lastSong}" target="_blank">final</a></td><td>${o.address} <span class="badge">${o.placeType}</span></td><td>${o.value?fmtBRL(o.value):'-'}</td><td><span class="badge">${o.status}</span></td><td><button data-status="${o.id}:pago" class="ok">Marcar pago</button> <button data-status="${o.id}:pendente" class="warn">Pendente</button> <button data-del="${o.id}" class="danger">Excluir</button></td></tr>`).join('');
-      $$('button[data-status]').forEach(b => b.onclick=()=>{ const [id,st]=b.getAttribute('data-status').split(':'); const idx=state.orders.findIndex(x=>x.id===id); if(idx>=0){ state.orders[idx].status=st; LS.set('diskmsg_state', state); renderOrders(); } });
-      $$('button[data-del]').forEach(b => b.onclick=()=>{ const id=b.getAttribute('data-del'); if(confirm('Excluir este pedido?')){ state.orders=state.orders.filter(x=>x.id!==id); LS.set('diskmsg_state', state); renderOrders(); } });
-    }
-
-    // Admin: mensagens
-    function renderAdminCats(){ $('#adminCats').innerHTML=(state.categories||[]).map(c=>`<div class="card"><div class="row" style="justify-content:space-between;align-items:center;"><div><b>${c.name}</b><div class="muted">${c.id}</div></div><div class="row"><button data-edit-cat="${c.id}">Editar</button><button data-del-cat="${c.id}" class="danger">Excluir</button></div></div></div>`).join('');
-      $$('button[data-edit-cat]').forEach(b=>b.onclick=()=>{ const id=b.getAttribute('data-edit-cat'); const c=state.categories.find(x=>x.id===id); const name=prompt('Nome da categoria:', c.name); if(!name) return; c.name=name.trim(); LS.set('diskmsg_state', state); renderCats(); renderAdminCats(); });
-      $$('button[data-del-cat]').forEach(b=>b.onclick=()=>{ const id=b.getAttribute('data-del-cat'); if(confirm('Excluir categoria?')){ state.categories=state.categories.filter(c=>c.id!==id); LS.set('diskmsg_state', state); renderCats(); renderAdminCats(); renderAdminMsgs(); renderMessages(); } });
-    }
-    function renderAdminMsgs(){ $('#adminMsgs').innerHTML=(state.messages||[]).map(m=>`<div class="card"><div class="row" style="justify-content:space-between;align-items:center;"><div><b>${m.title}</b> <span class="badge">${m.id}</span><div class="muted">Cat: ${m.category}</div></div><div class="row"><button data-edit-msg="${m.id}">Editar</button><button data-del-msg="${m.id}" class="danger">Excluir</button></div></div><div class="sep"></div><div class="msg-box ${state.blockCopy?'no-copy':''}" oncopy="return false" oncut="return false" oncontextmenu="return false">${(m.text||'').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div></div>`).join('');
-      $$('button[data-edit-msg]').forEach(b=>b.onclick=()=>{ const id=b.getAttribute('data-edit-msg'); const m=state.messages.find(x=>x.id===id); const title=prompt('Título da mensagem:', m.title); if(!title) return; const cat=prompt('Categoria (id):', m.category)||m.category; const code=prompt('Código:', m.id)||m.id; const text=prompt('Texto:', m.text); if(!text) return; m.title=title.trim(); m.category=cat.trim(); m.id=code.trim(); m.text=text; LS.set('diskmsg_state', state); renderMessages(); renderAdminMsgs(); });
-      $$('button[data-del-msg]').forEach(b=>b.onclick=()=>{ const id=b.getAttribute('data-del-msg'); if(confirm('Excluir esta mensagem?')){ state.messages=state.messages.filter(x=>x.id!==id); LS.set('diskmsg_state', state); renderMessages(); renderAdminMsgs(); } });
-      $('#toggleNoCopy').checked=!!state.blockCopy;
-    }
-    $('#toggleNoCopy').onchange=(e)=>{ state.blockCopy=!!e.target.checked; LS.set('diskmsg_state', state); renderMessages(); renderAdminMsgs(); };
-    $('#btnAddCategory').onclick=()=>{ const id=prompt('ID da categoria (ex.: aniversario)'); if(!id) return; const name=prompt('Nome da categoria'); if(!name) return; state.categories.push({id:id.trim(), name:name.trim()}); LS.set('diskmsg_state', state); renderCats(); renderAdminCats(); };
-    $('#btnAddMessage').onclick=()=>{ const id=prompt('Código'); if(!id) return; const cat=prompt('Categoria (id)'); if(!cat) return; const title=prompt('Título'); if(!title) return; const text=prompt('Texto'); if(!text) return; state.messages.push({id:id.trim(), category:cat.trim(), title:title.trim(), text:text}); LS.set('diskmsg_state', state); renderMessages(); renderAdminMsgs(); };
-
-    // Admin: config
-    function renderConfig(){ $('#cfgAppName').value=state.appName; $('#cfgWhats').value=state.whatsapp; $('#cfgPix').value=state.pixKey; $('#cfgPrice').value=state.price; $('#cfgCity').value=state.city; $('#cfgMerchant').value=state.merchant; $('#cfgPin').value=state.adminPin; }
-    $('#cfgLogo').onchange=(e)=>{ const file=e.target.files[0]; if(!file) return; const reader=new FileReader(); reader.onload=()=>{ const img=new Image(); img.onload=()=>{ const canvas=document.createElement('canvas'); canvas.width=512; canvas.height=512; const ctx=canvas.getContext('2d'); ctx.fillStyle='#000'; ctx.fillRect(0,0,512,512); ctx.drawImage(img,0,0,512,512); const dataURL=canvas.toDataURL('image/png'); LS.set('diskmsg_logo', dataURL); document.querySelector('.logo img').src = dataURL; alert('Logo atualizada!'); }; img.src=reader.result; }; reader.readAsDataURL(file); };
-    $('#btnSaveConfig').onclick=()=>{ state.appName=$('#cfgAppName').value.trim()||state.appName; state.whatsapp=($('#cfgWhats').value||'').replace(/\D/g,''); state.pixKey=$('#cfgPix').value.trim()||state.pixKey; state.price=Number($('#cfgPrice').value||state.price); state.city=$('#cfgCity').value.trim()||state.city; state.merchant=$('#cfgMerchant').value.trim()||state.merchant; state.adminPin=$('#cfgPin').value.trim()||state.adminPin; LS.set('diskmsg_state', state); document.title=state.appName; alert('Configurações salvas.'); };
-
-    // Admin: backup
-    $('#btnExportJSON').onclick=()=>{ const data=JSON.stringify(state,null,2); const blob=new Blob([data],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='diskmensagem-backup.json'; a.click(); };
-    $('#importJSON').onchange=(e)=>{ const file=e.target.files[0]; if(!file) return; const reader=new FileReader(); reader.onload=()=>{ try{ const obj=JSON.parse(reader.result); state=obj; LS.set('diskmsg_state', state); renderAll(); alert('Importado!'); } catch(err){ alert('Falha ao importar: '+err.message); } }; reader.readAsText(file); };
-
-    function renderAll(){ const savedLogo=LS.get('diskmsg_logo', null); if(savedLogo) document.querySelector('.logo img').src=savedLogo; document.title=state.appName; document.querySelector('h1').textContent=state.appName; renderCats(); renderMessages(); updatePix(); updateOutOfCity(); $('#date').value=todayISO(); }
-    function renderAllAdmin(){ renderOrders(); renderAdminCats(); renderAdminMsgs(); renderConfig(); }
+    // Modal leitura
+    let modalMessage=null;
+    function openModal(m){ modalMessage=m; $('#modalTitle').textContent=m.title; $('#modalCode').textContent=m.id; const cat=(state.categories||[]).find(c=>c.id===m.category); $('#modalCat').textContent=cat?cat.name:m.category; $('#modalText').innerHTML=(m.text||'').replace(/</g,'&lt;').replace(/>/g,'&gt;'); $('#modalBackdrop').style.display='flex'; }
+    function closeModal(){ $('#modalBackdrop').style.display='none'; }
+    $('#modalClose').onclick=closeModal; $('#modalCancel').onclick=closeModal; $('#modalBackdrop').addEventListener('click',e=>{ if(e.target.id==='modalBackdrop') closeModal(); });
+    $('#modalChoose').onclick=()=>{ if(!modalMessage) return; selectedMessage=modalMessage; closeModal(); showSelected(); renderMessages(); checkRepeatWarning(); setBrowseVisible(false); document.querySelector('#step5').scrollIntoView({behavior:'smooth',block:'start'}); };
 
     
-    // Steps bar navigation
-    $$('#stepsBar [data-goto]').forEach(btn => btn.addEventListener('click', () => {
-      const sel = btn.getAttribute('data-goto'); const el = document.querySelector(sel);
-      if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
-    }));
-
-    const fab = document.getElementById('fabNext');
-    function updateFab(){ fab.classList.toggle('hidden', !selectedMessage); }
-    fab.onclick = () => { document.querySelector('#step3').scrollIntoView({behavior:'smooth', block:'start'}); };
-
-    
-    // Modal message reader
-    let modalMessage = null;
-    function openModal(m){
-      modalMessage = m;
-      $('#modalTitle').textContent = m.title;
-      $('#modalCode').textContent = m.id;
-      const cat = (state.categories||[]).find(c=>c.id===m.category);
-      $('#modalCat').textContent = cat ? cat.name : m.category;
-      $('#modalText').innerHTML = (m.text||'').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-      document.getElementById('modalBackdrop').style.display = 'flex';
-    }
-    function closeModal(){ document.getElementById('modalBackdrop').style.display = 'none'; }
-    $('#modalClose').onclick = closeModal;
-    $('#modalCancel').onclick = closeModal;
-    $('#modalBackdrop').addEventListener('click', (e) => { if (e.target.id === 'modalBackdrop') closeModal(); });
-    $('#modalChoose').onclick = () => {
-      if (!modalMessage) return;
-      selectedMessage = modalMessage;
-      closeModal();
-      showSelected(); renderMessages(); checkOneYearWarning(); updateFab(); setBrowseVisible(false);
-      document.querySelector('#step2').scrollIntoView({behavior:'smooth', block:'start'});
-    };
-
-
-    
-    function setBrowseVisible(show){
-      const ids = ['categoryGrid','msgList','catSelect','msgSearch'];
-      ids.forEach(id => {
-        const el = document.getElementById(id);
-        if (!el) return;
-        if (show) el.classList.remove('hidden'); else el.classList.add('hidden');
-      });
-      // Also toggle the hint on steps bar
-      const steps = document.getElementById('stepsBar');
-      if (steps){
-        steps.querySelector('.muted').textContent = show ? 'Selecione a mensagem e clique em Ir para Dados.' : 'Mensagem escolhida. Você pode Trocar ou seguir para Músicas/Dados.';
+    // Alerta de repetição (qualquer tempo) com "há X dias"
+    function daysBetween(d1, d2){ const ms = Math.abs(new Date(d2) - new Date(d1)); return Math.floor(ms / (1000*60*60*24)); }
+    function checkRepeatWarning(){
+      warnSame.classList.add('hidden');
+      if (!selectedMessage) return;
+      const phone = (clientPhone.value||'').replace(/\D/g,'');
+      if (!phone) return;
+      const prev = (state.orders||[]).filter(o => o.clientPhone===phone && o.messageId===selectedMessage.id).sort((a,b)=> new Date(b.createdAt)-new Date(a.createdAt));
+      if (prev.length){
+        const d = daysBetween(prev[0].createdAt, new Date().toISOString());
+        let txt = '⚠️ Você já usou esta mensagem ';
+        if (d === 0) txt += 'hoje.';
+        else if (d === 1) txt += 'há 1 dia.';
+        else txt += `há ${d} dias.`;
+        warnSame.textContent = txt;
+        warnSame.classList.remove('hidden');
       }
     }
 
+    // Dados + Pix
+    function updateOutOfCity(){ const out=placeType.value!=='cidade'; $('#outOfCity').classList.toggle('hidden',!out); }
+    placeType.onchange=updateOutOfCity;
+    function updatePix(){ pixKeyInput.value=state.pixKey; priceEl.textContent=(Number(state.price).toFixed(2)).replace('.',','); const payload=buildPix({merchantName:state.merchant, merchantCity:state.city||'BRASIL', pixKey:state.pixKey, amount:Number(state.price||0), txid:'DISKMSG'}); pixCode.value=payload; }
+    $('#btnCopyPix').onclick=()=>{ pixCode.select(); document.execCommand('copy'); alert('Código Pix copiado.'); };
+
+    function checkRepeatWarning(){ warnSame.classList.add('hidden'); if(!selectedMessage) return; const phone=(clientPhone.value||'').replace(/\\D/g,''); if(!phone) return; const oneYearAgo=new Date(); oneYearAgo.setFullYear(oneYearAgo.getFullYear()-1); const prev=(state.orders||[]).find(o=>o.clientPhone===phone && o.messageId===selectedMessage.id && new Date(o.createdAt)>=oneYearAgo); if(prev){ warnSame.classList.remove('hidden'); } }
+    clientPhone.oninput=checkRepeatWarning;
+
+    function buildOrder(){
+      if(!toName.value||!fromName.value||!address.value||!date.value||!time.value){ alert('Preencha os dados do agendamento (passo 1).'); return null; }
+      if(!ytFirst.value||!ytLast.value){ alert('Confirme as duas músicas (passo 2).'); return null; }
+      if(placeType.value==='cidade' && !pixCode.value){ alert('Gere o Pix (passo 3).'); return null; }
+      if(!selectedMessage){ alert('Escolha a mensagem (passo 4).'); return null; }
+      const phone=(clientPhone.value||'').replace(/\\D/g,''); if(!phone||phone.length<10){ alert('Digite seu celular (com DDD).'); return null; }
+      return { id:'PED'+Math.random().toString(36).slice(2,8).toUpperCase(), createdAt:new Date().toISOString(), clientPhone:phone, toName:toName.value.trim(), fromName:fromName.value.trim(), address:address.value.trim(), date:date.value, time:time.value, placeType:placeType.value, firstSong:sanitizeURL(ytFirst.value), lastSong:sanitizeURL(ytLast.value), messageId:selectedMessage.id, messageTitle:selectedMessage.title, value:placeType.value==='cidade'?Number(state.price):null, status:'pendente' };
+    }
+
+    // ENVIAR PELO APP (sem WhatsApp)
+    $('#btnSend').onclick=()=>{
+      const order=buildOrder(); if(!order) return;
+      const oldLen=(state.orders||[]).length; state.orders.unshift(order); LS.set('diskmsg_state', state); if(((state.orders||[]).length) > oldLen){ beep(); }
+      renderOrders(); updateOrderCount();
+      const lines=[`✅ Pedido *${order.id}* enviado com sucesso!`,`📅 ${order.date} às ${order.time}`,`🎁 Para: ${order.toName}`,`👤 De: ${order.fromName}`,`💬 Mensagem: ${order.messageTitle} (cód ${order.messageId})`,`🎵 Início: ${order.firstSong}`,`🎵 Final: ${order.lastSong}`,`📍 ${order.address} (${order.placeType})`, order.value?`💰 Valor: ${fmtBRL(order.value)} (cidade)`:`💰 Valor a combinar`];
+      $('#okSummary').innerHTML = lines.join('<br>');
+      document.getElementById('okBackdrop').style.display='flex';
+      document.querySelector('#step5').scrollIntoView({behavior:'smooth',block:'start'});
+    };
+    $('#okClose').onclick=()=>{ document.getElementById('okBackdrop').style.display='none'; };
+
+    
+    // Beep se novo pedido chegar em outra aba (mesmo dispositivo)
+    let _lastOrderCount = (state.orders||[]).length || 0;
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'diskmsg_state' && e.newValue){
+        try {
+          const s = JSON.parse(e.newValue);
+          const n = (s.orders||[]).length || 0;
+          if (n > _lastOrderCount) { beep(); }
+          _lastOrderCount = n;
+          // Atualiza estado local sem perder o logo salvo
+          state.orders = s.orders || state.orders;
+          updateOrderCount();
+          renderOrders();
+        } catch(_) {}
+      }
+    });
+
+    // ADMIN
+    const adminLogin=$('#adminLogin'), adminPanel=$('#adminPanel');
+    $('#btnAdminLogin').onclick=()=>{ const pin=$('#adminPin').value.trim(); if(pin===(state.adminPin||'1234')){ adminLogin.classList.add('hidden'); adminPanel.classList.remove('hidden'); renderAllAdmin(); } else alert('PIN incorreto.'); };
+    $('#btnLogout').onclick=()=>{ adminPanel.classList.add('hidden'); adminLogin.classList.remove('hidden'); };
+    $$('.tab[data-admin]').forEach(btn=>btn.addEventListener('click',()=>{ $$('.tab[data-admin]').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); const pane=btn.getAttribute('data-admin'); $$('.admin-pane').forEach(p=>p.classList.add('hidden')); $('#admin-'+pane).classList.remove('hidden'); }));
+    function renderOrders(){ const tbody=$('#ordersTable tbody'); if(!tbody) return; const rows=(state.orders||[]); updateOrderCount(); tbody.innerHTML=rows.map((o,i)=>`<tr><td>${rows.length-i}</td><td>${o.date} ${o.time}</td><td><b>${o.fromName}</b> → ${o.toName}<br><span class="muted">${o.clientPhone}</span></td><td>${o.messageTitle} <span class="badge">${o.messageId}</span></td><td><a href="${o.firstSong}" target="_blank">início</a> · <a href="${o.lastSong}" target="_blank">final</a></td><td>${o.address} <span class="badge">${o.placeType}</span></td><td>${o.value?fmtBRL(o.value):'-'}</td><td><span class="badge">${o.status}</span></td><td><button data-status="${o.id}:pago" class="ok">Marcar pago</button> <button data-status="${o.id}:pendente" class="warn">Pendente</button> <button data-del="${o.id}" class="danger">Excluir</button></td></tr>`).join(''); $$('button[data-status]').forEach(b=>b.onclick=()=>{ const [id,st]=b.getAttribute('data-status').split(':'); const idx=state.orders.findIndex(x=>x.id===id); if(idx>=0){ state.orders[idx].status=st; LS.set('diskmsg_state', state); renderOrders(); updateOrderCount(); } }); $$('button[data-del]').forEach(b=>b.onclick=()=>{ const id=b.getAttribute('data-del'); if(confirm('Excluir este pedido?')){ state.orders=state.orders.filter(x=>x.id!==id); LS.set('diskmsg_state', state); renderOrders(); updateOrderCount(); } }); }
+    function renderAdminCats(){ $('#adminCats').innerHTML=(state.categories||[]).map(c=>`<div class="card"><div class="row" style="justify-content:space-between;align-items:center;"><div><b>${c.name}</b><div class="muted">${c.id}</div></div><div class="row"><button data-edit-cat="${c.id}">Editar</button><button data-del-cat="${c.id}" class="danger">Excluir</button></div></div></div>`).join(''); $$('button[data-edit-cat]').forEach(b=>b.onclick=()=>{ const id=b.getAttribute('data-edit-cat'); const c=state.categories.find(x=>x.id===id); const name=prompt('Nome da categoria:', c.name); if(!name) return; c.name=name.trim(); LS.set('diskmsg_state', state); renderCats(); renderAdminCats(); }); $$('button[data-del-cat]').forEach(b=>b.onclick=()=>{ const id=b.getAttribute('data-del-cat'); if(confirm('Excluir categoria?')){ state.categories=state.categories.filter(c=>c.id!==id); LS.set('diskmsg_state', state); renderCats(); renderAdminCats(); renderAdminMsgs(); renderMessages(); } }); }
+    function renderAdminMsgs(){ $('#adminMsgs').innerHTML=(state.messages||[]).map(m=>`<div class="card"><div class="row" style="justify-content:space-between;align-items:center;"><div><b>${m.title}</b> <span class="badge">${m.id}</span><div class="muted">Cat: ${m.category}</div></div><div class="row"><button data-edit-msg="${m.id}">Editar</button><button data-del-msg="${m.id}" class="danger">Excluir</button></div></div><div class="sep"></div><div class="msg-box ${state.blockCopy?'no-copy':''}" oncopy="return false" oncut="return false" oncontextmenu="return false">${(m.text||'').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div></div>`).join(''); $$('button[data-edit-msg]').forEach(b=>b.onclick=()=>{ const id=b.getAttribute('data-edit-msg'); const m=state.messages.find(x=>x.id===id); const title=prompt('Título da mensagem:', m.title); if(!title) return; const cat=prompt('Categoria (id):', m.category)||m.category; const code=prompt('Código:', m.id)||m.id; const text=prompt('Texto:', m.text); if(!text) return; m.title=title.trim(); m.category=cat.trim(); m.id=code.trim(); m.text=text; LS.set('diskmsg_state', state); renderMessages(); renderAdminMsgs(); }); $$('button[data-del-msg]').forEach(b=>b.onclick=()=>{ const id=b.getAttribute('data-del-msg'); if(confirm('Excluir esta mensagem?')){ state.messages=state.messages.filter(x=>x.id!==id); LS.set('diskmsg_state', state); renderMessages(); renderAdminMsgs(); } }); $('#toggleNoCopy').checked=!!state.blockCopy; }
+    $('#toggleNoCopy').onchange=e=>{ state.blockCopy=!!e.target.checked; LS.set('diskmsg_state', state); renderMessages(); renderAdminMsgs(); };
+    $('#btnAddCategory').onclick=()=>{ const id=prompt('ID da categoria (ex.: aniversario)'); if(!id) return; const name=prompt('Nome da categoria'); if(!name) return; state.categories.push({id:id.trim(),name:name.trim()}); LS.set('diskmsg_state', state); renderCats(); renderAdminCats(); };
+    $('#btnAddMessage').onclick=()=>{ const id=prompt('Código'); if(!id) return; const cat=prompt('Categoria (id)'); if(!cat) return; const title=prompt('Título'); if(!title) return; const text=prompt('Texto'); if(!text) return; state.messages.push({id:id.trim(),category:cat.trim(),title:title.trim(),text:text}); LS.set('diskmsg_state', state); renderMessages(); renderAdminMsgs(); };
+
+    function renderConfig(){ $('#cfgAppName').value=state.appName; $('#cfgWhats').value=state.whatsapp; $('#cfgPix').value=state.pixKey; $('#cfgPrice').value=state.price; $('#cfgCity').value=state.city; $('#cfgMerchant').value=state.merchant; $('#cfgPin').value=state.adminPin; }
+    $('#cfgLogo').onchange=(e)=>{ const f=e.target.files[0]; if(!f) return; const r=new FileReader(); r.onload=()=>{ const img=new Image(); img.onload=()=>{ const canvas=document.createElement('canvas'); canvas.width=512; canvas.height=512; const ctx=canvas.getContext('2d'); ctx.drawImage(img,0,0,512,512); const dataURL=canvas.toDataURL('image/png'); LS.set('diskmsg_logo', dataURL); document.querySelector('.logo img').src=dataURL; alert('Logo atualizada!'); }; img.src=r.result; }; r.readAsDataURL(f); };
+    $('#btnSaveConfig').onclick=()=>{ state.appName=$('#cfgAppName').value.trim()||state.appName; state.whatsapp=($('#cfgWhats').value||'').replace(/\\D/g,''); state.pixKey=$('#cfgPix').value.trim()||state.pixKey; state.price=Number($('#cfgPrice').value||state.price); state.city=$('#cfgCity').value.trim()||state.city; state.merchant=$('#cfgMerchant').value.trim()||state.merchant; state.adminPin=$('#cfgPin').value.trim()||state.adminPin; LS.set('diskmsg_state', state); document.title=state.appName; alert('Configurações salvas.'); };
+
+    $('#btnExportJSON').onclick=()=>{ const data=JSON.stringify(state,null,2); const blob=new Blob([data],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='diskmensagem-backup.json'; a.click(); };
+    $('#importJSON').onchange=(e)=>{ const f=e.target.files[0]; if(!f) return; const r=new FileReader(); r.onload=()=>{ try{ const obj=JSON.parse(r.result); state=obj; LS.set('diskmsg_state', state); renderAll(); alert('Importado!'); }catch(err){ alert('Falha ao importar: '+err.message); } }; r.readAsText(f); };
+
+    function renderAll(){ updateOrderCount(); const savedLogo=LS.get('diskmsg_logo',null); if(savedLogo) document.querySelector('.logo img').src=savedLogo; document.title=state.appName; document.querySelector('h1').textContent=state.appName; $('#date').value=todayISO(); renderCats(); renderMessages(); updateOutOfCity(); updatePix(); renderOrders(); updateOrderCount(); }
+    function renderAllAdmin(){ renderOrders(); updateOrderCount(); renderAdminCats(); renderAdminMsgs(); renderConfig(); }
 
     // Init
-    maybeLoadCatalog().then(()=>{ renderAll(); showSelected(); updateFab(); setBrowseVisible(true); });
-
-    // PWA
-    if('serviceWorker' in navigator){ window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js'); }); }
+    maybeLoadCatalog().then(()=>{ renderAll(); updateOrderCount(); });
+    if('serviceWorker' in navigator){ window.addEventListener('load',()=>{ navigator.serviceWorker.register('./sw.js'); }); }
   </script>
-
-  <div id="modalBackdrop" role="dialog" aria-modal="true">
-    <div class="modal">
-      <div class="row" style="justify-content:space-between; align-items:center;">
-        <div>
-          <div class="title" id="modalTitle"></div>
-          <div class="muted">Cód: <span id="modalCode"></span> · Categoria: <span id="modalCat"></span></div>
-        </div>
-        <button id="modalClose">✕</button>
-      </div>
-      <div class="sep"></div>
-      <div id="modalText" class="msg-box"></div>
-      <div class="actions">
-        <button id="modalChoose" class="cta">Escolher esta mensagem</button>
-        <button id="modalCancel">Voltar</button>
-      </div>
-    </div>
-  </div>
-
 </body>
 </html>
