@@ -1,4 +1,4 @@
-const CACHE = 'diskmsg-v4';
+const CACHE = 'diskmsg-v5';
 const PRECACHE = [
   './',
   './index.html',

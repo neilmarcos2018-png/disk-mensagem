@@ -419,7 +419,7 @@
     };
 
     function showSelected(){ const box=$('#selectedBox'); if(!selectedMessage){ box.classList.add('hidden'); return; } $('#selTitle').textContent=selectedMessage.title; $('#selCode').textContent=selectedMessage.id; $('#selText').innerHTML=(selectedMessage.text||'').replace(/</g,'&lt;').replace(/>/g,'&gt;'); box.classList.remove('hidden'); }
-    document.addEventListener('click', e => { if(e.target && e.target.id==='btnChangeMsg'){ selectedMessage=null; showSelected(); renderMessages(); updateFab(); } });
+    document.addEventListener('click', e => { if(e.target && e.target.id==='btnChangeMsg'){ selectedMessage=null; showSelected(); renderMessages(); updateFab(); setBrowseVisible(true); document.querySelector('#step1').scrollIntoView({behavior:'smooth', block:'start'}); } });
 
     // Admin auth
     const adminLogin=$('#adminLogin'), adminPanel=$('#adminPanel');
@@ -496,13 +496,29 @@
       if (!modalMessage) return;
       selectedMessage = modalMessage;
       closeModal();
-      showSelected(); renderMessages(); checkOneYearWarning(); updateFab();
+      showSelected(); renderMessages(); checkOneYearWarning(); updateFab(); setBrowseVisible(false);
       document.querySelector('#step2').scrollIntoView({behavior:'smooth', block:'start'});
     };
 
 
+    
+    function setBrowseVisible(show){
+      const ids = ['categoryGrid','msgList','catSelect','msgSearch'];
+      ids.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        if (show) el.classList.remove('hidden'); else el.classList.add('hidden');
+      });
+      // Also toggle the hint on steps bar
+      const steps = document.getElementById('stepsBar');
+      if (steps){
+        steps.querySelector('.muted').textContent = show ? 'Selecione a mensagem e clique em Ir para Dados.' : 'Mensagem escolhida. Você pode Trocar ou seguir para Músicas/Dados.';
+      }
+    }
+
+
     // Init
-    maybeLoadCatalog().then(()=>{ renderAll(); showSelected(); updateFab(); });
+    maybeLoadCatalog().then(()=>{ renderAll(); showSelected(); updateFab(); setBrowseVisible(true); });
 
     // PWA
     if('serviceWorker' in navigator){ window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js'); }); }
