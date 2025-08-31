@@ -333,7 +333,7 @@
           <div class="msg-box ${state.blockCopy?'no-copy':''}" oncopy="return false" oncut="return false" oncontextmenu="return false">${(m.text||'').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
         </div>
       `).join('');
-      $$('button[data-read]').forEach(btn=>btn.onclick=()=>{ const m=state.messages.find(x=>x.id===btn.getAttribute('data-read')); openModal(m); });
+      $$('button[data-read]').forEach(btn=>btn.onclick=()=>{ const m=state.messages.find(x=>x.id===btn.getAttribute('data-read')); openModal(m, btn); });
       $$('button[data-pick]').forEach(btn=>btn.onclick=()=>{ const id=btn.getAttribute('data-pick'); selectedMessage=state.messages.find(x=>x.id===id); showSelected(); renderMessages(); checkRepeatWarning(); setBrowseVisible(false); document.querySelector('#step5').scrollIntoView({behavior:'smooth',block:'start'}); });
       $$('input[name="msgPick"]').forEach(r=>r.onchange=()=>{ const id=r.value; selectedMessage=state.messages.find(x=>x.id===id); showSelected(); renderMessages(); checkRepeatWarning(); setBrowseVisible(false); });
     }
@@ -344,7 +344,27 @@
 
     // Modal leitura
     let modalMessage=null;
-    function openModal(m){ modalMessage=m; $('#modalTitle').textContent=m.title; $('#modalCode').textContent=m.id; const cat=(state.categories||[]).find(c=>c.id===m.category); $('#modalCat').textContent=cat?cat.name:m.category; $('#modalText').innerHTML=(m.text||'').replace(/</g,'&lt;').replace(/>/g,'&gt;'); $('#modalBackdrop').style.display='flex'; }
+    function openModal(m, btn){
+      modalMessage = m;
+      $('#modalTitle').textContent = m.title;
+      $('#modalCode').textContent = m.id;
+      const cat = (state.categories||[]).find(c=>c.id===m.category);
+      $('#modalCat').textContent = cat ? cat.name : m.category;
+
+      // Preferir o texto do objeto; se vier vazio, pegar do card visível
+      let txt = (m.text||'').trim();
+      if (!txt && btn) {
+        const card = btn.closest('.card');
+        if (card) {
+          const box = card.querySelector('.msg-box');
+          if (box) txt = (box.innerText || box.textContent || '').trim();
+        }
+      }
+      if (!txt) txt = '⚠️ Texto desta mensagem não foi carregado no catálogo. Você pode ver o texto no cartão ou editar pelo Admin → Mensagens.';
+
+      $('#modalText').textContent = txt; // preserva quebras de linha
+      $('#modalBackdrop').style.display = 'flex';
+    }
     function closeModal(){ $('#modalBackdrop').style.display='none'; }
     $('#modalClose').onclick=closeModal; $('#modalCancel').onclick=closeModal; $('#modalBackdrop').addEventListener('click',e=>{ if(e.target.id==='modalBackdrop') closeModal(); });
     $('#modalChoose').onclick=()=>{ if(!modalMessage) return; selectedMessage=modalMessage; closeModal(); showSelected(); renderMessages(); checkRepeatWarning(); setBrowseVisible(false); document.querySelector('#step5').scrollIntoView({behavior:'smooth',block:'start'}); };
