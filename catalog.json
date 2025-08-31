@@ -3,6 +3,10 @@
     {
       "id": "amor",
       "name": "Amor"
+    },
+    {
+      "id": "aniversario",
+      "name": "Aniversário"
     }
   ],
   "messages": [
@@ -10,7 +14,13 @@
       "id": "001",
       "category": "amor",
       "title": "Amor",
-      "text": "Exemplo de mensagem. Edite no Admin > Mensagens ou substitua seu catalog.json."
+      "text": "Exemplo de mensagem. Edite no Admin > Mensagens."
+    },
+    {
+      "id": "007",
+      "category": "aniversario",
+      "title": "Aniversário",
+      "text": "Feliz aniversário! Muita saúde e paz."
     }
   ]
 }
