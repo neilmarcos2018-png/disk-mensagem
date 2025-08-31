@@ -1,9 +1,9 @@
 {
   "name": "Disk Mensagem Stúdio Neil Marcos",
   "short_name": "Disk Mensagem",
-  "start_url": "./index.html",
+  "start_url": ".",
   "display": "standalone",
-  "background_color": "#0b0b0b",
+  "background_color": "#0c0c0f",
   "theme_color": "#111111",
   "icons": [
     {

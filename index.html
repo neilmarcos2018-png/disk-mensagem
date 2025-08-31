@@ -34,17 +34,13 @@
     .badge-ok{background:var(--ok)!important;border:none;color:#111}
     .badge-warn{background:var(--warn)!important;border:none;color:#111}
     .k{color:#bfbfcb}.card.selected{outline:2px solid var(--gold2)}.choose{display:flex;align-items:center;gap:8px}
-    /* Modal */
-    #modalBackdrop,#okBackdrop{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:50}
+    #modalBackdrop,#okBackdrop,#iosInstall{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:60}
     .modal{background:#141422;border:1px solid #2a2a3a;border-radius:16px;width:min(840px,92%);max-height:86vh;overflow:auto;box-shadow:0 12px 28px rgba(0,0,0,.45);padding:18px}
     .modal .actions{display:flex;gap:8px;justify-content:flex-end;margin-top:14px}
     .modal .title{margin:0 0 6px}
-    /* Category grid */
     #categoryGrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin:8px 0}
     .cat-card{background:#151525;border:1px solid #2a2a3a;border-radius:14px;padding:12px;cursor:pointer;display:flex;align-items:center;gap:10px;transition:transform .05s ease}
-    .cat-card:hover{transform:translateY(-1px)}
-    .cat-card .dot{width:10px;height:10px;border-radius:999px;background:#d7c651;box-shadow:0 0 0 2px rgba(215,198,81,.2)}
-    /* Steps bar */
+    .cat-card:hover{transform:translateY(-1px)} .cat-card .dot{width:10px;height:10px;border-radius:999px;background:#d7c651;box-shadow:0 0 0 2px rgba(215,198,81,.2)}
     #stepsBar{position:sticky;top:64px;z-index:9;margin:8px 0 16px}
   </style>
 </head>
@@ -55,8 +51,8 @@
       <div>
         <h1>Disk Mensagem Stúdio Neil Marcos</h1>
         <div class="subtitle">Agende sua mensagem com carro de som • trilha do YouTube • pagamento via Pix</div>
-        <div class="pill" style="margin-top:6px">Versão v4.3</div>
-        <div class="tabs">
+        <div class="pill" style="margin-top:6px">Versão v4.4</div>
+        <div class="tabs"><button id="installCTA" class="tab hidden">⬇️ Instalar app</button>
           <button class="tab active" data-tab="cliente">Área do Cliente</button>
           <button class="tab" data-tab="admin">Admin <span id="orderCount" class="badge">0</span></button>
         </div>
@@ -143,7 +139,7 @@
       <div class="muted">Ao enviar, seu pedido fica registrado no nosso sistema. Você verá o número do pedido na tela.</div>
       <div class="row" style="gap:8px;flex-wrap:wrap;">
         <button id="btnSend" class="cta">Enviar pedido (pelo app)</button>
-        <span id="warnSame" class="pill hidden">⚠️ Esta mesma mensagem foi usada por você ~1 ano atrás. Confirme antes de enviar.</span>
+        <span id="warnSame" class="pill hidden">⚠️ Você já usou esta mensagem anteriormente.</span>
       </div>
     </section>
 
@@ -216,7 +212,7 @@
     </section>
   </div>
 
-  <!-- Modal de leitura -->
+  <!-- Modais -->
   <div id="modalBackdrop"><div class="modal">
     <div class="row" style="justify-content:space-between;align-items:center;">
       <div><div class="title" id="modalTitle"></div><div class="muted">Cód: <span id="modalCode"></span> · Categoria: <span id="modalCat"></span></div></div>
@@ -227,11 +223,19 @@
     <div class="actions"><button id="modalChoose" class="cta">Escolher esta mensagem</button><button id="modalCancel">Voltar</button></div>
   </div></div>
 
-  <!-- Modal de confirmação do pedido -->
   <div id="okBackdrop"><div class="modal">
     <div class="title">Pedido enviado!</div>
     <div id="okSummary" class="muted"></div>
     <div class="actions"><button id="okClose" class="ok">Fechar</button></div>
+  </div></div>
+
+  <div id="iosInstall"><div class="modal" style="max-width:520px">
+    <div class="title">Como instalar no iPhone</div>
+    <div class="muted" style="line-height:1.6">
+      1) Abra no <b>Safari</b> • 2) Toque no botão <b>Compartilhar</b> (ícone do quadrado com seta) •
+      3) Escolha <b>“Adicionar à Tela de Início”</b>.
+    </div>
+    <div class="actions"><button id="iosClose" class="ok">Entendi</button></div>
   </div></div>
 
   <script>
@@ -241,7 +245,7 @@
     const todayISO = () => new Date().toISOString().slice(0,10);
     function sanitizeURL(u){ try{ return new URL(u).href; }catch{ return ''; } }
 
-    // CRC16/EMV Pix
+    // PIX helpers
     function crc16(str){ let crc=0xFFFF; for(let i=0;i<str.length;i++){ crc ^= str.charCodeAt(i)<<8; for(let j=0;j<8;j++){ crc = (crc & 0x8000) ? ((crc<<1)^0x1021) : (crc<<1); crc &= 0xFFFF; } } return crc.toString(16).toUpperCase().padStart(4,'0'); }
     function emv(id, value){ const v=String(value); return id + String(v.length).padStart(2,'0') + v; }
     function buildPix({merchantName, merchantCity, pixKey, amount, txid}){ const gui=emv('00','BR.GOV.BCB.PIX'); const key=emv('01',pixKey); const mai=emv('26',gui+key); const payload=emv('00','01')+emv('01','11')+mai+emv('52','0000')+emv('53','986')+emv('54',Number(amount).toFixed(2))+emv('58','BR')+emv('59',merchantName.slice(0,25))+emv('60',(merchantCity||'BRASIL').toUpperCase().slice(0,15))+emv('62', emv('05', (txid||'DISKMSG') )); const toCRC=payload+'6304'; const crc=crc16(toCRC); return toCRC+crc; }
@@ -252,7 +256,7 @@
     async function maybeLoadCatalog(){
       if (localStorage.getItem('diskmsg_state')) return;
       try{
-        const res = await fetch('./catalog.json?ver=6', {cache:'no-store'});
+        const res = await fetch('./catalog.json?ver=10', {cache:'no-store'});
         if(!res.ok) throw 0;
         const data = await res.json();
         if (data && Array.isArray(data.messages)) {
@@ -266,46 +270,30 @@
       }catch(e){ console.warn('Sem catalogo.json'); }
     }
 
-    const defaults = { appName:'Disk Mensagem Stúdio Neil Marcos', whatsapp:'5518997053664', price:70.00, pixKey:'18997053664', merchant:'DISK MENSAGEM NEIL', city:'Arapiraca', adminPin:'1234', blockCopy:true, categories:[{id:'amor',name:'Amor'}], messages:[{id:'001',category:'amor',title:'Exemplo',text:'Se o catálogo ainda não carregou, este é um exemplo. Atualize a página.'}], orders:[] };
+    const defaults = { appName:'Disk Mensagem Stúdio Neil Marcos', whatsapp:'5518997053664', price:70.00, pixKey:'18997053664', merchant:'DISK MENSAGEM NEIL', city:'ARAPIRACA', adminPin:'1234', blockCopy:true, categories:[{id:'amor',name:'Amor'}], messages:[{id:'001',category:'amor',title:'Exemplo',text:'Se o catálogo ainda não carregou, este é um exemplo. Atualize a página.'}], orders:[] };
     let state = LS.get('diskmsg_state', defaults);
+
+    // INSTALL CTA
+    let deferredPrompt = null;
+    const installBtn = document.getElementById('installCTA');
+    window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); deferredPrompt=e; installBtn.classList.remove('hidden'); });
+    window.addEventListener('appinstalled', () => { installBtn.classList.add('hidden'); deferredPrompt=null; });
+    const ua = navigator.userAgent.toLowerCase();
+    const isIOS = /iphone|ipad|ipod/.test(ua);
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    installBtn.onclick = async () => {
+      if (deferredPrompt){ deferredPrompt.prompt(); await deferredPrompt.userChoice; deferredPrompt=null; installBtn.classList.add('hidden'); }
+      else if (isIOS && isSafari){ document.getElementById('iosInstall').style.display='flex'; }
+      else { alert('No Android/Chrome, toque em ⋮ > Instalar app. No iPhone/Safari, Compartilhar > Adicionar à Tela de Início.'); }
+    };
+    document.getElementById('iosClose').onclick = () => document.getElementById('iosInstall').style.display='none';
 
     // Top tabs
     $$('.tab[data-tab]').forEach(b=>b.addEventListener('click',()=>{ $$('.tab[data-tab]').forEach(x=>x.classList.remove('active')); b.classList.add('active'); const t=b.getAttribute('data-tab'); $('#tab-cliente').classList.toggle('hidden',t!=='cliente'); $('#tab-admin').classList.toggle('hidden',t!=='admin'); window.scrollTo({top:0,behavior:'smooth'});}));
 
-    
-    // Beep simples via WebAudio
-    function beep(freq=880, dur=150){
-      try {
-        const ctx = new (window.AudioContext || window.webkitAudioContext)();
-        const o = ctx.createOscillator(); const g = ctx.createGain();
-        o.connect(g); g.connect(ctx.destination);
-        o.frequency.value = freq; o.type='sine';
-        g.gain.setValueAtTime(0.001, ctx.currentTime);
-        g.gain.exponentialRampToValueAtTime(0.3, ctx.currentTime + 0.02);
-        o.start();
-        setTimeout(()=>{ g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.02); o.stop(ctx.currentTime + 0.04); }, dur);
-      } catch(e){ /* ignore */ }
-    }
-
-    // Atualiza badge de pedidos
-    
-    function updateOrderCount(){
-      const el = document.getElementById('orderCount');
-      if (!el) return;
-      const rows = (state.orders||[]);
-      const pending = rows.filter(o => (o.status||'').toLowerCase() === 'pendente').length;
-      const paid = rows.filter(o => (o.status||'').toLowerCase() === 'pago').length;
-      el.textContent = pending; // mostra apenas pendentes
-      el.classList.remove('badge-ok','badge-warn');
-      if (pending > 0) {
-        el.classList.add('badge-warn'); // atenção (laranja) se houver pendente
-      } else if (paid > 0) {
-        el.classList.add('badge-ok'); // verde se não há pendente e há pago
-      }
-    }
-    
-
     // Steps bar navigation
+    function beep(freq=880, dur=150){ try{ const ctx=new (window.AudioContext||window.webkitAudioContext)(); const o=ctx.createOscillator(); const g=ctx.createGain(); o.connect(g); g.connect(ctx.destination); o.frequency.value=freq; o.type='sine'; g.gain.setValueAtTime(0.001, ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.3, ctx.currentTime+0.02); o.start(); setTimeout(()=>{ g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+0.02); o.stop(ctx.currentTime+0.04); }, dur);}catch(e){} }
+    function updateOrderCount(){ const el=$('#orderCount'); if(!el) return; const rows=(state.orders||[]); const pending=rows.filter(o=>(o.status||'').toLowerCase()==='pendente').length; const paid=rows.filter(o=>(o.status||'').toLowerCase()==='pago').length; el.textContent=pending; el.classList.remove('badge-ok','badge-warn'); if(pending>0){ el.classList.add('badge-warn'); } else if(paid>0){ el.classList.add('badge-ok'); } }
     $$('#stepsBar [data-goto]').forEach(btn=>btn.addEventListener('click',()=>{ const sel=btn.getAttribute('data-goto'); const el=document.querySelector(sel); if(el) el.scrollIntoView({behavior:'smooth',block:'start'});}));
 
     // Cliente vars
@@ -314,7 +302,7 @@
     let selectedMessage=null;
 
     function renderCategoryGrid(){ const grid=$('#categoryGrid'); grid.innerHTML=(state.categories||[]).map(c=>`<div class="cat-card" data-cat="${c.id}"><div class="dot"></div><div><b>${c.name}</b><div class="muted">${c.id}</div></div></div>`).join(''); $$('#categoryGrid .cat-card').forEach(card=>card.onclick=()=>{ catSelect.value=card.getAttribute('data-cat'); renderMessages(); grid.scrollIntoView({behavior:'smooth',block:'start'}); }); }
-    function renderCats(){ catSelect.innerHTML=['<option value=\"\">Selecione...</option>'].concat((state.categories||[]).map(c=>`<option value="${c.id}">${c.name}</option>`)).join(''); renderCategoryGrid(); }
+    function renderCats(){ catSelect.innerHTML=['<option value="">Selecione...</option>'].concat((state.categories||[]).map(c=>`<option value="${c.id}">${c.name}</option>`)).join(''); renderCategoryGrid(); }
     function renderMessages(){
       const term=(msgSearch.value||'').toLowerCase(); const cat=catSelect.value;
       const items=(state.messages||[]).filter(m=>(!cat||m.category===cat)&&(((m.title||'').toLowerCase().includes(term))||((m.text||'').toLowerCase().includes(term))));
@@ -333,61 +321,21 @@
           <div class="msg-box ${state.blockCopy?'no-copy':''}" oncopy="return false" oncut="return false" oncontextmenu="return false">${(m.text||'').replace(/</g,'&lt;').replace(/>/g,'&gt;')}</div>
         </div>
       `).join('');
-      $$('button[data-read]').forEach(btn=>btn.onclick=()=>{ const m=state.messages.find(x=>x.id===btn.getAttribute('data-read')); openModal(m, btn); });
+      $$('button[data-read]').forEach(btn=>btn.onclick=()=>{ const m=state.messages.find(x=>x.id===btn.getAttribute('data-read')); openModal(m,btn); });
       $$('button[data-pick]').forEach(btn=>btn.onclick=()=>{ const id=btn.getAttribute('data-pick'); selectedMessage=state.messages.find(x=>x.id===id); showSelected(); renderMessages(); checkRepeatWarning(); setBrowseVisible(false); document.querySelector('#step5').scrollIntoView({behavior:'smooth',block:'start'}); });
       $$('input[name="msgPick"]').forEach(r=>r.onchange=()=>{ const id=r.value; selectedMessage=state.messages.find(x=>x.id===id); showSelected(); renderMessages(); checkRepeatWarning(); setBrowseVisible(false); });
     }
     catSelect.onchange=renderMessages; msgSearch.oninput=renderMessages;
 
     function setBrowseVisible(show){ ['categoryGrid','msgList','catSelect','msgSearch'].forEach(id=>{ const el=document.getElementById(id); if(!el) return; if(show) el.classList.remove('hidden'); else el.classList.add('hidden'); }); }
-    function showSelected(){ const box=$('#selectedBox'); if(!selectedMessage){ box.classList.add('hidden'); return; } $('#selTitle').textContent=selectedMessage.title; $('#selCode').textContent=selectedMessage.id; $('#selText').innerHTML=(selectedMessage.text||'').replace(/</g,'&lt;').replace(/>/g,'&gt;'); box.classList.remove('hidden'); }
+    function showSelected(){ const box=$('#selectedBox'); if(!selectedMessage){ box.classList.add('hidden'); return; } $('#selTitle').textContent=selectedMessage.title; $('#selCode').textContent=selectedMessage.id; $('#selText').textContent=(selectedMessage.text||''); box.classList.remove('hidden'); }
 
     // Modal leitura
     let modalMessage=null;
-    function openModal(m, btn){
-      modalMessage = m;
-      $('#modalTitle').textContent = m.title;
-      $('#modalCode').textContent = m.id;
-      const cat = (state.categories||[]).find(c=>c.id===m.category);
-      $('#modalCat').textContent = cat ? cat.name : m.category;
-
-      // Preferir o texto do objeto; se vier vazio, pegar do card visível
-      let txt = (m.text||'').trim();
-      if (!txt && btn) {
-        const card = btn.closest('.card');
-        if (card) {
-          const box = card.querySelector('.msg-box');
-          if (box) txt = (box.innerText || box.textContent || '').trim();
-        }
-      }
-      if (!txt) txt = '⚠️ Texto desta mensagem não foi carregado no catálogo. Você pode ver o texto no cartão ou editar pelo Admin → Mensagens.';
-
-      $('#modalText').textContent = txt; // preserva quebras de linha
-      $('#modalBackdrop').style.display = 'flex';
-    }
+    function openModal(m,btn){ modalMessage=m; $('#modalTitle').textContent=m.title; $('#modalCode').textContent=m.id; const cat=(state.categories||[]).find(c=>c.id===m.category); $('#modalCat').textContent=cat?cat.name:m.category; let txt=(m.text||'').trim(); if(!txt && btn){ const card=btn.closest('.card'); if(card){ const box=card.querySelector('.msg-box'); if(box) txt=(box.innerText||box.textContent||'').trim(); } } if(!txt) txt='⚠️ Texto não carregado. Edite no Admin → Mensagens.'; $('#modalText').textContent=txt; $('#modalBackdrop').style.display='flex'; }
     function closeModal(){ $('#modalBackdrop').style.display='none'; }
     $('#modalClose').onclick=closeModal; $('#modalCancel').onclick=closeModal; $('#modalBackdrop').addEventListener('click',e=>{ if(e.target.id==='modalBackdrop') closeModal(); });
     $('#modalChoose').onclick=()=>{ if(!modalMessage) return; selectedMessage=modalMessage; closeModal(); showSelected(); renderMessages(); checkRepeatWarning(); setBrowseVisible(false); document.querySelector('#step5').scrollIntoView({behavior:'smooth',block:'start'}); };
-
-    
-    // Alerta de repetição (qualquer tempo) com "há X dias"
-    function daysBetween(d1, d2){ const ms = Math.abs(new Date(d2) - new Date(d1)); return Math.floor(ms / (1000*60*60*24)); }
-    function checkRepeatWarning(){
-      warnSame.classList.add('hidden');
-      if (!selectedMessage) return;
-      const phone = (clientPhone.value||'').replace(/\D/g,'');
-      if (!phone) return;
-      const prev = (state.orders||[]).filter(o => o.clientPhone===phone && o.messageId===selectedMessage.id).sort((a,b)=> new Date(b.createdAt)-new Date(a.createdAt));
-      if (prev.length){
-        const d = daysBetween(prev[0].createdAt, new Date().toISOString());
-        let txt = '⚠️ Você já usou esta mensagem ';
-        if (d === 0) txt += 'hoje.';
-        else if (d === 1) txt += 'há 1 dia.';
-        else txt += `há ${d} dias.`;
-        warnSame.textContent = txt;
-        warnSame.classList.remove('hidden');
-      }
-    }
 
     // Dados + Pix
     function updateOutOfCity(){ const out=placeType.value!=='cidade'; $('#outOfCity').classList.toggle('hidden',!out); }
@@ -395,47 +343,16 @@
     function updatePix(){ pixKeyInput.value=state.pixKey; priceEl.textContent=(Number(state.price).toFixed(2)).replace('.',','); const payload=buildPix({merchantName:state.merchant, merchantCity:state.city||'BRASIL', pixKey:state.pixKey, amount:Number(state.price||0), txid:'DISKMSG'}); pixCode.value=payload; }
     $('#btnCopyPix').onclick=()=>{ pixCode.select(); document.execCommand('copy'); alert('Código Pix copiado.'); };
 
-    function checkRepeatWarning(){ warnSame.classList.add('hidden'); if(!selectedMessage) return; const phone=(clientPhone.value||'').replace(/\\D/g,''); if(!phone) return; const oneYearAgo=new Date(); oneYearAgo.setFullYear(oneYearAgo.getFullYear()-1); const prev=(state.orders||[]).find(o=>o.clientPhone===phone && o.messageId===selectedMessage.id && new Date(o.createdAt)>=oneYearAgo); if(prev){ warnSame.classList.remove('hidden'); } }
+    // Repetição (há X dias)
+    function daysBetween(d1,d2){ const ms=Math.abs(new Date(d2)-new Date(d1)); return Math.floor(ms/(1000*60*60*24)); }
+    function checkRepeatWarning(){ warnSame.classList.add('hidden'); if(!selectedMessage) return; const phone=(clientPhone.value||'').replace(/\D/g,''); if(!phone) return; const prev=(state.orders||[]).filter(o=>o.clientPhone===phone && o.messageId===selectedMessage.id).sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt)); if(prev.length){ const d=daysBetween(prev[0].createdAt,new Date().toISOString()); let txt='⚠️ Você já usou esta mensagem '; if(d===0) txt+='hoje.'; else if(d===1) txt+='há 1 dia.'; else txt+=`há ${d} dias.`; warnSame.textContent=txt; warnSame.classList.remove('hidden'); } }
     clientPhone.oninput=checkRepeatWarning;
 
-    function buildOrder(){
-      if(!toName.value||!fromName.value||!address.value||!date.value||!time.value){ alert('Preencha os dados do agendamento (passo 1).'); return null; }
-      if(!ytFirst.value||!ytLast.value){ alert('Confirme as duas músicas (passo 2).'); return null; }
-      if(placeType.value==='cidade' && !pixCode.value){ alert('Gere o Pix (passo 3).'); return null; }
-      if(!selectedMessage){ alert('Escolha a mensagem (passo 4).'); return null; }
-      const phone=(clientPhone.value||'').replace(/\\D/g,''); if(!phone||phone.length<10){ alert('Digite seu celular (com DDD).'); return null; }
-      return { id:'PED'+Math.random().toString(36).slice(2,8).toUpperCase(), createdAt:new Date().toISOString(), clientPhone:phone, toName:toName.value.trim(), fromName:fromName.value.trim(), address:address.value.trim(), date:date.value, time:time.value, placeType:placeType.value, firstSong:sanitizeURL(ytFirst.value), lastSong:sanitizeURL(ytLast.value), messageId:selectedMessage.id, messageTitle:selectedMessage.title, value:placeType.value==='cidade'?Number(state.price):null, status:'pendente' };
-    }
+    function buildOrder(){ if(!toName.value||!fromName.value||!address.value||!date.value||!time.value){ alert('Preencha os dados do agendamento (passo 1).'); return null; } if(!ytFirst.value||!ytLast.value){ alert('Confirme as duas músicas (passo 2).'); return null; } if(placeType.value==='cidade' && !pixCode.value){ alert('Gere o Pix (passo 3).'); return null; } if(!selectedMessage){ alert('Escolha a mensagem (passo 4).'); return null; } const phone=(clientPhone.value||'').replace(/\D/g,''); if(!phone||phone.length<10){ alert('Digite seu celular (com DDD).'); return null; } return { id:'PED'+Math.random().toString(36).slice(2,8).toUpperCase(), createdAt:new Date().toISOString(), clientPhone:phone, toName:toName.value.trim(), fromName:fromName.value.trim(), address:address.value.trim(), date:date.value, time:time.value, placeType:placeType.value, firstSong:sanitizeURL(ytFirst.value), lastSong:sanitizeURL(ytLast.value), messageId:selectedMessage.id, messageTitle:selectedMessage.title, value:placeType.value==='cidade'?Number(state.price):null, status:'pendente' }; }
 
-    // ENVIAR PELO APP (sem WhatsApp)
-    $('#btnSend').onclick=()=>{
-      const order=buildOrder(); if(!order) return;
-      const oldLen=(state.orders||[]).length; state.orders.unshift(order); LS.set('diskmsg_state', state); if(((state.orders||[]).length) > oldLen){ beep(); }
-      renderOrders(); updateOrderCount();
-      const lines=[`✅ Pedido *${order.id}* enviado com sucesso!`,`📅 ${order.date} às ${order.time}`,`🎁 Para: ${order.toName}`,`👤 De: ${order.fromName}`,`💬 Mensagem: ${order.messageTitle} (cód ${order.messageId})`,`🎵 Início: ${order.firstSong}`,`🎵 Final: ${order.lastSong}`,`📍 ${order.address} (${order.placeType})`, order.value?`💰 Valor: ${fmtBRL(order.value)} (cidade)`:`💰 Valor a combinar`];
-      $('#okSummary').innerHTML = lines.join('<br>');
-      document.getElementById('okBackdrop').style.display='flex';
-      document.querySelector('#step5').scrollIntoView({behavior:'smooth',block:'start'});
-    };
+    // ENVIAR PELO APP
+    $('#btnSend').onclick=()=>{ const order=buildOrder(); if(!order) return; const oldLen=(state.orders||[]).length; state.orders.unshift(order); LS.set('diskmsg_state', state); if(((state.orders||[]).length)>oldLen){ beep(); } renderOrders(); updateOrderCount(); const lines=[`✅ Pedido *${order.id}* enviado com sucesso!`,`📅 ${order.date} às ${order.time}`,`🎁 Para: ${order.toName}`,`👤 De: ${order.fromName}`,`💬 Mensagem: ${order.messageTitle} (cód ${order.messageId})`,`🎵 Início: ${order.firstSong}`,`🎵 Final: ${order.lastSong}`,`📍 ${order.address} (${order.placeType})`, order.value?`💰 Valor: ${fmtBRL(order.value)} (cidade)`:`💰 Valor a combinar`]; $('#okSummary').innerHTML=lines.join('<br>'); document.getElementById('okBackdrop').style.display='flex'; document.querySelector('#step5').scrollIntoView({behavior:'smooth',block:'start'}); };
     $('#okClose').onclick=()=>{ document.getElementById('okBackdrop').style.display='none'; };
-
-    
-    // Beep se novo pedido chegar em outra aba (mesmo dispositivo)
-    let _lastOrderCount = (state.orders||[]).length || 0;
-    window.addEventListener('storage', (e) => {
-      if (e.key === 'diskmsg_state' && e.newValue){
-        try {
-          const s = JSON.parse(e.newValue);
-          const n = (s.orders||[]).length || 0;
-          if (n > _lastOrderCount) { beep(); }
-          _lastOrderCount = n;
-          // Atualiza estado local sem perder o logo salvo
-          state.orders = s.orders || state.orders;
-          updateOrderCount();
-          renderOrders();
-        } catch(_) {}
-      }
-    });
 
     // ADMIN
     const adminLogin=$('#adminLogin'), adminPanel=$('#adminPanel');
@@ -451,16 +368,24 @@
 
     function renderConfig(){ $('#cfgAppName').value=state.appName; $('#cfgWhats').value=state.whatsapp; $('#cfgPix').value=state.pixKey; $('#cfgPrice').value=state.price; $('#cfgCity').value=state.city; $('#cfgMerchant').value=state.merchant; $('#cfgPin').value=state.adminPin; }
     $('#cfgLogo').onchange=(e)=>{ const f=e.target.files[0]; if(!f) return; const r=new FileReader(); r.onload=()=>{ const img=new Image(); img.onload=()=>{ const canvas=document.createElement('canvas'); canvas.width=512; canvas.height=512; const ctx=canvas.getContext('2d'); ctx.drawImage(img,0,0,512,512); const dataURL=canvas.toDataURL('image/png'); LS.set('diskmsg_logo', dataURL); document.querySelector('.logo img').src=dataURL; alert('Logo atualizada!'); }; img.src=r.result; }; r.readAsDataURL(f); };
-    $('#btnSaveConfig').onclick=()=>{ state.appName=$('#cfgAppName').value.trim()||state.appName; state.whatsapp=($('#cfgWhats').value||'').replace(/\\D/g,''); state.pixKey=$('#cfgPix').value.trim()||state.pixKey; state.price=Number($('#cfgPrice').value||state.price); state.city=$('#cfgCity').value.trim()||state.city; state.merchant=$('#cfgMerchant').value.trim()||state.merchant; state.adminPin=$('#cfgPin').value.trim()||state.adminPin; LS.set('diskmsg_state', state); document.title=state.appName; alert('Configurações salvas.'); };
+    $('#btnSaveConfig').onclick=()=>{ state.appName=$('#cfgAppName').value.trim()||state.appName; state.whatsapp=($('#cfgWhats').value||'').replace(/\D/g,''); state.pixKey=$('#cfgPix').value.trim()||state.pixKey; state.price=Number($('#cfgPrice').value||state.price); state.city=$('#cfgCity').value.trim()||state.city; state.merchant=$('#cfgMerchant').value.trim()||state.merchant; state.adminPin=$('#cfgPin').value.trim()||state.adminPin; LS.set('diskmsg_state', state); document.title=state.appName; alert('Configurações salvas.'); };
 
     $('#btnExportJSON').onclick=()=>{ const data=JSON.stringify(state,null,2); const blob=new Blob([data],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='diskmensagem-backup.json'; a.click(); };
     $('#importJSON').onchange=(e)=>{ const f=e.target.files[0]; if(!f) return; const r=new FileReader(); r.onload=()=>{ try{ const obj=JSON.parse(r.result); state=obj; LS.set('diskmsg_state', state); renderAll(); alert('Importado!'); }catch(err){ alert('Falha ao importar: '+err.message); } }; r.readAsText(f); };
 
-    function renderAll(){ updateOrderCount(); const savedLogo=LS.get('diskmsg_logo',null); if(savedLogo) document.querySelector('.logo img').src=savedLogo; document.title=state.appName; document.querySelector('h1').textContent=state.appName; $('#date').value=todayISO(); renderCats(); renderMessages(); updateOutOfCity(); updatePix(); renderOrders(); updateOrderCount(); }
-    function renderAllAdmin(){ renderOrders(); updateOrderCount(); renderAdminCats(); renderAdminMsgs(); renderConfig(); }
+    function renderAll(){ const savedLogo=LS.get('diskmsg_logo',null); if(savedLogo) document.querySelector('.logo img').src=savedLogo; document.title=state.appName; document.querySelector('h1').textContent=state.appName; $('#date').value=todayISO(); renderCats(); renderMessages(); updateOutOfCity(); updatePix(); renderOrders(); updateOrderCount(); }
+    function renderAllAdmin(){ renderOrders(); renderAdminCats(); renderAdminMsgs(); renderConfig(); }
+
+    // Storage listener for beep across tabs
+    let _lastOrderCount = (state.orders||[]).length || 0;
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'diskmsg_state' && e.newValue){
+        try { const s = JSON.parse(e.newValue); const n = (s.orders||[]).length || 0; if (n > _lastOrderCount) { beep(); } _lastOrderCount = n; state.orders = s.orders || state.orders; updateOrderCount(); renderOrders(); } catch(_) {}
+      }
+    });
 
     // Init
-    maybeLoadCatalog().then(()=>{ renderAll(); updateOrderCount(); });
+    maybeLoadCatalog().then(()=>{ renderAll(); });
     if('serviceWorker' in navigator){ window.addEventListener('load',()=>{ navigator.serviceWorker.register('./sw.js'); }); }
   </script>
 </body>
