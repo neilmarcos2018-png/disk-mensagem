@@ -50,9 +50,23 @@
       </div>
     </header>
 
+
+    <div id="stepsBar" class="steps card" style="position:sticky; top:64px; z-index:9; margin:8px 0 16px;">
+      <div class="row" style="justify-content:space-between; align-items:center;">
+        <div class="row" style="gap:6px; flex-wrap:wrap;">
+          <button class="pill" data-goto="#step1">1) Mensagem</button>
+          <button class="pill" data-goto="#step2">2) Músicas</button>
+          <button class="pill" data-goto="#step3">3) Dados</button>
+          <button class="pill" data-goto="#step4">4) Pix</button>
+          <button class="pill" data-goto="#step5">5) Enviar</button>
+        </div>
+        <div class="muted">Selecione a mensagem e clique em <b>Ir para Dados</b>.</div>
+      </div>
+    </div>
+
     <!-- CLIENTE -->
     <section id="tab-cliente" class="card">
-      <div class="title">1) Escolha uma categoria e a mensagem</div>
+      <a id="step1"></a><div class="title">1) Escolha uma categoria e a mensagem</div>
       <div class="row">
         <div class="field" style="min-width:250px;flex:1;">
           <label>Categoria</label>
@@ -63,6 +77,7 @@
           <input id="msgSearch" type="text" placeholder="digite um trecho, ex.: parabéns, amor, gratidão..."/>
         </div>
       </div>
+      <div id="categoryGrid"></div>
       <div id="msgList" class="grid"></div>
 
       <div id="selectedBox" class="card hidden" style="margin-top:10px;">
@@ -81,7 +96,7 @@
       </div>
 
       <div class="sep"></div>
-      <div class="title">2) Configure as músicas (YouTube)</div>
+      <a id="step2"></a><div class="title">2) Configure as músicas (YouTube)</div>
       <div class="grid">
         <div class="field">
           <label>Primeira música (toca só um trecho, até o carro chegar)</label>
@@ -94,7 +109,7 @@
       </div>
 
       <div class="sep"></div>
-      <div class="title">3) Dados do agendamento</div>
+      <a id="step3"></a><div class="title">3) Dados do agendamento</div>
       <div class="grid">
         <div class="field"><label>Quem vai receber a mensagem?</label><input id="toName" type="text" placeholder="Nome de quem recebe"/></div>
         <div class="field"><label>Quem está mandando?</label><input id="fromName" type="text" placeholder="Seu nome"/></div>
@@ -117,7 +132,7 @@
       </div>
 
       <div class="sep"></div>
-      <div class="title">4) Pagamento via Pix (R$ <span id="price">70,00</span>)</div>
+      <a id="step4"></a><div class="title">4) Pagamento via Pix (R$ <span id="price">70,00</span>)</div>
       <div class="grid">
         <div class="field">
           <label>Chave Pix (celular)</label>
@@ -134,12 +149,16 @@
       </div>
 
       <div class="sep"></div>
-      <div class="title">5) Enviar pedido</div>
+      <a id="step5"></a><div class="title">5) Enviar pedido</div>
       <div class="muted">Ao enviar, abriremos seu WhatsApp com o pedido pronto para <b>Disk Mensagem Stúdio Neil Marcos</b>. Você também receberá um aviso se já usou a mesma mensagem há cerca de 1 ano.</div>
       <div class="row" style="gap:8px;flex-wrap:wrap;">
         <button id="btnSend" class="cta">Enviar pelo WhatsApp</button>
         <span id="warnSame" class="pill hidden">⚠️ Esta mesma mensagem foi usada por você ~1 ano atrás. Confirme antes de enviar.</span>
       </div>
+    
+      <button id="fabNext" class="cta hidden" style="position:fixed; right:16px; bottom:16px; padding:14px 18px; border-radius:999px; box-shadow:0 10px 24px rgba(0,0,0,.35);">
+        Ir para Dados (3) ⟶
+      </button>
     </section>
 
     <!-- ADMIN -->
@@ -295,16 +314,36 @@
     const msgList = $('#msgList');
     let selectedMessage = null;
 
-    function renderCats(){ catSelect.innerHTML = (state.categories||[]).map(c => `<option value="${c.id}">${c.name}</option>`).join(''); }
-    function renderMessages(){
+    
+    function renderCats(){
+      const opts = ['<option value="">Selecione...</option>'].concat((state.categories||[]).map(c => `<option value="${c.id}">${c.name}</option>`));
+      catSelect.innerHTML = opts.join('');
+      renderCategoryGrid();
+    }
+    function renderCategoryGrid(){
+      const grid = document.getElementById('categoryGrid');
+      grid.innerHTML = (state.categories||[]).map(c => `
+        <div class="cat-card" data-cat="${c.id}">
+          <div class="dot"></div>
+          <div><b>${c.name}</b><div class="muted">${c.id}</div></div>
+        </div>`).join('');
+      $$('#categoryGrid .cat-card').forEach(card => {
+        card.onclick = () => { catSelect.value = card.getAttribute('data-cat'); renderMessages(); grid.scrollIntoView({behavior:'smooth', block:'start'}); };
+      });
+    }
+
+    
+    function renderMessages() {
       const term = (msgSearch.value||'').toLowerCase();
       const cat = catSelect.value;
       const items = (state.messages||[]).filter(m => (!cat || m.category===cat) && (((m.title||'').toLowerCase().includes(term)) || ((m.text||'').toLowerCase().includes(term))));
+      if (!cat) { msgList.innerHTML = '<div class="muted">Escolha uma categoria acima para ver as mensagens.</div>'; return; }
       msgList.innerHTML = items.map(m => `
         <div class="card ${selectedMessage && selectedMessage.id===m.id ? 'selected' : ''}">
           <div class="row" style="justify-content:space-between;align-items:center;">
             <div><b>${m.title}</b><div class="muted">Cód: ${m.id}</div></div>
             <div class="choose">
+              <button data-read="${m.id}" class="primary">Ler</button>
               <input type="radio" name="msgPick" value="${m.id}" ${selectedMessage && selectedMessage.id===m.id ? 'checked' : ''}/>
               <button data-pick="${m.id}" class="primary">Selecionar</button>
             </div>
@@ -315,10 +354,31 @@
           </div>
         </div>
       `).join('');
-      $$('button[data-pick]').forEach(btn => btn.onclick = () => { const id = btn.getAttribute('data-pick'); selectedMessage = state.messages.find(x=>x.id===id); showSelected(); renderMessages(); checkOneYearWarning(); window.scrollTo({top: $('#selectedBox').offsetTop-80, behavior:'smooth'}); });
-      $$('input[name="msgPick"]').forEach(r => r.onchange = () => { const id=r.value; selectedMessage = state.messages.find(x=>x.id===id); showSelected(); renderMessages(); checkOneYearWarning(); });
+      $$('button[data-pick]').forEach(btn => btn.onclick = () => {
+        const id = btn.getAttribute('data-pick');
+        selectedMessage = state.messages.find(x => x.id === id);
+        showSelected();
+        renderMessages();
+        checkOneYearWarning();
+        updateFab();
+        window.scrollTo({top: document.getElementById('selectedBox').offsetTop - 80, behavior:'smooth'});
+      });
+      $$('input[name="msgPick"]').forEach(r => r.onchange = () => {
+        const id = r.value;
+        selectedMessage = state.messages.find(x => x.id === id);
+        showSelected();
+        renderMessages();
+        checkOneYearWarning();
+        updateFab();
+      });
+      $$('button[data-read]').forEach(btn => btn.onclick = () => {
+        const id = btn.getAttribute('data-read');
+        const m = state.messages.find(x => x.id === id);
+        openModal(m);
+      });
     }
-    catSelect.onchange = renderMessages;
+    catSelect.onchange = renderMessages
+ = renderMessages;
     msgSearch.oninput = renderMessages;
 
     // Cliente: YouTube + form + Pix
@@ -359,7 +419,7 @@
     };
 
     function showSelected(){ const box=$('#selectedBox'); if(!selectedMessage){ box.classList.add('hidden'); return; } $('#selTitle').textContent=selectedMessage.title; $('#selCode').textContent=selectedMessage.id; $('#selText').innerHTML=(selectedMessage.text||'').replace(/</g,'&lt;').replace(/>/g,'&gt;'); box.classList.remove('hidden'); }
-    document.addEventListener('click', e => { if(e.target && e.target.id==='btnChangeMsg'){ selectedMessage=null; showSelected(); renderMessages(); } });
+    document.addEventListener('click', e => { if(e.target && e.target.id==='btnChangeMsg'){ selectedMessage=null; showSelected(); renderMessages(); updateFab(); } });
 
     // Admin auth
     const adminLogin=$('#adminLogin'), adminPanel=$('#adminPanel');
@@ -405,11 +465,66 @@
     function renderAll(){ const savedLogo=LS.get('diskmsg_logo', null); if(savedLogo) document.querySelector('.logo img').src=savedLogo; document.title=state.appName; document.querySelector('h1').textContent=state.appName; renderCats(); renderMessages(); updatePix(); updateOutOfCity(); $('#date').value=todayISO(); }
     function renderAllAdmin(){ renderOrders(); renderAdminCats(); renderAdminMsgs(); renderConfig(); }
 
+    
+    // Steps bar navigation
+    $$('#stepsBar [data-goto]').forEach(btn => btn.addEventListener('click', () => {
+      const sel = btn.getAttribute('data-goto'); const el = document.querySelector(sel);
+      if (el) el.scrollIntoView({behavior:'smooth', block:'start'});
+    }));
+
+    const fab = document.getElementById('fabNext');
+    function updateFab(){ fab.classList.toggle('hidden', !selectedMessage); }
+    fab.onclick = () => { document.querySelector('#step3').scrollIntoView({behavior:'smooth', block:'start'}); };
+
+    
+    // Modal message reader
+    let modalMessage = null;
+    function openModal(m){
+      modalMessage = m;
+      $('#modalTitle').textContent = m.title;
+      $('#modalCode').textContent = m.id;
+      const cat = (state.categories||[]).find(c=>c.id===m.category);
+      $('#modalCat').textContent = cat ? cat.name : m.category;
+      $('#modalText').innerHTML = (m.text||'').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+      document.getElementById('modalBackdrop').style.display = 'flex';
+    }
+    function closeModal(){ document.getElementById('modalBackdrop').style.display = 'none'; }
+    $('#modalClose').onclick = closeModal;
+    $('#modalCancel').onclick = closeModal;
+    $('#modalBackdrop').addEventListener('click', (e) => { if (e.target.id === 'modalBackdrop') closeModal(); });
+    $('#modalChoose').onclick = () => {
+      if (!modalMessage) return;
+      selectedMessage = modalMessage;
+      closeModal();
+      showSelected(); renderMessages(); checkOneYearWarning(); updateFab();
+      document.querySelector('#step2').scrollIntoView({behavior:'smooth', block:'start'});
+    };
+
+
     // Init
-    maybeLoadCatalog().then(()=>{ renderAll(); showSelected(); });
+    maybeLoadCatalog().then(()=>{ renderAll(); showSelected(); updateFab(); });
 
     // PWA
     if('serviceWorker' in navigator){ window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js'); }); }
   </script>
+
+  <div id="modalBackdrop" role="dialog" aria-modal="true">
+    <div class="modal">
+      <div class="row" style="justify-content:space-between; align-items:center;">
+        <div>
+          <div class="title" id="modalTitle"></div>
+          <div class="muted">Cód: <span id="modalCode"></span> · Categoria: <span id="modalCat"></span></div>
+        </div>
+        <button id="modalClose">✕</button>
+      </div>
+      <div class="sep"></div>
+      <div id="modalText" class="msg-box"></div>
+      <div class="actions">
+        <button id="modalChoose" class="cta">Escolher esta mensagem</button>
+        <button id="modalCancel">Voltar</button>
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>
